@@ -11,9 +11,9 @@ Society :
 Technology :   
 감염병 위기극복을 위한 기술에 투자   
 바이오헬스, 미래차, 시스템반도체등에 집중 육성   
-디지털 트랜스포메이션의 가속화   https://www.redhat.com/ko/topics/digital-transformation
+디지털 트랜스포메이션의 가속화   https://www.redhat.com/ko/topics/digital-transformation  
 화상 협업 플랫폼과 참여형 콘텐츠의 증가   
-모바일 퍼스트 지속   https://prgateblog.tistory.com/94
+모바일 퍼스트 지속   https://prgateblog.tistory.com/94  
 개인화의 보편화   
 인공지능 적용 활발   
 
