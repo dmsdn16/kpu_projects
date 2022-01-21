@@ -1,22 +1,2 @@
-﻿  Scene.cpp
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(90,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(101,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(129,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(163,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(174,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(182,12): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(192,12): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(260,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(273,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(286,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(540,50): warning C4244: '인수': 'float'에서 '_Ty'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Ty=int
-          ]
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\Scene.cpp(540,44): warning C4244: '인수': 'float'에서 '_Ty'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Ty=int
-          ]
+﻿  Player.cpp
   3DGPMF.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\x64\Debug\3DGPMF.exe
