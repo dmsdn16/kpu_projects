@@ -457,9 +457,9 @@ void CGameFramework::ProcessInput()
 		if (pKeysBuffer[VK_A] & 0xF0) dwDirection |= DIR_LEFT;
 		if (pKeysBuffer[VK_D] & 0xF0) dwDirection |= DIR_RIGHT;
 		if (pKeysBuffer[VK_Q] & 0xF0) dwDirection |= DIR_UP;
-		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;
+		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;*/
 		if (pKeysBuffer[VK_RIGHT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->RightSpin();
-		if (pKeysBuffer[VK_LEFT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->LeftSpin();*/
+		if (pKeysBuffer[VK_LEFT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->LeftSpin();
 		
 	}
 
