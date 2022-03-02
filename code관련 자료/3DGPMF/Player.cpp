@@ -472,6 +472,7 @@ void CTerrainPlayer::Update(float fTimeElapsed)
 	}
 	
 	CPlayer::Update(fTimeElapsed);
+	
 }
 
 void CTerrainPlayer::ResetPlayerPos()
@@ -501,3 +502,7 @@ void CTerrainPlayer::LeftSpin()
 	Rotate(0.0f, -10.0f, 0.0f);
 }
 
+void CTerrainPlayer::AT()
+{
+	MoveForward(10.0f);
+}

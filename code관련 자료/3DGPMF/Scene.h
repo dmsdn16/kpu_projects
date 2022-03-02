@@ -47,6 +47,7 @@ protected:
 	CGameObject                 **m_mObjects = 0; // 적 투사체
 	CGameObject                 **m_doorObjects = 0; // 문
 	CGameObject                 **m_BriObjects = 0; // 다리
+	CGameObject					** cob = 0;
 	int							m_nObjects = 0;
 	int                         m_pObjects = 0;
 	int                         m_Brige = 0;

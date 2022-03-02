@@ -83,6 +83,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_bObjects[0]->SetPosition(1000.0f, 400.0f, 1000.0f);
 	m_bObjects[0]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
 
+
 	// °Ç¹°
 	// area1
 	for (int i = 0; i < 8; ++i)
@@ -568,6 +569,8 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	
 	m_bObjects[0]->Animate(fTimeElapsed);
 	//m_doorObjects[0]->Animate(fTimeElapsed);
+
+	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
 
 	CheckPlayerByObjectCollisions();
 	CheckMissileByTerrainCollisions();

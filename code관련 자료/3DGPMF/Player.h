@@ -106,6 +106,7 @@ public:
 	void Attack();
 	void RightSpin();
 	void LeftSpin();
+	void AT();
 	
 	int GetMissileNum() { return m_missileNum; }
 	CMissileObject* GetMissile(int index) { return m_missile[index]; }
