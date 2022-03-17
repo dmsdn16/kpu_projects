@@ -328,3 +328,5 @@ CBuildingObject::CBuildingObject()
 CBuildingObject::~CBuildingObject()
 {
 }
+
+// a스타 알고리즘 무빙 추가
