@@ -8,6 +8,9 @@ using namespace std;
 
 #pragma pack(1)
 
+SOCKET server;
+constexpr int SERVER_PORT = 3500;
+
 class Player {
 public:
 	int id = 0;
@@ -57,6 +60,23 @@ void drawMap()
 
 int main()
 {
+	char serverIP[64];
+	cout << "서버 주소를 입력 : "; //1글자 입력시 127.0.0.1로 고정
+	cin >> serverIP;
+	if (strlen(serverIP) < 2) {
+		strcpy_s(serverIP, "127.0.0.1");
+	}
+	WSADATA WSAData;
+	WSAStartup(MAKEWORD(2, 2), &WSAData);
+	server = WSASocket(AF_INET, SOCK_STREAM, 0, 0, 0, 0);
+	SOCKADDR_IN server_addr;
+	memset(&server_addr, 0, sizeof(server_addr));
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(SERVER_PORT);
+	inet_pton(server_addr.sin_family, serverIP, &server_addr.sin_addr);  //str IPv4,IPv6를 binary형태로 변환
+	WSAConnect(server, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr), 0, 0, 0, 0);
+
+	
 
 	gotoxy(0, 10);
 
