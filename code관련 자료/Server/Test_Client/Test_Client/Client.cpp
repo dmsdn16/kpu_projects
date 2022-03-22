@@ -48,11 +48,11 @@ void display_error(const char* msg, int err_no) {
 
 void gotoxy(int x, int y)
 {
+	
 	COORD Pos;
 	Pos.X = x;
 	Pos.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
-
 }
 
 int clamp(int value, int min, int max)
@@ -103,7 +103,8 @@ void recvUpdatePlayer() {
 	DWORD recv_flag = 0;
 	int ret = WSARecv(server, r_wsabuf, 1, &bytes_recv, &recv_flag, NULL, NULL);
 	if (SOCKET_ERROR == ret) {
-		display_error("recv_error: ", WSAGetLastError());
+		//display_error("recv_error1 : ", WSAGetLastError());
+		//exit(-1);
 		drawPlayer();
 		return;
 	}
@@ -113,7 +114,8 @@ void recvUpdatePlayer() {
 	r_wsabuf[0].len = recvPacket.playerCnt * sizeof(Player);
 	ret = WSARecv(server, r_wsabuf, 1, &bytes_recv, &recv_flag, NULL, NULL);
 	if (SOCKET_ERROR == ret) {
-		display_error("recv_error: ", WSAGetLastError());
+		//display_error("recv_error2 : ", WSAGetLastError());
+		//exit(-1);
 		drawPlayer();
 		return;
 	}
@@ -151,6 +153,7 @@ void sendKeyInput() {
 		display_error("Send error: ", WSAGetLastError());
 		return;
 	}
+	gotoxy(0, 10);
 }
 
 
@@ -180,12 +183,12 @@ int main()
 	DWORD recv_flag = 0;
 	int ret = WSARecv(server, r_wsabuf, 1, &bytes_recv, &recv_flag, NULL, NULL);
 	if (SOCKET_ERROR == ret) {
-		display_error("201	recv_error: ", WSAGetLastError());
+		display_error("main()	recv_error: ", WSAGetLastError());
 		exit(-1);
 	}
+	
 	gotoxy(0, 10);
-	//cout << "받은 ID (" << (unsigned)ID << ") 받은 바이트 크기 (" << bytes_recv << "\n";
-
+	cout << "받은 ID (" << (unsigned)ID << ") 받은 바이트 크기 (" << bytes_recv << "\n";
 	initBoard();
 	drawMap();
 

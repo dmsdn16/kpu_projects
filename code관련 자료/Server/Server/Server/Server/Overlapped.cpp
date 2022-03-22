@@ -172,6 +172,7 @@ void CALLBACK recv_callback(DWORD Error, DWORD dataBytes, LPWSAOVERLAPPED overla
 		return;
 	}
 	cout << "From client : " << (int)client.messageBuffer[0] << " ( " << dataBytes << ") bytes)\n";
+	cout << "ID : " << (int)client.player.id << endl;
 
 	getKeyInput(client.player, (int)client.messageBuffer[0]);
 	sendEveryPlayersInfo(&client);
