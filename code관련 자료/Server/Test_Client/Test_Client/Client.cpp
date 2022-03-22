@@ -89,6 +89,7 @@ void drawPlayer() {
 	while (lter != playerInfos.end()) {
 		auto info = lter->second;
 		Board[info.posY][info.posX] = ID == lter->first ? 'M' : 'A';
+		lter++;
 	}
 }
 
@@ -169,7 +170,7 @@ int main()
 	memset(&server_addr, 0, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(SERVER_PORT);
-	inet_pton(server_addr.sin_family, serverIP, &server_addr.sin_addr);  //str IPv4,IPv6를 binary형태로 변환
+	inet_pton(AF_INET, serverIP, &server_addr.sin_addr);  //str IPv4,IPv6를 binary형태로 변환
 	WSAConnect(server, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr), 0, 0, 0, 0);
 
 	WSABUF r_wsabuf[1]; //보낼 버퍼
@@ -187,6 +188,7 @@ int main()
 
 	initBoard();
 	drawMap();
+
 	ioctlsocket(server, FIONBIO, &Non_BlockingMode); //논-블럭킹 소켓으로 변환
 	while (true){
 		recvUpdatePlayer();
@@ -194,6 +196,10 @@ int main()
 		drawMap();
 
 		Sleep(60);
+
+		sendKeyInput();
+
+		initBoard();
 
 	}
 }
