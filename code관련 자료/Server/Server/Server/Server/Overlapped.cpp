@@ -42,9 +42,8 @@ struct SOCKETINFO{
 };
 
 map<SOCKET, SOCKETINFO> clients;
-map<LPWSAOVERLAPPED, SOCKETINFO*>clientsFromRecv;
-map<LPWSAOVERLAPPED, SOCKETINFO*> clientsFromSend0;
-map<LPWSAOVERLAPPED, SOCKETINFO*> clientsFromSend1;
+map<LPWSAOVERLAPPED, SOCKETINFO*> clientsFromRecv;
+map<LPWSAOVERLAPPED, SOCKETINFO*> clientsFromSend;
 int currentPlayerId = 0;
 char Board[MAPSIZE][MAPSIZE];
 
@@ -59,7 +58,6 @@ void recvPlayerKeyInput(SOCKETINFO& socketInfo);
 void CALLBACK recv_callback(DWORD Error, DWORD dataBytes, LPWSAOVERLAPPED overlapped, DWORD Inflags);
 void sendPlayerID(SOCKETINFO& client);
 void CALLBACK sendPlayerInfosCallback(DWORD Error, DWORD dataBytes, LPWSAOVERLAPPED overlapped, DWORD lnFlags);
-
 
 void display_error(const char* msg, int err_no) {
 	WCHAR* lpMsgBuf;
@@ -116,7 +114,7 @@ void sendEveryPlayersInfo(SOCKETINFO* socketInfo) {
 	auto lter1 = clients.begin();
 	while (lter1 != clients.end()) {
 		auto& info = clients[lter1->first];
-		clientsFromSend1[&info.sendOverLapped[1]] = &info;
+		clientsFromSend[&info.sendOverLapped[1]] = &info;
 
 		memcpy(reinterpret_cast<SendPacket*>(info.messageBuffer)->players, reinterpret_cast<SendPacket*>(socketInfo->messageBuffer)->players, clientCnt * sizeof(Player));
 		reinterpret_cast<SendPacket*>(info.messageBuffer)->playerCnt = (unsigned char)clientCnt;
@@ -132,7 +130,7 @@ void sendEveryPlayersInfo(SOCKETINFO* socketInfo) {
 
 void CALLBACK sendPlayerIDCallback(DWORD Error, DWORD dataBytes, LPWSAOVERLAPPED overlapped, DWORD lnFlags) {
 	DWORD flags = 0;
-	auto& socket = clientsFromSend0[overlapped]->socket;
+	auto& socket = clientsFromSend[overlapped]->socket;
 	auto& client = clients[socket];
 
 	if (dataBytes == 0) {
@@ -184,13 +182,13 @@ void sendPlayerID(SOCKETINFO& client) {
 	memset(&client.sendOverLapped[0], 0, sizeof(WSAOVERLAPPED));
 	DWORD flags = 0;
 
-	clientsFromSend0[&client.sendOverLapped[0]] = &client;
+	clientsFromSend[&client.sendOverLapped[0]] = &client;
 	auto result = WSASend(client.socket, &client.sendDateBuffer, 1, NULL, 0, &client.sendOverLapped[0], sendPlayerIDCallback);
 
 }
 
 void CALLBACK sendPlayerInfosCallback(DWORD Error, DWORD dataBytes, LPWSAOVERLAPPED overlapped, DWORD lnFlags) {
-	auto& socket = clientsFromSend1[overlapped]->socket;
+	auto& socket = clientsFromSend[overlapped]->socket;
 	auto& client = clients[socket];
 
 	if (dataBytes == 0) {
