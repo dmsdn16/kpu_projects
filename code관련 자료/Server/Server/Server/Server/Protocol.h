@@ -2,7 +2,7 @@
 
 constexpr int MAX_NAME = 100;
 constexpr int MAX_BUFFER = 1024;
-constexpr short SEVER_PORT = 3500;
+constexpr short SERVER_PORT = 3500;
 constexpr int WORLD_X_SIZE = 400;
 constexpr int WORLD_Y_SIZE = 400;
 constexpr int MAX_USER = 5000;
@@ -17,13 +17,13 @@ constexpr unsigned char StoC_REMOVE_PLAYER = 6;
 #pragma pack(push, 1)
 enum DIRECTION {D_N,D_S,D_W,D_E,D_NO};
 
-struct CtoS_login{
+struct CtoS_login {
 	unsigned char size;
 	unsigned char type;
 	char name[MAX_NAME];
 };
 
-struct StoC_login_ok{
+struct StoC_login_ok {
 	unsigned char size;
 	unsigned char type;
 	int id;
@@ -32,7 +32,7 @@ struct StoC_login_ok{
 	short x, y;
 };
 
-struct StoC_move_player{
+struct StoC_move_player {
 	unsigned char size;
 	unsigned char type;
 	int id;
@@ -40,7 +40,7 @@ struct StoC_move_player{
 	short x, y;
 };
 
-struct StoC_remove_player{
+struct StoC_remove_player {
 	unsigned char size;
 	unsigned char type;
 	int id;
