@@ -495,7 +495,7 @@ void CTerrainPlayer::Attack()
 
 void CTerrainPlayer::RightSpin()
 {
-	Rotate(0.0f, 10.0f, 10.0f);
+	Rotate(0.0f, 10.0f, 0.0f);
 }
 
 void CTerrainPlayer::LeftSpin()
@@ -503,7 +503,3 @@ void CTerrainPlayer::LeftSpin()
 	Rotate(0.0f, -10.0f, 0.0f);
 }
 
-void CTerrainPlayer::AT()
-{
-	MoveForward(10.0f);
-}
