@@ -83,6 +83,8 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_bObjects[0]->SetPosition(1000.0f, 400.0f, 1000.0f);
 	m_bObjects[0]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
 
+	
+
 
 	// °Ç¹°
 	// area1
