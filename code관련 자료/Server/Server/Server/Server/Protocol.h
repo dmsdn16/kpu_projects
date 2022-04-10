@@ -32,6 +32,14 @@ struct StoC_login_ok {
 	short x, y;
 };
 
+struct StoC_add_player {
+	unsigned char size;
+	unsigned char type;
+	int		id;
+	short	x, y;
+	int		race;
+};
+
 struct StoC_move_player {
 	unsigned char size;
 	unsigned char type;

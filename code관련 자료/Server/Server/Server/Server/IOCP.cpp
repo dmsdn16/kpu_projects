@@ -79,13 +79,13 @@ void send_login_ok_packet(int p_id)
 	send_packet(p_id, &p);
 }
 
-void do_recv(int p_id)
+void do_recv(int c_id)
 {
-	players[p_id].m_recv_over.m_wsabuf[0].buf = reinterpret_cast<char*>(players[p_id].m_recv_over.m_packetbuf) + players[p_id].m_prev_size;
-	players[p_id].m_recv_over.m_wsabuf[0].len = MAX_BUFFER - players[p_id].m_prev_size; //buffer=임시 저장공간
-	memset(&players[p_id].m_recv_over.m_over, 0, sizeof(players[p_id].m_recv_over.m_over));
+	players[c_id].m_recv_over.m_wsabuf[0].buf = reinterpret_cast<char*>(players[c_id].m_recv_over.m_packetbuf) + players[c_id].m_prev_size;
+	players[c_id].m_recv_over.m_wsabuf[0].len = MAX_BUFFER - players[c_id].m_prev_size; //buffer=임시 저장공간
+	memset(&players[c_id].m_recv_over.m_over, 0, sizeof(players[c_id].m_recv_over.m_over));
 	DWORD r_flag = 0;
-	auto ret = WSARecv(players[p_id].m_socket, players[p_id].m_recv_over.m_wsabuf, 1, NULL, &r_flag, &players[p_id].m_recv_over.m_over, NULL);
+	auto ret = WSARecv(players[c_id].m_socket, players[c_id].m_recv_over.m_wsabuf, 1, NULL, &r_flag, &players[c_id].m_recv_over.m_over, NULL);
 	if (0 != ret) {
 		auto err_no = WSAGetLastError();
 		if (WSA_IO_PENDING != err_no)
@@ -107,6 +107,57 @@ int get_new_player_id(SOCKET p_socket)
 	}
 	return -1;
 }
+
+void send_add_player(int c_id, int p_id) 
+{
+	StoC_add_player p;
+	p.id = p_id;
+	p.size = sizeof(p);
+	p.type = StoC_ADD_PLAYER;
+	p.x = players[p_id].x;
+	p.y = players[p_id].y;
+	p.race = 0;
+	send_packet(c_id, &p);
+}
+
+void send_remove_player(int c_id, int p_id)
+{
+	StoC_remove_player p;
+	p.id = p_id;
+	p.size = sizeof(p);
+	p.type = StoC_REMOVE_PLAYER;
+	send_packet(c_id, &p);
+}
+
+void send_move_packet(int c_id, int p_id)
+{
+	StoC_move_player p;
+	p.id = p_id;
+	p.size = sizeof(p);
+	p.type = StoC_MOVE_PLAYER;
+	p.x = players[p_id].x;
+	p.y = players[p_id].y;
+	send_packet(c_id, &p);
+}
+
+void do_move(int p_id, DIRECTION dir)
+{
+	auto &x = players[p_id].x;
+	auto& y = players[p_id].y;
+	switch (dir)
+	{
+	case D_N: if (y > 0) y--; break;
+	case D_S: if (y < (WORLD_Y_SIZE - 1))y++; break;
+	case D_W: if (x > 0)x--; break;
+	case D_E: if (x < (WORLD_X_SIZE - 1))x++; break;
+	}
+	for (auto& pl : players) {
+		lock_guard<mutex> gl{ pl.m_slock };
+		if (PLST_INGAME == pl.m_state)
+			send_move_packet(pl.id, p_id);
+	}
+}
+
 
 int main()
 {
