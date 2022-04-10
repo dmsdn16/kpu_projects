@@ -140,9 +140,10 @@ void send_move_packet(int c_id, int p_id)
 	send_packet(c_id, &p);
 }
 
+
 void do_move(int p_id, DIRECTION dir)
 {
-	auto &x = players[p_id].x;
+	auto& x = players[p_id].x;
 	auto& y = players[p_id].y;
 	switch (dir)
 	{
@@ -156,6 +157,41 @@ void do_move(int p_id, DIRECTION dir)
 		if (PLST_INGAME == pl.m_state)
 			send_move_packet(pl.id, p_id);
 	}
+}
+
+
+void proccess_packet(int p_id, unsigned char* p_buf) 
+{
+	switch (p_buf[1])
+	{
+		case CtoS_LOGIN: {
+			CtoS_login* packet = reinterpret_cast<CtoS_login*>(p_buf);
+			lock_guard<mutex> gl2{ players[p_id].m_slock };
+			strcpy_s(players[p_id].m_name, packet->name);
+			send_login_ok_packet(p_id);
+			players[p_id].m_state = PLST_INGAME;
+			//주위에 누가 있는지 알려줘야함(시야공유 등)
+			for (auto& pl : players) {
+				if (p_id != pl.id) {
+					lock_guard<mutex>gl{ pl.m_slock };
+					if (PLST_INGAME == pl.m_state) {
+						send_add_player(pl.id, p_id);
+						send_add_player(p_id, pl.id);
+					}
+				}
+			}
+		}
+			break;
+		case CtoS_MOVE: {
+			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
+			do_move(p_id, packet->dr);
+		}
+			break;
+		default:
+			cout<< "Unknown Packet Type from Client[" << p_id << "] Packet Type [" << p_buf[1] << "]" << endl;
+			while (true);
+	}
+
 }
 
 
