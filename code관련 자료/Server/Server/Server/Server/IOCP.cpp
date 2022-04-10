@@ -45,6 +45,27 @@ void display_error(const char* msg, int err_no)
 	LocalFree(lpMsgBuf);
 }
 
+void send_packet(int p_id, void* p)
+{
+	int p_size = reinterpret_cast<unsigned char*>(p)[0];
+	int p_type = reinterpret_cast<unsigned char*>(p)[1];
+	cout << "To client [" << p_id << "]";//디버깅용 callback 에러 생기니 실행할땐 제거
+	cout << "Packet [" << p_type << "]\n";
+	EX_OVER* s_over = new EX_OVER; //로컬 변수로 사용 X sned를 계속 사용할 예정
+	s_over->m_op = OP_SEND;
+	memset(&s_over->m_over, 0, sizeof(s_over->m_over));
+	memcpy(s_over->m_packetbuf, p, p_size);
+	s_over->m_wsabuf[0].buf = reinterpret_cast<CHAR*>(s_over->m_packetbuf);
+	s_over->m_wsabuf[0].len = p_size;
+	auto ret = WSASend(players[p_id].m_socket, s_over->m_wsabuf, 1, NULL, 0, &s_over->m_over, 0);
+	if (0 != ret) {
+		auto err_no = WSAGetLastError();
+		if (WSA_IO_PENDING != err_no)
+			display_error("Error in SendPacket:", err_no);
+	}
+}
+
+
 int main()
 {
 	for (int i = 0; i < MAX_USER + 1; ++i) {
