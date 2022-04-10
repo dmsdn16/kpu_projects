@@ -65,6 +65,19 @@ void send_packet(int p_id, void* p)
 	}
 }
 
+void send_login_ok_packet(int p_id)
+{
+	StoC_login_ok p;
+	p.hp = 100;
+	p.id = p_id;
+	p.level = 1;
+	p.race = 1;
+	p.size = sizeof(p);
+	p.type = StoC_LOGIN_OK;
+	p.x = players[p_id].x;
+	p.y = players[p_id].y;
+	send_packet(p_id, &p);
+}
 
 int main()
 {
