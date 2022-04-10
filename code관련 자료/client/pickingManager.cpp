@@ -3,6 +3,18 @@
 
 PickMgr* PickMgr::pInstance = nullptr;
 
+
+void PickMgr::Create(
+    HWND _hWnd, int	_nWndClientWidth, int _nWndClientHeight, ID3D12Device* _pd3dDevice)
+
+{
+    m_WindowResolution.x = _nWndClientWidth;
+    m_WindowResolution.y = _nWndClientHeight;
+
+    m_hWnd = _hWnd;
+
+    m_pGraphic_Device = _pd3dDevice;
+}
 void PickMgr::Tick(void)
 {
     // 윈도우에서 마우스 좌표, 윈도우 가로 / 세로 길이, 투영행렬의 역행렬, 레이, 레이포스, 대상의 폴리곤 3개 좌표
