@@ -93,6 +93,21 @@ void do_recv(int p_id)
 	}
 }
 
+int get_new_player_id(SOCKET p_socket)
+{
+	for (int i = SERVER_ID + 1; i < MAX_USER; ++i)
+	{
+		lock_guard<mutex>lg{ players[i].m_slock };//lock_guard 초기값으로 가지는 가드(자동언락)
+		if (PLST_FREE == players[i].m_state) {
+			players[i].m_state = PLST_CONNECTED;
+			players[i].m_socket = p_socket;
+			players[i].m_name[0] = 0;
+			return i;
+		}
+	}
+	return -1;
+}
+
 int main()
 {
 	for (int i = 0; i < MAX_USER + 1; ++i) {
