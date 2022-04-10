@@ -79,6 +79,20 @@ void send_login_ok_packet(int p_id)
 	send_packet(p_id, &p);
 }
 
+void do_recv(int p_id)
+{
+	players[p_id].m_recv_over.m_wsabuf[0].buf = reinterpret_cast<char*>(players[p_id].m_recv_over.m_packetbuf) + players[p_id].m_prev_size;
+	players[p_id].m_recv_over.m_wsabuf[0].len = MAX_BUFFER - players[p_id].m_prev_size; //buffer=임시 저장공간
+	memset(&players[p_id].m_recv_over.m_over, 0, sizeof(players[p_id].m_recv_over.m_over));
+	DWORD r_flag = 0;
+	auto ret = WSARecv(players[p_id].m_socket, players[p_id].m_recv_over.m_wsabuf, 1, NULL, &r_flag, &players[p_id].m_recv_over.m_over, NULL);
+	if (0 != ret) {
+		auto err_no = WSAGetLastError();
+		if (WSA_IO_PENDING != err_no)
+			display_error("Error in SendPacket: ", err_no);
+	}
+}
+
 int main()
 {
 	for (int i = 0; i < MAX_USER + 1; ++i) {
