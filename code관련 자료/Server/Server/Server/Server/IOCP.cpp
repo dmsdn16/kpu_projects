@@ -194,6 +194,19 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 
 }
 
+void disconnect(int p_id)
+{
+	{
+		lock_guard<mutex> gl{ players[p_id].m_slock };
+		closesocket(players[p_id].m_socket);
+		players[p_id].m_state = PLST_FREE; //데드락 조심 범위지정
+	}
+	for (auto& pl : players) {
+		lock_guard<mutex> gl2{ pl.m_slock };
+		if (PLST_INGAME == pl.m_state)
+			send_remove_player(pl.id, p_id);
+	}
+}
 
 int main()
 {
