@@ -23,7 +23,9 @@ private:
 private:
 	XMFLOAT3 m_RayPos;
 	XMFLOAT4 m_RayVec;
+
 	POINT m_ptMouse;
+	POINT m_ptResolution;
 
 	HWND m_hWnd;
 	ID3D12Device* m_pGraphic_Device;

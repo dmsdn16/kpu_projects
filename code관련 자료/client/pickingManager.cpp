@@ -38,7 +38,7 @@ void PickMgr::Tick(void)
 
 
     // 레이 포스 : 카메라의 위치를 월드의 0.f, 0.f, 0.f로 잡는다.
-    D3DXVECTOR3 vCameraPos{ 0.f, 0.f, 0.f };
+    XMFLOAT3 vCameraPos{ 0.f, 0.f, 0.f };
 
     D3DXMATRIX MatrixWorld{};
 
@@ -49,7 +49,7 @@ void PickMgr::Tick(void)
     D3DXVec3TransformCoord(&vCameraPos, &vCameraPos, &MatrixWorld);
 
     // 레이 벡터 또한 구해준다. 이름이 헷갈려서 바꿈.
-    D3DXVECTOR3 vRay{ vMouseProjection };
+    XMFLOAT3 vRay{ vMouseProjection };
 
     // 레이 벡터를 카메라 시점으로 같이 이동한다. 단, 현재 레이는 방향벡터이므로 D3DXVec3TransformNormal로 연산한다.
     D3DXVec3TransformNormal(&vRay, &vRay, &MatrixWorld);
