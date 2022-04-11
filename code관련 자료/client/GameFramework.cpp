@@ -333,9 +333,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
         case WM_KEYUP:
 			switch (wParam) 
             {
-				case VK_SPACE:
-					((CTerrainPlayer*)m_pPlayer)->Attack();
-				break;
+				
 				case VK_ESCAPE:
 					::PostQuitMessage(0);
                     break;
@@ -463,7 +461,7 @@ void CGameFramework::ProcessInput()
 		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;*/
 		if (pKeysBuffer[VK_RIGHT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->RightSpin();
 		if (pKeysBuffer[VK_LEFT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->LeftSpin();
-		if(pKeysBuffer[VK_LBUTTON] & 0xF0)  ((CTerrainPlayer*)m_pPlayer)->RightSpin();
+		//if (pKeysBuffer[VK_LBUTTON] & 0xF0)  ((CTerrainPlayer*)m_pPlayer)->RightSpin();
 		
 	}
 

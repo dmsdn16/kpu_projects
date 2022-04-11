@@ -29,7 +29,7 @@ void PickMgr::Tick(void)
     vMouseProjection.y = -1.f * m_ptMouse.y / (m_ptResolution.y / 2) + 1;
     vMouseProjection.z = 0.f;
 
-    D3DXMATRIX MatrixProjectionInverse{};
+    XMFLOAT4X4 MatrixProjectionInverse{};
     m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &MatrixProjectionInverse);
     D3DXMatrixInverse(&MatrixProjectionInverse, nullptr, &MatrixProjectionInverse);
 
