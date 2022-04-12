@@ -1,4 +1,5 @@
 #include "pickingManager.h"
+#include "TransManager.h"
 
 
 PickMgr* PickMgr::pInstance = nullptr;
@@ -30,33 +31,34 @@ void PickMgr::Tick(void)
     vMouseProjection.z = 0.f;
 
     XMFLOAT4X4 MatrixProjectionInverse{};
-    m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &MatrixProjectionInverse);
-    D3DXMatrixInverse(&MatrixProjectionInverse, nullptr, &MatrixProjectionInverse);
+    MatrixProjectionInverse = TransManager::GetInstance()->GetProjectionMatrix();
+    MatrixProjectionInverse = Matrix4x4::Inverse(MatrixProjectionInverse);
+  
 
     // 현재 vMouseProjection의 위치는 뷰스페이스에 있다.
-    D3DXVec3TransformCoord(&vMouseProjection, &vMouseProjection, &MatrixProjectionInverse);
+    vMouseProjection = Vector3::TransformCoord(vMouseProjection, MatrixProjectionInverse);
 
-
+  
     // 레이 포스 : 카메라의 위치를 월드의 0.f, 0.f, 0.f로 잡는다.
     XMFLOAT3 vCameraPos{ 0.f, 0.f, 0.f };
 
-    D3DXMATRIX MatrixWorld{};
-
-    m_pGraphic_Device->GetTransform(D3DTS_VIEW, &MatrixWorld);
-    D3DXMatrixInverse(&MatrixWorld, nullptr, &MatrixWorld);
+    XMFLOAT4X4 MatrixView{};
+    MatrixView = TransManager::GetInstance()->GetViewMaterix();
+    MatrixView = Matrix4x4::Inverse(MatrixView);
+    
 
     // 현재 카메라의 위치는 월드에 있던 오브젝트를 카메라를 원점으로 이동하기 이전에 존재한다.
-    D3DXVec3TransformCoord(&vCameraPos, &vCameraPos, &MatrixWorld);
-
+    vCameraPos = Vector3::TransformCoord(vCameraPos, MatrixView);
     // 레이 벡터 또한 구해준다. 이름이 헷갈려서 바꿈.
     XMFLOAT3 vRay{ vMouseProjection };
 
     // 레이 벡터를 카메라 시점으로 같이 이동한다. 단, 현재 레이는 방향벡터이므로 D3DXVec3TransformNormal로 연산한다.
-    D3DXVec3TransformNormal(&vRay, &vRay, &MatrixWorld);
-
+    vRay = Vector3::TransformNormal(vRay, XMLoadFloat4x4(&MatrixView));
     // 이제 월드 스페이스에 레이 벡터와 레이 포스가 존재한다.
-    m_RayDecs.vRayPos = vCameraPos;
+    m_RayPos = vCameraPos;
 
-    D3DXVec3Normalize(&vRay, &vRay);
-    m_RayDecs.vRayDirection = vRay;
+    XMFLOAT3 vec3;
+    vec3 = Vector3::Normalize(vRay);
+    m_RayVec = XMFLOAT4(vec3.x,vec3.y,vec3.z, 1.0f);
+
 }
