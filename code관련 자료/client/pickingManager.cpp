@@ -59,6 +59,21 @@ void PickMgr::Tick(void)
 
     XMFLOAT3 vec3;
     vec3 = Vector3::Normalize(vRay);
-    m_RayVec = XMFLOAT4(vec3.x,vec3.y,vec3.z, 1.0f);
+    //m_RayVec = XMFLOAT4(vec3.x,vec3.y,vec3.z, 1.0f);
+    m_RayVec = vec3;
 
+}
+
+bool PickMgr::IntersecTri()
+{
+    PickMgr ray = (*this);
+    
+    float u, v, t;
+
+    float vv = Vector3::DotProduct(ray.m_RayVec,ray.m_RayVec);
+    float qv = Vector3::DotProduct(ray.m_RayPos, ray.m_RayVec);
+    float qq = Vector3::DotProduct(ray.m_RayPos, ray.m_RayPos);
+
+    return true;
+    
 }

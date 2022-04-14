@@ -22,7 +22,8 @@ private:
 
 private:
 	XMFLOAT3 m_RayPos;
-	XMFLOAT4 m_RayVec;
+	//XMFLOAT4 m_RayVec;
+	XMFLOAT3 m_RayVec;
 
 	POINT m_ptMouse;
 	POINT m_ptResolution;
@@ -35,4 +36,5 @@ private:
 public:
 	void Create(HWND _hWnd, int	_nWndClientWidth, int _nWndClientHeight, ID3D12Device* _pd3dDevice);
 	void Tick(void);
+	bool IntersecTri(void);
 };

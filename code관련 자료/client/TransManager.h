@@ -42,10 +42,13 @@ public:
 			return pCamera->GetProjectionMatrix();
 	}
 
+	XMFLOAT3 GetWorldMatrix()
+	{
+		
+	}
+
 private:
 	CCamera* pCamera = nullptr;
-
-
 
 };
 
