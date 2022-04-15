@@ -1,6 +1,6 @@
 #pragma once
-#include "Camera.h"
 #include "stdafx.h"
+#include "Camera.h"
 class TransManager
 {
 
