@@ -3,6 +3,8 @@
 #include <MSWSock.h>
 #include <mutex>
 #include <array>
+#include <vector>
+#include <thread>
 #include "Protocol.h"
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
@@ -184,7 +186,7 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 			break;
 		case CtoS_MOVE: {
 			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
-			do_move(p_id, packet->dr);
+			do_move(p_id, packet->dir);
 		}
 			break;
 		default:
@@ -205,6 +207,76 @@ void disconnect(int p_id)
 		lock_guard<mutex> gl2{ pl.m_slock };
 		if (PLST_INGAME == pl.m_state)
 			send_remove_player(pl.id, p_id);
+	}
+}
+
+
+void worker_thread(HANDLE h_iocp, SOCKET l_socket)
+{
+	while (true) {
+		DWORD num_bytes;
+		ULONG_PTR ikey;
+		WSAOVERLAPPED* over;
+		BOOL ret = GetQueuedCompletionStatus(h_iocp, &num_bytes, &ikey, &over, INFINITE);
+		int key = static_cast<int>(ikey);
+		if (FALSE == ret) {
+			if (SERVER_ID == key) {
+				display_error("GQCS:", WSAGetLastError());
+				exit(-1);
+			}
+			else {
+				display_error("GQCS:", WSAGetLastError());
+				disconnect(key);
+			}
+		}
+		if ((key != SERVER_ID) && (num_bytes == 0)) {
+			disconnect(key);
+			continue;
+		}
+		EX_OVER* ex_over = reinterpret_cast<EX_OVER*> (over);
+		switch (ex_over->m_op)
+		{
+			case OP_RECV: {
+				//패킷 조립 및 처리
+				unsigned char* packet_ptr = ex_over->m_packetbuf;
+				int num_data = num_bytes + players[key].m_prev_size;
+				int packet_size = packet_ptr[0];
+				while (num_data >= packet_size) {
+					proccess_packet(key, packet_ptr);
+					num_data -= packet_size;
+					packet_ptr += packet_size;
+					if (0 >= num_data) break;
+					packet_size = packet_ptr[0];
+				}
+				players[key].m_prev_size = num_data;
+				if (0 != num_data)
+					memcpy(ex_over->m_packetbuf, packet_ptr, num_data);
+				do_recv(key);
+				break;
+			}
+
+			case OP_SEND:
+				delete ex_over;
+				break;
+
+			case OP_ACCEPT: {
+				int c_id = get_new_player_id(ex_over->m_csocket);
+				if (-1 != c_id) {
+					players[c_id].m_recv_over.m_op = OP_RECV;
+					players[c_id].m_prev_size = 0;
+					CreateIoCompletionPort(reinterpret_cast<HANDLE>(ex_over->m_csocket), h_iocp, c_id, 0);
+					do_recv(c_id);
+				}
+				else {
+					closesocket(players[c_id].m_socket);
+				}
+				memset(&ex_over->m_over, 0, sizeof(ex_over->m_over));
+				SOCKET c_socket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+				ex_over->m_csocket = c_socket;
+				AcceptEx(l_socket, c_socket, ex_over->m_packetbuf, 0, 32, 32, NULL, &ex_over->m_over);
+			}
+			break;
+		}
 	}
 }
 
@@ -239,4 +311,13 @@ int main()
 		if (err_num != WSA_IO_PENDING)
 			display_error("AcceptEX Error", err_num);
 	}
+
+	vector<thread> mult_threads;
+	for (int i = 0; i < CORE; ++i)
+		mult_threads.emplace_back(worker_thread, h_iocp, listenSocket);
+	for (auto& th : mult_threads)
+		th.join();
+	closesocket(listenSocket);
+	WSACleanup();
+
 }
