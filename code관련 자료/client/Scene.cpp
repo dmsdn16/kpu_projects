@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Scene.h"
-
+#include "pickingManager.h"
 CScene::CScene()
 {
 }
@@ -407,7 +407,7 @@ void CScene::ReleaseUploadBuffers()
 	if (m_pTerrain) m_pTerrain->ReleaseUploadBuffers();
 }
 
-void CScene::CheckPlayerByObjectCollisions()
+void CScene::CheckMouseByObjectCollisions()
 {
 	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
 
@@ -574,7 +574,7 @@ void CScene::AnimateObjects(float fTimeElapsed)
 
 	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
 
-	CheckPlayerByObjectCollisions();
+	CheckMouseByObjectCollisions();
 	CheckMissileByTerrainCollisions();
 	CheckMissileByObjectCollisions();
 	EnemyAttack(fTimeElapsed);

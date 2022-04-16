@@ -29,7 +29,7 @@ public:
 
 	CHeightMapTerrain* GetTerrain() { return(m_pTerrain); }
 
-	void CheckPlayerByObjectCollisions();
+	void CheckMouseByObjectCollisions();
 	void CheckMissileByObjectCollisions();
 	void CheckMissileByTerrainCollisions();
 	void EnemyAttack(float fTimeElapsed);

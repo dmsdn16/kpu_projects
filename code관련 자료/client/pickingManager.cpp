@@ -1,5 +1,6 @@
 #include "pickingManager.h"
 #include "TransManager.h"
+#include "Scene.h"
 
 
 PickMgr* PickMgr::pInstance = nullptr;
@@ -73,6 +74,10 @@ bool PickMgr::IntersecTri()
     float vv = Vector3::DotProduct(ray.m_RayVec,ray.m_RayVec);
     float qv = Vector3::DotProduct(ray.m_RayPos, ray.m_RayVec);
     float qq = Vector3::DotProduct(ray.m_RayPos, ray.m_RayPos);
+
+    CGameObject* m_bObjects[1];
+
+    m_bObjects[0]->m_xmOOBB.Center;
 
     return true;
     
