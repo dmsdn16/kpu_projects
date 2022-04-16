@@ -19,7 +19,7 @@ using namespace std;
 #pragma comment (lib, "winmm.lib")
 #pragma comment (lib, "ws2_32.lib")
 
-#include "..\..\st_iocp_server\st_iocp_server\protocol.h"
+#include "../../Server/Server/Server/Protocol.h"
 
 sf::TcpSocket socket;
 
@@ -131,9 +131,9 @@ void ProcessPacket(char* ptr)
 	static bool first_time = true;
 	switch (ptr[1])
 	{
-	case S2C_LOGIN_OK:
+	case StoC_LOGIN_OK:
 	{
-		s2c_login_ok* packet = reinterpret_cast<s2c_login_ok*>(ptr);
+		StoC_login_ok* packet = reinterpret_cast<StoC_login_ok*>(ptr);
 		g_myid = packet->id;
 		avatar.m_x = packet->x;
 		avatar.m_y = packet->y;
@@ -144,9 +144,9 @@ void ProcessPacket(char* ptr)
 		avatar.show();
 	}
 	break;
-	case S2C_ADD_PLAYER:
+	case StoC_ADD_PLAYER:
 	{
-		s2c_add_player* my_packet = reinterpret_cast<s2c_add_player*>(ptr);
+		StoC_add_player* my_packet = reinterpret_cast<StoC_add_player*>(ptr);
 		int id = my_packet->id;
 
 		//players[id].set_name(my_packet->name);
@@ -162,9 +162,9 @@ void ProcessPacket(char* ptr)
 		}
 		break;
 	}
-	case S2C_MOVE_PLAYER:
+	case StoC_MOVE_PLAYER:
 	{
-		s2c_move_player * my_packet = reinterpret_cast<s2c_move_player*>(ptr);
+		StoC_move_player* my_packet = reinterpret_cast<StoC_move_player*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
 			avatar.move(my_packet->x, my_packet->y);
@@ -181,9 +181,9 @@ void ProcessPacket(char* ptr)
 		break;
 	}
 
-	case S2C_REMOVE_PLAYER:
+	case StoC_REMOVE_PLAYER:
 	{
-		s2c_remove_player* my_packet = reinterpret_cast<s2c_remove_player*>(ptr);
+		StoC_remove_player* my_packet = reinterpret_cast<StoC_remove_player*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
 			avatar.hide();
@@ -268,19 +268,19 @@ void client_main()
 
 void send_move_packet(DIRECTION dr)
 {
-	c2s_move packet;
+	CtoS_move packet;
 	packet.size = sizeof(packet);
-	packet.type = C2S_MOVE;
-	packet.dr = dr;
+	packet.type = CtoS_MOVE;
+	packet.dir = dr;
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
 }
 
 void send_login_packet(string &name)
 {
-	c2s_login packet;
+	CtoS_login packet;
 	packet.size = sizeof(packet);
-	packet.type = C2S_LOGIN;
+	packet.type = CtoS_LOGIN;
 	strcpy_s(packet.name, name.c_str());
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);

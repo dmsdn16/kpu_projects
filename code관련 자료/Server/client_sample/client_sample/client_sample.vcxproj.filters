@@ -274,7 +274,7 @@
     <ClInclude Include="include\SFML\Window\WindowStyle.hpp">
       <Filter>SFML\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\st_iocp_server\st_iocp_server\protocol.h">
+    <ClInclude Include="..\..\Server\Server\Server\Protocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

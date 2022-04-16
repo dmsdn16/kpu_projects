@@ -127,7 +127,7 @@
     <Image Include="chessmap.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\st_iocp_server\st_iocp_server\protocol.h" />
+    <ClInclude Include="..\..\Server\Server\Server\Protocol.h" />
     <ClInclude Include="include\SFML\Config.hpp" />
     <ClInclude Include="include\SFML\Graphics.hpp" />
     <ClInclude Include="include\SFML\Graphics\BlendMode.hpp" />
