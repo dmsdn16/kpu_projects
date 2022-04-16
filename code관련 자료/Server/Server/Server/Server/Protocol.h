@@ -23,6 +23,14 @@ struct CtoS_login {
 	char name[MAX_NAME];
 };
 
+struct CtoS_move {
+	unsigned char size;
+	unsigned char type;
+	DIRECTION dir;
+	int move_time; // 클라이언트에서 패킷을 보낸 시간이고 millisecond단위
+};
+
+
 struct StoC_login_ok {
 	unsigned char size;
 	unsigned char type;
@@ -30,6 +38,14 @@ struct StoC_login_ok {
 	int hp, level;
 	int race;
 	short x, y;
+};
+
+struct StoC_add_player {
+	unsigned char size;
+	unsigned char type;
+	int		id;
+	short	x, y;
+	int		race;
 };
 
 struct StoC_move_player {
