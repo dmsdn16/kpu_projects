@@ -22,6 +22,7 @@ using namespace std;
 
 constexpr auto BUF_SIZE = MAX_BUFFER;
 
+sf::TcpSocket socket;
 
 int g_x;
 int g_y;
@@ -72,6 +73,7 @@ void ProcessPacket(char* ptr) {
 		g_x = packet->x;
 		g_y = packet->y;
 		avatar.move(packet->x, packet->y);
+		avatar.show();
 	}
 	break;
 	case StoC_ADD_PLAYER:
@@ -147,5 +149,15 @@ void send_move_packet(DIRECTION dir)
 	packet.type = CtoS_MOVE;
 	packet.dir = dir;
 	size_t sent = 0;
-	WSASend(&packet,)
+	socket.send(&packet, sizeof(packet), sent);
+}
+
+void send_login_packet(string& name)
+{
+	CtoS_login packet;
+	packet.size = sizeof(packet);
+	packet.type = CtoS_LOGIN;
+	strcpy_s(packet.name, name.c_str());
+	size_t sent = 0;
+	socket.send(&packet, sizeof(packet), sent);
 }
