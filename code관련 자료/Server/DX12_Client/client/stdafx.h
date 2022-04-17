@@ -40,6 +40,27 @@ using namespace std;
 
 #include <Mmsystem.h>
 
+//TODO 서버
+#include <iostream>
+#include "../../Server/Server/Server/Protocol.h"
+#define SFML_STATIC 1
+#include <SFML/Network.hpp>
+
+#ifdef _DEBUG
+#pragma comment (lib, "lib/sfml-window-s-d.lib")
+#pragma comment (lib, "lib/sfml-system-s-d.lib")
+#pragma comment (lib, "lib/sfml-network-s-d.lib")
+#else
+#pragma comment (lib, "lib/sfml-window-s.lib")
+#pragma comment (lib, "lib/sfml-system-s.lib")
+#pragma comment (lib, "lib/sfml-network-s.lib")
+#endif
+#pragma comment (lib, "winmm.lib")
+#pragma comment (lib, "ws2_32.lib")
+
+
+//TODO 서버끝
+
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 

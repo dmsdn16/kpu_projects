@@ -1,35 +1,12 @@
-#define SFML_STATIC 1
-#include <SFML/Network.hpp>
-#include <iostream>
-#include <chrono>
+#include "stdafx.h"
 #include "Network.h"
-using namespace std;
-
-#ifdef _DEBUG
-#pragma comment (lib, "lib/sfml-window-s-d.lib")
-#pragma comment (lib, "lib/sfml-system-s-d.lib")
-#pragma comment (lib, "lib/sfml-network-s-d.lib")
-#else
-#pragma comment (lib, "lib/sfml-window-s.lib")
-#pragma comment (lib, "lib/sfml-system-s.lib")
-#pragma comment (lib, "lib/sfml-network-s.lib")
-#endif
-#pragma comment (lib, "winmm.lib")
-#pragma comment (lib, "ws2_32.lib")
-
-
-#include "../../Server/Server/Server/Protocol.h"
-
-constexpr auto BUF_SIZE = MAX_BUFFER;
 
 sf::TcpSocket socket;
-
+using namespace std;
+constexpr auto BUF_SIZE = MAX_BUFFER;
 int g_x;
 int g_y;
 int g_myid;
-
-
-
 
 OBJECT avatar;
 OBJECT players[MAX_USER];
@@ -125,7 +102,7 @@ void send_move_packet(DIRECTION dir)
 	socket.send(&packet, sizeof(packet), sent);
 }
 
-void send_login_packet(string& name)
+void send_login_packet()
 {
 	CtoS_login packet;
 	packet.size = sizeof(packet);
@@ -133,4 +110,38 @@ void send_login_packet(string& name)
 	//strcpy_s(packet.name, name.c_str());
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
+}
+
+void client_main()
+{
+	char net_buf[BUF_SIZE];
+	size_t	received;
+
+	auto recv_result = socket.receive(net_buf, BUF_SIZE, received);
+	if (recv_result == sf::Socket::Error)
+	{
+		wcout << L"Recv 에러!";
+		while (true);
+	}
+	if (recv_result != sf::Socket::NotReady)
+		if (received > 0) process_data(net_buf, received);
+	
+}
+
+int main()
+{
+	if (players->init)
+	{
+		sf::Socket::Status status = socket.connect("127.0.0.1", SERVER_PORT);
+		socket.setBlocking(false);
+		if (status != sf::Socket::Done) {
+			wcout << L"서버와 연결할 수 없습니다.\n";
+			while (true);
+		}
+		players->init = false;
+	}
+	DIRECTION p_type = D_NO;
+	
+	
+	return 0;
 }

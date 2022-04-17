@@ -53,6 +53,7 @@ void send_packet(int p_id, void* p)
 	int p_type = reinterpret_cast<unsigned char*>(p)[1];
 	cout << "To client [" << p_id << "]";//디버깅용 callback 에러 생기니 실행할땐 제거
 	cout << "Packet [" << p_type << "]\n";
+	//cout << "test" << p_type;
 	EX_OVER* s_over = new EX_OVER; //로컬 변수로 사용 X sned를 계속 사용할 예정
 	s_over->m_op = OP_SEND;
 	memset(&s_over->m_over, 0, sizeof(s_over->m_over));
@@ -91,7 +92,7 @@ void do_recv(int c_id)
 	if (0 != ret) {
 		auto err_no = WSAGetLastError();
 		if (WSA_IO_PENDING != err_no)
-			display_error("Error in SendPacket: ", err_no);
+			display_error("Error in Recv: ", err_no);
 	}
 }
 
@@ -167,9 +168,10 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 	switch (p_buf[1])
 	{
 		case CtoS_LOGIN: {
+			printf("로그인 %d", p_id);
 			CtoS_login* packet = reinterpret_cast<CtoS_login*>(p_buf);
 			lock_guard<mutex> gl2{ players[p_id].m_slock };
-			strcpy_s(players[p_id].m_name, packet->name);
+			//strcpy_s(players[p_id].m_name, packet->name);
 			send_login_ok_packet(p_id);
 			players[p_id].m_state = PLST_INGAME;
 			//주위에 누가 있는지 알려줘야함(시야공유 등)
@@ -260,6 +262,7 @@ void worker_thread(HANDLE h_iocp, SOCKET l_socket)
 				break;
 
 			case OP_ACCEPT: {
+				printf("연결");
 				int c_id = get_new_player_id(ex_over->m_csocket);
 				if (-1 != c_id) {
 					players[c_id].m_recv_over.m_op = OP_RECV;

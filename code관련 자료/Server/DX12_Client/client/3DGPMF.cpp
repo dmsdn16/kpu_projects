@@ -4,8 +4,7 @@
 #include "stdafx.h"
 #include "3DGPMF.h"
 #include "GameFramework.h"
-
-
+#include "Network.h"
 #define MAX_LOADSTRING 100
 
 HINSTANCE						ghAppInstance;
@@ -99,15 +98,21 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
+	static int nX, nY;
 	PAINTSTRUCT ps;
 	HDC hdc;
-
-
-
+	main();
+	send_login_packet();
+	client_main();
 	switch (message)
 	{
 	case WM_SIZE:
 	case WM_LBUTTONDOWN:
+	{
+		nX = LOWORD(lParam);
+		nY = HIDWORD(lParam);
+		break;
+	}
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:

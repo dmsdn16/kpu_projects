@@ -20,7 +20,7 @@ enum DIRECTION {D_N,D_S,D_W,D_E,D_NO};
 struct CtoS_login {
 	unsigned char size;
 	unsigned char type;
-	char name[MAX_NAME];
+	//char name[MAX_NAME];
 };
 
 struct CtoS_move {
