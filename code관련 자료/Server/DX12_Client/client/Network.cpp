@@ -2,7 +2,7 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 #include <chrono>
-#include <WS2tcpip.h>
+#include "Network.h"
 using namespace std;
 
 #ifdef _DEBUG
@@ -27,38 +27,12 @@ sf::TcpSocket socket;
 int g_x;
 int g_y;
 int g_myid;
-SOCKET server;
 
-class OBJECT {
-public:
-	bool m_showing = false;
-	float m_x, m_y;
-	
-	void move(float x, float y) {
-		m_x = x;
-		m_y = y;
-	}
 
-	void show(){
-		m_showing = true;
-	}
 
-	void hide() {
-		m_showing = false;
-	}
-};
 
 OBJECT avatar;
 OBJECT players[MAX_USER];
-
-
-void display_error(const char* msg, int err_no) {
-	WCHAR* lpMsgBuf;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), (LPTSTR)&lpMsgBuf, 0, NULL);
-	cout << msg;
-	wcout << lpMsgBuf << endl;
-	LocalFree(lpMsgBuf);
-}
 
 void ProcessPacket(char* ptr) {
 	static bool first_time = true;
@@ -112,7 +86,6 @@ void ProcessPacket(char* ptr) {
 		}
 		break;
 	}
-	default:
 		//에러 출력
 	}
 }
@@ -157,7 +130,7 @@ void send_login_packet(string& name)
 	CtoS_login packet;
 	packet.size = sizeof(packet);
 	packet.type = CtoS_LOGIN;
-	strcpy_s(packet.name, name.c_str());
+	//strcpy_s(packet.name, name.c_str());
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
 }

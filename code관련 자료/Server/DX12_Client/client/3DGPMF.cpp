@@ -5,6 +5,7 @@
 #include "3DGPMF.h"
 #include "GameFramework.h"
 
+
 #define MAX_LOADSTRING 100
 
 HINSTANCE						ghAppInstance;
@@ -100,6 +101,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
+
+
 
 	switch (message)
 	{
