@@ -145,6 +145,7 @@
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="pickingManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
@@ -161,6 +162,7 @@
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="pickingManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />

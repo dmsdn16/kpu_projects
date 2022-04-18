@@ -1,2 +1,37 @@
-﻿  TransManager.cpp
+﻿  stdafx.cpp
+  3DGPMF.cpp
+  Camera.cpp
+  GameFramework.cpp
+  Mesh.cpp
+  Object.cpp
+  ObjectManager.cpp
+  pickingManager.cpp
+  Player.cpp
+  Scene.cpp
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(93,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(104,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(132,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(166,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(177,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(185,12): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(195,12): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(263,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(276,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(289,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(532,50): warning C4244: '인수': 'float'에서 '_Ty'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(532,44): warning C4244: '인수': 'float'에서 '_Ty'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Ty=int
+          ]
+  Shader.cpp
+  Timer.cpp
+  TransManager.cpp
+  코드를 생성하고 있습니다...
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\TransManager.h(43): warning C4715: 'TransManager::GetProjectionMatrix': 모든 제어 경로에서 값을 반환하지는 않습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\TransManager.h(37): warning C4715: 'TransManager::GetViewMaterix': 모든 제어 경로에서 값을 반환하지는 않습니다.
   3DGPMF.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\x64\Debug\3DGPMF.exe

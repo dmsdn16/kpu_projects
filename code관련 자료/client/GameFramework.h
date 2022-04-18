@@ -3,7 +3,7 @@
 #include "Timer.h"
 #include "Player.h"
 #include "Scene.h"
-
+#include "pickingManager.h"
 class CGameFramework
 {
 public:
@@ -83,7 +83,8 @@ private:
 	CScene						*m_pScene = NULL;
 	CPlayer						*m_pPlayer = NULL;
 	CCamera						*m_pCamera = NULL;
-
+	PickMgr                     *m_pick = NULL;
+	
 	POINT						m_ptOldCursorPos;
 
 	CGameTimer					m_GameTimer;

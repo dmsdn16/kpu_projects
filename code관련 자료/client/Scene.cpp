@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Scene.h"
 #include "pickingManager.h"
+#include "ObjectManager.h"
 CScene::CScene()
 {
 }
@@ -71,7 +72,6 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_ppObjects = new CGameObject * [m_nObjects];
 	m_bObjects = new CGameObject * [1];
 	m_mObjects = new CGameObject * [m_pObjects];
-	m_doorObjects = new CGameObject * [1];
 	CPseudoLightingShader* pShader = new CPseudoLightingShader();
 	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
 	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
@@ -83,7 +83,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_bObjects[0]->SetPosition(1000.0f, 400.0f, 1000.0f);
 	m_bObjects[0]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
 
-	
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_PLAYER, m_bObjects[0]);
 
 
 	// °Ç¹°
@@ -297,16 +297,10 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		m_ppObjects[61 + i]->Rotate(0.0f, 180.0f, 0.0f);
 	}
 
-	// ¹®
-	m_doorObjects[0] = new CBuildingObject();
-	m_doorObjects[0]->SetMesh(0, pRoadMesh);
-	m_doorObjects[0]->SetShader(pShader);
-	m_doorObjects[0]->SetScale(100.0f);
-	m_doorObjects[0]->SetPosition(190.0f, m_pTerrain->GetHeight(100, 80), 0.0f);
-	m_doorObjects[0]->SetColor(XMFLOAT3(1.0f, 1.0f, 1.0f));
-	m_doorObjects[0]->Rotate(0.0f, 90.0f, 0.0f);
-
-
+	for (int i = 0; i < m_nObjects; i++)
+	{
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_Building, m_ppObjects[i]);
+	}
 
 	
 }
@@ -372,14 +366,8 @@ void CScene::ReleaseObjects()
 		}
 		delete[] m_bObjects;
 	}
-	if (m_doorObjects)
-	{
-		if (m_doorObjects[0])
-		{
-			delete m_doorObjects[0];
-		}
-		delete[] m_doorObjects;
-	}
+	
+
 
 
 
@@ -397,10 +385,8 @@ void CScene::ReleaseUploadBuffers()
 	{
 		if (m_bObjects[0]) m_bObjects[0]->ReleaseUploadBuffers();
 	}
-	if (m_doorObjects)
-	{
-		if (m_doorObjects[0]) m_doorObjects[0]->ReleaseUploadBuffers();
-	}
+	
+
 
 
 
@@ -597,7 +583,6 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 	
 
 	if (m_bObjects[0]) m_bObjects[0]->Render(pd3dCommandList, pCamera);
-	if (m_doorObjects[0]) m_doorObjects[0]->Render(pd3dCommandList, pCamera);
-
+	
 }
 
