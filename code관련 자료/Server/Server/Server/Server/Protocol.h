@@ -15,7 +15,7 @@ constexpr unsigned char StoC_MOVE_PLAYER = 5;
 constexpr unsigned char StoC_REMOVE_PLAYER = 6;
 
 #pragma pack(push, 1)
-enum DIRECTION {D_N,D_S,D_W,D_E,D_NO};
+enum DIRECTION {D_N,D_S,D_W,D_E,D_NO,D_LB,D_RB};
 
 struct CtoS_login {
 	unsigned char size;

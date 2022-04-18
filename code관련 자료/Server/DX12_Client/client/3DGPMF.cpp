@@ -101,16 +101,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static int nX, nY;
 	PAINTSTRUCT ps;
 	HDC hdc;
+	DIRECTION p_type = D_NO;
 	main();
-	send_login_packet();
-	client_main();
+	
 	switch (message)
 	{
+	
 	case WM_SIZE:
 	case WM_LBUTTONDOWN:
 	{
-		nX = LOWORD(lParam);
-		nY = HIDWORD(lParam);
+		p_type = D_LB;
+		if (D_NO != p_type)
+			send_move_packet(p_type);
 		break;
 	}
 	case WM_LBUTTONUP:
@@ -146,6 +148,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	default:
 		return(::DefWindowProc(hWnd, message, wParam, lParam));
 	}
+	client_main();
 	return 0;
 }
 

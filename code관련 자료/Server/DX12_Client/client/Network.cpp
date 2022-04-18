@@ -139,8 +139,8 @@ int main()
 			while (true);
 		}
 		players->init = false;
+		send_login_packet();
 	}
-	DIRECTION p_type = D_NO;
 	
 	
 	return 0;
