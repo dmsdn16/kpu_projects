@@ -1,11 +1,11 @@
-﻿  3DGPMF.cpp
+﻿  Network.cpp
 sfml-network-s-d.lib(Http.cpp.obj) : warning LNK4099: 'sfml-network-s-d.pdb' PDB를 'sfml-network-s-d.lib(Http.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-network-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 sfml-network-s-d.lib(IpAddress.cpp.obj) : warning LNK4099: 'sfml-network-s-d.pdb' PDB를 'sfml-network-s-d.lib(IpAddress.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-network-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 sfml-network-s-d.lib(Packet.cpp.obj) : warning LNK4099: 'sfml-network-s-d.pdb' PDB를 'sfml-network-s-d.lib(Packet.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-network-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 sfml-network-s-d.lib(Socket.cpp.obj) : warning LNK4099: 'sfml-network-s-d.pdb' PDB를 'sfml-network-s-d.lib(Socket.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-network-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 sfml-network-s-d.lib(TcpSocket.cpp.obj) : warning LNK4099: 'sfml-network-s-d.pdb' PDB를 'sfml-network-s-d.lib(TcpSocket.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-network-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 sfml-network-s-d.lib(SocketImpl.cpp.obj) : warning LNK4099: 'sfml-network-s-d.pdb' PDB를 'sfml-network-s-d.lib(SocketImpl.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-network-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-sfml-system-s-d.lib(Err.cpp.obj) : warning LNK4099: '' PDB를 'sfml-system-s-d.lib(Err.cpp.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+sfml-system-s-d.lib(Err.cpp.obj) : warning LNK4099: 'sfml-system-s-d.pdb' PDB를 'sfml-system-s-d.lib(Err.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-system-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 sfml-system-s-d.lib(String.cpp.obj) : warning LNK4099: 'sfml-system-s-d.pdb' PDB를 'sfml-system-s-d.lib(String.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-system-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 sfml-system-s-d.lib(Time.cpp.obj) : warning LNK4099: 'sfml-system-s-d.pdb' PDB를 'sfml-system-s-d.lib(Time.cpp.obj)' 또는 'E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\sfml-system-s-d.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
   3DGPMF.vcxproj -> E:\KPU_Project\code관련 자료\Server\DX12_Client\client\x64\Debug\3DGPMF.exe

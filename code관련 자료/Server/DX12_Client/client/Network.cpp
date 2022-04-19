@@ -1,16 +1,15 @@
 #include "stdafx.h"
 #include "Network.h"
 
+
 sf::TcpSocket socket;
 using namespace std;
 constexpr auto BUF_SIZE = MAX_BUFFER;
-int g_x;
-int g_y;
 int g_myid;
-
+float g_x = 0, g_y = 0;
 OBJECT avatar;
 OBJECT players[MAX_USER];
-
+CPlayer* S_Player;
 void ProcessPacket(char* ptr) {
 	static bool first_time = true;
 	switch (ptr[1])
@@ -45,6 +44,8 @@ void ProcessPacket(char* ptr) {
 			avatar.move(my_packet->x, my_packet->y);
 			g_x = my_packet->x;
 			g_y = my_packet->y;
+			S_Player->Move(XMFLOAT3(g_x,g_y,0.f));
+			
 		}
 		else if (other_id < MAX_USER) {
 			players[other_id].move(my_packet->x, my_packet->y);
@@ -92,12 +93,14 @@ void process_data(char* net_buf, size_t io_byte)
 	}
 }
 
-void send_move_packet(DIRECTION dir)
+void send_move_packet(DIRECTION dir,int x, int y)
 {
 	CtoS_move packet;
 	packet.size = sizeof(packet);
 	packet.type = CtoS_MOVE;
 	packet.dir = dir;
+	packet.x = x;
+	packet.y = y;
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
 }
@@ -112,11 +115,12 @@ void send_login_packet()
 	socket.send(&packet, sizeof(packet), sent);
 }
 
-void client_main()
+void client_main(CPlayer* m_pPlayer)
 {
+	
 	char net_buf[BUF_SIZE];
 	size_t	received;
-
+	S_Player = m_pPlayer;
 	auto recv_result = socket.receive(net_buf, BUF_SIZE, received);
 	if (recv_result == sf::Socket::Error)
 	{
@@ -125,7 +129,6 @@ void client_main()
 	}
 	if (recv_result != sf::Socket::NotReady)
 		if (received > 0) process_data(net_buf, received);
-	
 }
 
 int main()

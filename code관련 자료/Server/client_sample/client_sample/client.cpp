@@ -281,7 +281,7 @@ void send_login_packet(string &name)
 	CtoS_login packet;
 	packet.size = sizeof(packet);
 	packet.type = CtoS_LOGIN;
-	strcpy_s(packet.name, name.c_str());
+	//strcpy_s(packet.name, name.c_str());
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
 }

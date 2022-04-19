@@ -27,6 +27,7 @@ struct CtoS_move {
 	unsigned char size;
 	unsigned char type;
 	DIRECTION dir;
+	int x, y;
 	int move_time; // 클라이언트에서 패킷을 보낸 시간이고 millisecond단위
 };
 

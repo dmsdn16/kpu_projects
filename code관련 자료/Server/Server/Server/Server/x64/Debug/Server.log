@@ -1,2 +1,3 @@
 ﻿  IOCP.cpp
+E:\KPU_Project\code관련 자료\Server\Server\Server\Server\IOCP.cpp(153,8): warning C4101: 'dwDirection' :참조되지 않은 지역 변수입니다.
   Server.vcxproj -> E:\KPU_Project\code관련 자료\Server\Server\Server\x64\Debug\Server.exe

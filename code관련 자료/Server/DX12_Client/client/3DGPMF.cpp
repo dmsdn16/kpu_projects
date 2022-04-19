@@ -5,6 +5,7 @@
 #include "3DGPMF.h"
 #include "GameFramework.h"
 #include "Network.h"
+
 #define MAX_LOADSTRING 100
 
 HINSTANCE						ghAppInstance;
@@ -102,6 +103,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 	DIRECTION p_type = D_NO;
+	static int x=0, y=0;
 	main();
 	
 	switch (message)
@@ -109,17 +111,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	case WM_SIZE:
 	case WM_LBUTTONDOWN:
-	{
-		p_type = D_LB;
-		if (D_NO != p_type)
-			send_move_packet(p_type);
-		break;
-	}
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
+	{
+		p_type = D_RB;
+		x = LOWORD(lParam);
+		y = HIWORD(lParam);
+		if (D_NO != p_type)
+			send_move_packet(p_type, x, y);
+		break;
+	}
+
 	case WM_RBUTTONUP:
 	case WM_MOUSEMOVE:
 	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_UP:
+			p_type = D_N;
+			break;
+		case VK_DOWN:
+			p_type = D_S;
+			break;
+		case VK_RIGHT:
+			p_type = D_E;
+			break;
+		case VK_LEFT:
+			p_type = D_W;
+			break;
+		}
+		if (D_NO != p_type)
+			send_move_packet(p_type,x,y);
 	case WM_KEYUP:
 		gGameFramework.OnProcessingWindowMessage(hWnd, message, wParam, lParam);
 		break;
@@ -148,7 +170,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	default:
 		return(::DefWindowProc(hWnd, message, wParam, lParam));
 	}
-	client_main();
+	//client_main();
 	return 0;
 }
 

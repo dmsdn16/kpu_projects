@@ -9,6 +9,10 @@
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
 #define CORE 4
+#define DIR_LEFT				0x04
+#define DIR_RIGHT				0x08
+#define DIR_UP					0x10
+#define DIR_DOWN				0x20
 
 using namespace std;
 
@@ -144,16 +148,32 @@ void send_move_packet(int c_id, int p_id)
 }
 
 
-void do_move(int p_id, DIRECTION dir)
+void do_move(int p_id, DIRECTION dir, int p_x, int p_y)
 {
+	DWORD dwDirection;
 	auto& x = players[p_id].x;
 	auto& y = players[p_id].y;
-	switch (dir)
+	/*switch (dir)
 	{
 	case D_N: if (y > 0) y--; break;
 	case D_S: if (y < (WORLD_Y_SIZE - 1))y++; break;
 	case D_W: if (x > 0)x--; break;
 	case D_E: if (x < (WORLD_X_SIZE - 1))x++; break;
+	}*/
+	switch (dir) 
+	{
+	case D_N:
+		break;
+	case D_S:
+		break;
+	case D_E:
+		break;
+	case D_W:
+		break;
+	case D_LB:
+		x = p_x;
+		y = p_y;
+		break;
 	}
 	for (auto& pl : players) {
 		lock_guard<mutex> gl{ pl.m_slock };
@@ -188,7 +208,7 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 			break;
 		case CtoS_MOVE: {
 			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
-			do_move(p_id, packet->dir);
+			do_move(p_id, packet->dir,packet->x,packet->y);
 		}
 			break;
 		default:

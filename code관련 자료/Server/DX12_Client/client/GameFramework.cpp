@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "GameFramework.h"
 #include "pickingManager.h"
-
+#include "Network.h"
 CGameFramework::CGameFramework()
 {
 	m_pdxgiFactory = NULL;
@@ -461,8 +461,10 @@ void CGameFramework::ProcessInput()
 		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;*/
 		if (pKeysBuffer[VK_RIGHT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->RightSpin();
 		if (pKeysBuffer[VK_LEFT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->LeftSpin();
-		//if (pKeysBuffer[VK_LBUTTON] & 0xF0)  ((CTerrainPlayer*)m_pPlayer)->RightSpin();
-		
+		if (pKeysBuffer[VK_LBUTTON] & 0xF0)
+		{
+			client_main(m_pPlayer);
+		}
 	}
 
 	float cxDelta = 0.0f, cyDelta = 0.0f;

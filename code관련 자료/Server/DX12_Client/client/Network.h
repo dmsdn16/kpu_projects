@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
+#include "Player.h"
 using namespace std;
-
 class OBJECT {
 public:
 	bool m_showing = false;
@@ -18,8 +18,8 @@ public:
 
 void ProcessPacket(char* ptr);
 void process_data(char* net_buf, size_t io_byte);
-void send_move_packet(DIRECTION dir);
+void send_move_packet(DIRECTION dir,int x,int y);
 void send_login_packet();
-void client_main();
+void client_main(CPlayer* m_pPlayer);
 int main();
 
