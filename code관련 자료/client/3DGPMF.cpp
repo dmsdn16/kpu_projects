@@ -5,6 +5,8 @@
 #include "3DGPMF.h"
 #include "GameFramework.h"
 
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+
 #define MAX_LOADSTRING 100
 
 HINSTANCE						ghAppInstance;
