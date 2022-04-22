@@ -1,6 +1,7 @@
 #include "pickingManager.h"
 #include "TransManager.h"
 #include "Scene.h"
+#include "ObjectManager.h"
 
 
 PickMgr* PickMgr::pInstance = nullptr;
@@ -72,7 +73,6 @@ bool PickMgr::IntersecTri()
     
     CGameObject* m_bObjects[1];
 
-    
 
     m_bObjects[0]->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos),XMLoadFloat3(&m_RayVec), x);
 
