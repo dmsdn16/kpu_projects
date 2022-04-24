@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "Object.h"
 class PickMgr
 {
 public:
@@ -36,5 +37,5 @@ private:
 public:
 	void Create(HWND _hWnd, int	_nWndClientWidth, int _nWndClientHeight, ID3D12Device* _pd3dDevice);
 	void Tick(void);
-	bool IntersecTri(void);
+	CGameObject* IntersecTri(void);
 };

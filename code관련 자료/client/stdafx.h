@@ -27,6 +27,7 @@
 #include <vector>
 #include <list>
 #include <random>
+#include <map>
 using namespace std;
 
 #include <d3d12.h>

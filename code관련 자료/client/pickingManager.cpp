@@ -66,17 +66,24 @@ void PickMgr::Tick(void)
 
 }
 
-bool PickMgr::IntersecTri()
+CGameObject* PickMgr::IntersecTri()
 {
-
     float x;
+    map<float, CGameObject*> map;
+    list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
+    for (auto& object : oj)
+    {
+        if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec), x))
+        { 
+            map.emplace(x, object);
+        }
+      
+    }
+    if (!map.empty())
+    {
+        return map.begin()->second;
+    }
+    return nullptr;
     
-    CGameObject* m_bObjects[1];
-
-
-    m_bObjects[0]->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos),XMLoadFloat3(&m_RayVec), x);
-
-    
-    return true;
     
 }

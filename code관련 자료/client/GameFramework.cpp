@@ -462,7 +462,7 @@ void CGameFramework::ProcessInput()
 		if (pKeysBuffer[VK_RIGHT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->RightSpin();
 		if (pKeysBuffer[VK_LEFT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->LeftSpin();
 		if (pKeysBuffer[VK_LBUTTON] & 0xF0) 
-			if(((PickMgr*)m_pick)->IntersecTri())
+			if(m_pick->IntersecTri() !=nullptr)
 				((CTerrainPlayer*)m_pPlayer)->RightSpin();
 		
 	}
