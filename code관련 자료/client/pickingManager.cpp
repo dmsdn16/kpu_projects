@@ -64,16 +64,21 @@ void PickMgr::Tick(void)
     //m_RayVec = XMFLOAT4(vec3.x,vec3.y,vec3.z, 1.0f);
     m_RayVec = vec3;
 
+    SetRayPos(m_RayPos);
+    SetRayVec(m_RayVec);
+
 }
 
 CGameObject* PickMgr::IntersecTri()
 {
     float x;
+    XMVECTOR ray1,ray2;
+
     map<float, CGameObject*> map;
     list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
     for (auto& object : oj)
     {
-        if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec), x))
+        if(object->m_xmOOBB.Intersects(ray1,ray2,x))
         { 
             map.emplace(x, object);
         }
