@@ -1,5 +1,5 @@
 ﻿  pickingManager.cpp
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\pickingManager.cpp(81,11): error C2664: 'DirectX::XMVECTOR DirectX::XMLoadFloat3(const DirectX::XMFLOAT3 *)': 인수 1을(를) 'DirectX::XMFLOAT3'에서 'const DirectX::XMFLOAT3 *'(으)로 변환할 수 없습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\pickingManager.cpp(81,53): message : 이 변환을 수행할 수 있는 사용 가능한 사용자 정의 변환 연산자가 없거나 연산자를 호출할 수 없습니다.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\DirectXMathConvert.inl(492,29): message : 'DirectX::XMLoadFloat3' 선언을 참조하십시오.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\pickingManager.cpp(81,11): error C2661: 'DirectX::BoundingOrientedBox::Intersects': 오버로드된 함수에서 2개의 인수를 사용하지 않습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\pickingManager.cpp(39,8): warning C4102: 'std': 참조되지 않은 레이블입니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\TransManager.h(43): warning C4715: 'TransManager::GetProjectionMatrix': 모든 제어 경로에서 값을 반환하지는 않습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\TransManager.h(37): warning C4715: 'TransManager::GetViewMaterix': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  3DGPMF.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\x64\Debug\3DGPMF.exe

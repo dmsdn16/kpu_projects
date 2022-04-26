@@ -15,6 +15,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <math.h>
+#include <iostream>
 
 #include <string>
 #include <wrl.h>
@@ -43,7 +44,7 @@ using namespace std;
 #include <Mmsystem.h>
 
 using namespace DirectX;
-using namespace DirectX::PackedVector;
+//using namespace DirectX::PackedVector;
 
 using Microsoft::WRL::ComPtr;
 

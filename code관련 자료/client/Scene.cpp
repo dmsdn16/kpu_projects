@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "pickingManager.h"
 #include "ObjectManager.h"
+#include "TransManager.h"
 CScene::CScene()
 {
 }
@@ -67,6 +68,8 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		m_pd3dGraphicsRootSignature, _T("Assets/Image/Terrain/1HeightMap.raw"), 257, 257, 257,
 		257, xmf3Scale, xmf4Color);
 #endif
+
+	
 
 	m_nObjects = 64; // °Ç¹° °¹¼ö
 	m_ppObjects = new CGameObject * [m_nObjects];
