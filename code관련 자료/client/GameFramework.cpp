@@ -463,9 +463,9 @@ void CGameFramework::ProcessInput()
 		if (pKeysBuffer[VK_RIGHT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->RightSpin();
 		if (pKeysBuffer[VK_LEFT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->LeftSpin();
 		if (pKeysBuffer[VK_LBUTTON] & 0xF0) 
-			if(m_pick->IntersecTri() !=nullptr)
+			if(m_pick->GetInstance()->IntersecTri() !=nullptr)
 				((CTerrainPlayer*)m_pPlayer)->RightSpin();
-		
+	
 	}
 
 	float cxDelta = 0.0f, cyDelta = 0.0f;

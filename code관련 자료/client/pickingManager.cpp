@@ -19,6 +19,7 @@ void PickMgr::Create(
 }
 void PickMgr::Tick(void)
 {
+   
     // 윈도우에서 마우스 좌표, 윈도우 가로 / 세로 길이, 투영행렬의 역행렬, 레이, 레이포스, 대상의 폴리곤 3개 좌표
         // g_iWinCX, g_iWinCY
     ::GetCursorPos(&m_ptMouse);
@@ -70,7 +71,6 @@ void PickMgr::Tick(void)
     SetRayPos(m_RayPos);
     SetRayVec(m_RayVec);
 
-    std::cout << m_RayPos.x << std::endl;
 
 }
 
@@ -78,10 +78,12 @@ CGameObject* PickMgr::IntersecTri()
 {
     float x;
 
-
+    std::cout << m_RayPos.x << std::endl;
     map<float, CGameObject*> map;
     list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_Building);
-    for (auto& object : oj)
+  
+   
+   for (auto& object : oj)
     {
        if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec),x))
         { 
