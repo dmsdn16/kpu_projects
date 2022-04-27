@@ -63,4 +63,9 @@ struct StoC_remove_player {
 	int id;
 };
 
+struct StoC_Time {
+	bool round;
+	bool start;
+};
+
 #pragma pack(pop)
