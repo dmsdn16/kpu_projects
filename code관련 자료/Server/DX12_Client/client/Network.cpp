@@ -95,6 +95,7 @@ void process_data(char* net_buf, size_t io_byte)
 
 void send_move_packet(DIRECTION dir,int x, int y)
 {
+	cout << "서버에서 보냄: " << x << " : " << y << endl;
 	CtoS_move packet;
 	packet.size = sizeof(packet);
 	packet.type = CtoS_MOVE;
