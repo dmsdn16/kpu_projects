@@ -51,7 +51,7 @@ void PickMgr::Tick(void)
     XMFLOAT4X4 MatrixView{};
     MatrixView = TransManager::GetInstance()->GetViewMaterix();
     MatrixView = Matrix4x4::Inverse(MatrixView);
-    
+
     // 현재 카메라의 위치는 월드에 있던 오브젝트를 카메라를 원점으로 이동하기 이전에 존재한다.
     vCameraPos = Vector3::TransformCoord(vCameraPos, MatrixView);
     // 레이 벡터 또한 구해준다. 이름이 헷갈려서 바꿈.
@@ -70,17 +70,17 @@ void PickMgr::Tick(void)
 
     SetRayPos(m_RayPos);
     SetRayVec(m_RayVec);
-
+    std::cout << m_RayVec.x << std::endl;
 
 }
 
 CGameObject* PickMgr::IntersecTri()
 {
-    float x;
-
-    std::cout << m_RayPos.x << std::endl;
+    float x = 0.0f;
+ 
+  
     map<float, CGameObject*> map;
-    list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_Building);
+    list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
   
    
    for (auto& object : oj)

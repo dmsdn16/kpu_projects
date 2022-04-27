@@ -98,7 +98,7 @@ public:
 	virtual void OnCameraUpdateCallback(float fTimeElapsed);
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera = NULL);
 	virtual void Update(float fTimeElapsed);
-
+	
 	virtual void ResetPlayerPos();
 
 	bool rot = false;
@@ -107,7 +107,6 @@ public:
 	void RightSpin();
 	void LeftSpin();
 	void AT();
-	
 	int GetMissileNum() { return m_missileNum; }
 	CMissileObject* GetMissile(int index) { return m_missile[index]; }
 
