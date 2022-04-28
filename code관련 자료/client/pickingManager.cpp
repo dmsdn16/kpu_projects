@@ -32,12 +32,12 @@ void PickMgr::Tick(void)
     vMouseProjection.y = -1.f * m_ptMouse.y / (600 / 2) + 1;
     vMouseProjection.z = 0.f;
    
-
+   // std::cout << m_ptMouse.y << std::endl;
 
    
     XMFLOAT4X4 MatrixProjectionInverse{};
     MatrixProjectionInverse = TransManager::GetInstance()->GetProjectionMatrix();
-    std:; cout << MatrixProjectionInverse._33 << std::endl;
+   // std:; cout << MatrixProjectionInverse._33 << std::endl;
     MatrixProjectionInverse = Matrix4x4::Inverse(MatrixProjectionInverse);
 
     // 현재 vMouseProjection의 위치는 뷰스페이스에 있다.
@@ -70,7 +70,7 @@ void PickMgr::Tick(void)
 
     SetRayPos(m_RayPos);
     SetRayVec(m_RayVec);
-    std::cout << m_RayVec.x << std::endl;
+   
 
 }
 
@@ -85,16 +85,23 @@ CGameObject* PickMgr::IntersecTri()
    
    for (auto& object : oj)
     {
-       if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec),x))
+       std::cout << object->m_xmOOBB.Center.z << std::endl;
+       std::cout <<"mouse"<< m_ptMouse.y << std::endl;
+     /*  if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec),x))
         { 
             map.emplace(x, object);
-        }
+      } */ 
+       if (m_ptMouse.x - 100 <=object->GetPosition().x <= m_ptMouse.x + 100 )
+       {
+           map.emplace(x, object);
+       }
       
     }
     if (!map.empty())
     {
         return map.begin()->second;
     }
+   
     return nullptr;
     
     

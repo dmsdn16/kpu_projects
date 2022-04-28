@@ -1,5 +1,5 @@
 ﻿  pickingManager.cpp
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\pickingManager.cpp(40,8): warning C4102: 'std': 참조되지 않은 레이블입니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\pickingManager.cpp(94,30): warning C4804: '<=': 연산에 'bool' 형식을 사용하는 것은 안전하지 않습니다.
 C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\TransManager.h(43): warning C4715: 'TransManager::GetProjectionMatrix': 모든 제어 경로에서 값을 반환하지는 않습니다.
 C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\TransManager.h(37): warning C4715: 'TransManager::GetViewMaterix': 모든 제어 경로에서 값을 반환하지는 않습니다.
   3DGPMF.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\x64\Debug\3DGPMF.exe
