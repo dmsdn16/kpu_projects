@@ -147,6 +147,28 @@ void send_move_packet(int c_id, int p_id)
 	send_packet(c_id, &p);
 }
 
+void send_round_packet(int c_id, int p_id)
+{
+	StoC_Round p;
+	p.id = p_id;
+	p.size = sizeof(p);
+	p.type = StoC_TIME;
+	p.round = true;
+	p.start = false;
+	send_packet(c_id, &p);
+}
+
+void send_start_packet(int c_id, int p_id)
+{
+	StoC_Start p;
+	p.id = p_id;
+	p.size = sizeof(p);
+	p.type = StoC_TIME;
+	p.round = true;
+	p.start = false;
+	send_packet(c_id, &p);
+	
+}
 
 void do_move(int p_id, DIRECTION dir, int p_x, int p_y)
 {
@@ -209,6 +231,10 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 		case CtoS_MOVE: {
 			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
 			do_move(p_id, packet->dir,packet->x,packet->y);
+		}
+			break;
+		case StoC_TIME: {
+			
 		}
 			break;
 		default:
@@ -336,8 +362,18 @@ int main()
 	}
 
 	vector<thread> mult_threads;
-	for (int i = 0; i < CORE; ++i)
+	for (int i = 0; i < CORE; ++i) {
+		clock_t start = clock();
+		if (start <= 10.0)
+		{
+			clock_t end = clock();
+			start = 0.0;
+
+		}
 		mult_threads.emplace_back(worker_thread, h_iocp, listenSocket);
+		
+	}
+		
 	for (auto& th : mult_threads)
 		th.join();
 	closesocket(listenSocket);

@@ -13,6 +13,7 @@ constexpr unsigned char StoC_LOGIN_OK = 3;
 constexpr unsigned char StoC_ADD_PLAYER = 4;
 constexpr unsigned char StoC_MOVE_PLAYER = 5;
 constexpr unsigned char StoC_REMOVE_PLAYER = 6;
+constexpr unsigned char StoC_TIME = 7;
 
 #pragma pack(push, 1)
 enum DIRECTION {D_N,D_S,D_W,D_E,D_NO,D_LB,D_RB};
@@ -63,7 +64,18 @@ struct StoC_remove_player {
 	int id;
 };
 
-struct StoC_Time {
+struct StoC_Round {
+	unsigned char size;
+	unsigned char type;
+	int id;
+	bool round;
+	bool start;
+};
+
+struct StoC_Start {
+	unsigned char size;
+	unsigned char type;
+	int id;
 	bool round;
 	bool start;
 };
