@@ -32,6 +32,11 @@ struct CtoS_move {
 	int move_time; // 클라이언트에서 패킷을 보낸 시간이고 millisecond단위
 };
 
+struct CtoS_Time {
+	unsigned char size;
+	unsigned char type;
+	clock_t time;
+};
 
 struct StoC_login_ok {
 	unsigned char size;
@@ -70,6 +75,7 @@ struct StoC_Round {
 	int id;
 	bool round;
 	bool start;
+	clock_t time;
 };
 
 struct StoC_Start {
