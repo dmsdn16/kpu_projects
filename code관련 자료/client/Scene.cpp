@@ -48,6 +48,10 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	CMesh* pRoadMesh2 = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/road.bin", false);
 	CMesh* pLampMesh = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/c4_lamp.bin", false);
 	CMesh* pBriMesh = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/c4_bridge.bin", false);
+	
+	CCubeMeshDiffused* pCube = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList);
+
+	
 
 
 #endif
@@ -70,6 +74,10 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 #endif
 
 	
+	m_UI = new CGameObject * [1];
+	m_UI[0] = new StoreManager();
+	m_UI[0]->SetMesh(0, pCube);
+	
 
 	m_nObjects = 64; // °Ç¹° °¹¼ö
 	m_ppObjects = new CGameObject * [m_nObjects];
@@ -79,12 +87,17 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
 	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
+
+
+
 	m_bObjects[0] = new CUfoObject(1);
 	m_bObjects[0]->SetMesh(0, pUfoMesh);
 	m_bObjects[0]->SetShader(pShader);
 	m_bObjects[0]->SetScale(100.0f);
 	m_bObjects[0]->SetPosition(1000.0f, 400.0f, 1000.0f);
 	m_bObjects[0]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
+
+	
 
 	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_bObjects[0]);
 
@@ -300,12 +313,14 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		m_ppObjects[61 + i]->Rotate(0.0f, 180.0f, 0.0f);
 	}
 
+	
+
 	for (int i = 0; i < m_nObjects; i++)
 	{
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_Building, m_ppObjects[i]);
 	}
 
-	
+
 }
 
 ID3D12RootSignature* CScene::CreateGraphicsRootSignature(ID3D12Device* pd3dDevice)
@@ -346,7 +361,7 @@ ID3D12RootSignature* CScene::CreateGraphicsRootSignature(ID3D12Device* pd3dDevic
 	pd3dDevice->CreateRootSignature(0, pd3dSignatureBlob->GetBufferPointer(), pd3dSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature), (void**)&pd3dGraphicsRootSignature);
 	if (pd3dSignatureBlob) pd3dSignatureBlob->Release();
 	if (pd3dErrorBlob) pd3dErrorBlob->Release();
-
+	
 	return(pd3dGraphicsRootSignature);
 }
 
@@ -395,6 +410,8 @@ void CScene::ReleaseUploadBuffers()
 
 	if (m_pTerrain) m_pTerrain->ReleaseUploadBuffers();
 }
+
+
 
 void CScene::CheckMouseByObjectCollisions()
 {
@@ -585,6 +602,6 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 	
 
 	if (m_bObjects[0]) m_bObjects[0]->Render(pd3dCommandList, pCamera);
-	
+	if (m_UI[0]) m_UI[0]->Render(pd3dCommandList, pCamera);
 }
 

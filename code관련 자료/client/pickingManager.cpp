@@ -28,8 +28,8 @@ void PickMgr::Tick(void)
 
     // 투영 스페이스의 마우스 좌표
     XMFLOAT3 vMouseProjection{};
-    vMouseProjection.x = 1.f * m_ptMouse.x / (800/ 2) - 1;
-    vMouseProjection.y = -1.f * m_ptMouse.y / (600 / 2) + 1;
+    vMouseProjection.x = 1.f * m_ptMouse.x / (FRAME_BUFFER_WIDTH / 2) - 1;
+    vMouseProjection.y = -1.f * m_ptMouse.y / (FRAME_BUFFER_HEIGHT / 2) + 1;
     vMouseProjection.z = 0.f;
    
    // std::cout << m_ptMouse.y << std::endl;
@@ -85,17 +85,17 @@ CGameObject* PickMgr::IntersecTri()
    
    for (auto& object : oj)
     {
-       std::cout << object->m_xmOOBB.Center.z << std::endl;
-       std::cout <<"mouse"<< m_ptMouse.y << std::endl;
-     /*  if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec),x))
+       
+      if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec),x))
         { 
             map.emplace(x, object);
-      } */ 
-       if (m_ptMouse.x - 100 <=object->GetPosition().x <= m_ptMouse.x + 100 )
+            std::cout << "와 충돌!!" << std::endl;
+      }
+     /*  if (m_ptMouse.x - 100 <=object->GetPosition().x <= m_ptMouse.x + 100 )
        {
            map.emplace(x, object);
        }
-      
+      */
     }
     if (!map.empty())
     {

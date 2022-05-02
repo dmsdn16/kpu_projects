@@ -460,7 +460,7 @@ void CTerrainPlayer::OnCameraUpdateCallback(float fTimeElapsed)
 
 void CTerrainPlayer::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
 {
-	//CPlayer::Render(pd3dCommandList, pCamera);
+	CPlayer::Render(pd3dCommandList, pCamera);
 	for (int i = 0; i < m_missileNum; ++i) {
 		m_missile[i]->Render(pd3dCommandList, pCamera);
 	}
@@ -497,7 +497,7 @@ void CTerrainPlayer::Attack()
 
 void CTerrainPlayer::RightSpin()
 {
-	Rotate(10.0f, 0.0f, 0.0f);
+	Rotate(0.0f, 10.0f, 0.0f);
 }
 
 void CTerrainPlayer::LeftSpin()

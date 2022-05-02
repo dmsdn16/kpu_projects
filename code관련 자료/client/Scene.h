@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Shader.h"
+#include "StoreManager.h"
 static std::default_random_engine dre;
 class CScene
 {
@@ -36,6 +37,7 @@ public:
 	void PlayerSpin();
 	void BrigeCollision();
 	void CollisonBossMissile();
+	
 
 	CPlayer* m_pPlayer = NULL;
 
@@ -47,7 +49,8 @@ protected:
 	CGameObject                 **m_mObjects = 0; // 적 투사체
 	CGameObject                 **m_doorObjects = 0; // 문
 	CGameObject                 **m_BriObjects = 0; // 다리
-	CGameObject					** cob = 0;
+	CGameObject					**m_UI = 0;
+	
 	int							m_nObjects = 0;
 	int                         m_pObjects = 0;
 	int                         m_Brige = 0;

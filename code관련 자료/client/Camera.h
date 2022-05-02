@@ -8,6 +8,8 @@
 
 class CPlayer;
 
+
+
 class CCamera
 {
 protected:
@@ -28,7 +30,7 @@ protected:
 
 	XMFLOAT4X4						m_xmf4x4View;
 	XMFLOAT4X4						m_xmf4x4Projection;
-
+	
 #ifdef _WITH_DIERECTX_MATH_FRUSTUM
 	BoundingFrustum					m_xmFrustumView;
 	BoundingFrustum					m_xmFrustumWorld;
@@ -90,6 +92,8 @@ public:
 
 	XMFLOAT4X4 GetViewMatrix() { return(m_xmf4x4View); }
 	XMFLOAT4X4 GetProjectionMatrix() { return(m_xmf4x4Projection); }
+	void SetViewMatrix(FXMMATRIX xmf4x4View) { XMStoreFloat4x4(&m_xmf4x4View, xmf4x4View); }
+	void SetProMatrix(FXMMATRIX xmf4x4Pro) { XMStoreFloat4x4(&m_xmf4x4Projection, xmf4x4Pro); }
 	D3D12_VIEWPORT GetViewport() { return(m_d3dViewport); }
 	D3D12_RECT GetScissorRect() { return(m_d3dScissorRect); }
 
@@ -101,6 +105,8 @@ public:
 	void CalculateFrustumPlanes();
 	bool IsInFrustum(BoundingBox& xmBoundingBox);
 	bool IsInFrustum(BoundingOrientedBox& xmBoundingBox);
+
+	XMMATRIX m_PRO = {};
 };
 
 class CSpaceShipCamera : public CCamera
@@ -129,4 +135,7 @@ public:
 
 	virtual void Update(XMFLOAT3& xmf3LookAt, float fTimeElapsed);
 	virtual void SetLookAt(XMFLOAT3& vLookAt);
+
+	
+	
 };
