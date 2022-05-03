@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include <WS2tcpip.h>
 #include <MSWSock.h>
 #include <mutex>
@@ -8,16 +9,13 @@
 #include "Protocol.h"
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
+#include <Windows.h>
 #define CORE 4
-#define DIR_LEFT				0x04
-#define DIR_RIGHT				0x08
-#define DIR_UP					0x10
-#define DIR_DOWN				0x20
 
 using namespace std;
-clock_t start;
+unsigned long start;
 enum OP_TYPE {OP_RECV,OP_SEND,OP_ACCEPT};
-enum PL_STATE {PLST_FREE, PLST_CONNECTED, PLST_INGAME};
+enum PL_STATE {PLST_FREE, PLST_CONNECTED, PLST_INGAME, PLST_READY};
 struct EX_OVER {
 	WSAOVERLAPPED m_over;
 	WSABUF m_wsabuf[1];
@@ -40,7 +38,6 @@ struct SESSION {
 
 constexpr int SERVER_ID = 0;
 array <SESSION, MAX_USER + 1> players;
-
 void display_error(const char* msg, int err_no)
 {
 	WCHAR* lpMsgBuf;
@@ -146,24 +143,23 @@ void send_move_packet(int c_id, int p_id)
 	send_packet(c_id, &p);
 }
 
-void send_round_packet(int c_id, int p_id)
+void send_all_ready_packet(int p_id)
 {
-	StoC_Round p;
+	StoC_all_ready p;
 	p.id = p_id;
 	p.size = sizeof(p);
-	p.type = StoC_TIME;
-	p.time = start;
-	send_packet(c_id, &p);
+	p.type = StoC_ALL_READY;
+	send_packet(p_id, &p);
 }
 
 void send_start_packet(int c_id, int p_id)
 {
-	StoC_Start p;
+	StoC_start p;
 	p.id = p_id;
 	p.size = sizeof(p);
-	p.type = StoC_TIME;
+	p.type = StoC_START;
+	p.time = GetTickCount64();
 	send_packet(c_id, &p);
-	
 }
 
 void do_move(int p_id, DIRECTION dir, int p_x, int p_y)
@@ -203,15 +199,18 @@ void do_move(int p_id, DIRECTION dir, int p_x, int p_y)
 
 void proccess_packet(int p_id, unsigned char* p_buf) 
 {
+	
 	switch (p_buf[1])
 	{
 		case CtoS_LOGIN: {
-			printf("로그인 %d", p_id);
 			CtoS_login* packet = reinterpret_cast<CtoS_login*>(p_buf);
-			lock_guard<mutex> gl2{ players[p_id].m_slock };
+			{
+				lock_guard<mutex> gl2{ players[p_id].m_slock };
+				players[p_id].m_state = PLST_INGAME;
+			}
+			
 			//strcpy_s(players[p_id].m_name, packet->name);
 			send_login_ok_packet(p_id);
-			players[p_id].m_state = PLST_INGAME;
 			//주위에 누가 있는지 알려줘야함(시야공유 등)
 			for (auto& pl : players) {
 				if (p_id != pl.id) {
@@ -227,31 +226,31 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 		case CtoS_MOVE: {
 			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
 			do_move(p_id, packet->dir,packet->x,packet->y);
+			cout << "클라에게 받음: " << packet->x << " " << packet->y << endl;
 		}
 			break;
-		case StoC_TIME: {
-			CtoS_Time* packet = reinterpret_cast<CtoS_Time*>(p_buf);
-			lock_guard<mutex> gl2{ players[p_id].m_slock };
-			//strcpy_s(players[p_id].m_name, packet->name);
-			send_login_ok_packet(p_id);
-			players[p_id].m_state = PLST_INGAME;
-			//전 대상에게 시간 공유
+		case CtoS_START:
+		{
+			CtoS_start* packet = reinterpret_cast<CtoS_start*>(p_buf);
+			{
+				lock_guard<mutex> gl2{ players[p_id].m_slock };
+				players[p_id].m_state = PLST_READY;
+			}
 			for (auto& pl : players) {
 				if (p_id != pl.id) {
 					lock_guard<mutex>gl{ pl.m_slock };
-					if (PLST_INGAME == pl.m_state) {
-						send_round_packet(pl.id, p_id);
-						send_round_packet(p_id, pl.id);
+					if (PLST_READY == pl.m_state) {
+						send_start_packet(pl.id, p_id);
+						send_start_packet(p_id, pl.id);
 					}
 				}
 			}
 		}
-			break;
+		break;
 		default:
-			cout<< "Unknown Packet Type from Client[" << p_id << "] Packet Type [" << p_buf[1] << "]" << endl;
+			cout << "Unknown Packet Type from Client[" << p_id << "] Packet Type [" << p_buf[1] << "]" << endl;
 			while (true);
 	}
-
 }
 
 void disconnect(int p_id)
@@ -373,14 +372,8 @@ int main()
 
 	vector<thread> mult_threads;
 	for (int i = 0; i < CORE; ++i) {
-		mult_threads.emplace_back(worker_thread, h_iocp, listenSocket);
-		for (int i = 0; i < 2; ++i)
-		{
-			auto& pl = players[i];
-			if(players[i].m_state==PLST_INGAME)
-				start = clock();
-		}
-		
+		mult_threads.emplace_back(worker_thread, h_iocp, listenSocket);	
+
 	}
 		
 	for (auto& th : mult_threads)

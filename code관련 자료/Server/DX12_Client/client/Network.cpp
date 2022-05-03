@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Network.h"
 
-
+unsigned long start = 0;
 sf::TcpSocket socket;
 using namespace std;
 constexpr auto BUF_SIZE = MAX_BUFFER;
@@ -44,7 +44,6 @@ void ProcessPacket(char* ptr) {
 			avatar.move(my_packet->x, my_packet->y);
 			g_x = my_packet->x;
 			g_y = my_packet->y;
-			S_Player->Move(XMFLOAT3(g_x,g_y,0.f));
 			
 		}
 		else if (other_id < MAX_USER) {
@@ -64,7 +63,10 @@ void ProcessPacket(char* ptr) {
 		}
 		break;
 	}
-		//에러 출력
+	case StoC_START:
+		StoC_start* packet = reinterpret_cast<StoC_start*>(ptr);
+		start = packet->time;
+		cout << start << endl;
 	}
 }
 
@@ -106,6 +108,15 @@ void send_move_packet(DIRECTION dir,int x, int y)
 	socket.send(&packet, sizeof(packet), sent);
 }
 
+void send_timer()
+{
+	CtoS_start packet;
+	packet.size = sizeof(packet);
+	packet.type = CtoS_START;
+	size_t sent = 0;
+	socket.send(&packet, sizeof(packet), sent);
+}
+
 void send_login_packet()
 {
 	CtoS_login packet;
@@ -116,13 +127,14 @@ void send_login_packet()
 	socket.send(&packet, sizeof(packet), sent);
 }
 
-void client_main(CPlayer* m_pPlayer)
+
+void client_main()
 {
-	
 	char net_buf[BUF_SIZE];
 	size_t	received;
-	S_Player = m_pPlayer;
 	auto recv_result = socket.receive(net_buf, BUF_SIZE, received);
+	//cout << start << endl;
+	
 	if (recv_result == sf::Socket::Error)
 	{
 		wcout << L"Recv 에러!";

@@ -23,7 +23,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
-
+	main();
 	MSG msg;
 	HACCEL hAccelTable;
 
@@ -37,6 +37,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	while (1)
 	{
+		
 		if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT) break;
@@ -50,9 +51,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		{
 			gGameFramework.FrameAdvance();
 		}
+		send_timer();
+		client_main();
 	}
 	gGameFramework.OnDestroy();
-
+	
 	return((int)msg.wParam);
 }
 
@@ -104,11 +107,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	DIRECTION p_type = D_NO;
 	static int x=0, y=0;
-	main();
 	
 	switch (message)
 	{
-	
 	case WM_SIZE:
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONUP:
@@ -168,9 +169,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		::PostQuitMessage(0);
 		break;
 	default:
+	{
 		return(::DefWindowProc(hWnd, message, wParam, lParam));
 	}
-	//client_main();
+	}
 	return 0;
 }
 
