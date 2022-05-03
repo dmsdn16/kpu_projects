@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Shader.h"
+#include "pickingManager.h"
 #include "StoreManager.h"
 static std::default_random_engine dre;
 class CScene
@@ -40,6 +41,7 @@ public:
 	
 
 	CPlayer* m_pPlayer = NULL;
+	
 
 protected:
 	ID3D12RootSignature			*m_pd3dGraphicsRootSignature = NULL;
@@ -56,9 +58,12 @@ protected:
 	int                         m_Brige = 0;
 
 	CHeightMapTerrain* m_pTerrain = NULL;
+	PickMgr	*m_pick = NULL;
+	
 private:
 	int m_missileNum = 10; // 미사일 갯수
 	CMissileObject** m_pmissile = 0;
 public:
 	int cnt = 0; // 보스 타격 횟수
+	
 };

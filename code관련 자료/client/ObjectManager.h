@@ -29,6 +29,7 @@ public:
 		OT_PLAYER,
 		OT_UNIT,
 		OT_Building,
+		OT_UI,
 		OT_END
 	};
 

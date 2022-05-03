@@ -168,8 +168,7 @@ void CMesh::LoadMeshFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
 }
 
-CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
-	float fWidth, float fHeight, float fDepth) : CMesh(pd3dDevice, pd3dCommandList)
+CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) : CMesh(pd3dDevice, pd3dCommandList)
 {
 	//직육면체는 꼭지점(정점)이 8개이다.
 	m_nVertices = 4;
@@ -177,7 +176,7 @@ CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCom
 	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	//fWidth: 직육면체 가로(x-축) 길이, fHeight: 직육면체 세로(y-축) 길이, fDepth: 직육면체 깊이(z-축) 길이
-	float fx = FRAME_BUFFER_WIDTH * 0.5f, fy = 600 * 0.5f, fz = fDepth * 0.5f;
+	float fx = FRAME_BUFFER_WIDTH * 0.5f, fy = FRAME_BUFFER_WIDTH * 0.5f, fz = 0 * 0.5f;
 
 	//정점 버퍼는 직육면체의 꼭지점 4개에 대한 정점 데이터를 가진다.
 	CDiffusedVertex pVertices[4];

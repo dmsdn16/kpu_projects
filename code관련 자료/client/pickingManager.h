@@ -2,7 +2,6 @@
 #include "stdafx.h"
 #include "ObjectManager.h"
 #include "TransManager.h"
-#include "Scene.h"
 class PickMgr
 {
 public:

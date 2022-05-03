@@ -375,11 +375,15 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 		case WM_SIZE:
 			break;
 		case WM_LBUTTONDOWN:
+			break;
         case WM_RBUTTONDOWN:
         case WM_LBUTTONUP:
+			if (m_pick->GetInstance()->IntersecTri() != nullptr)
+				((CTerrainPlayer*)m_pPlayer)->RightSpin();
+			break;
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE:
-			//OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
+			OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
             break;
         case WM_KEYDOWN:
         case WM_KEYUP:
@@ -456,17 +460,17 @@ void CGameFramework::ProcessInput()
 	DWORD dwDirection = 0;
 	if (::GetKeyboardState(pKeysBuffer))
 	{
-		/*if (pKeysBuffer[VK_W] & 0xF0) dwDirection |= DIR_FORWARD;
+		if (pKeysBuffer[VK_W] & 0xF0) dwDirection |= DIR_FORWARD;
 		if (pKeysBuffer[VK_S] & 0xF0) dwDirection |= DIR_BACKWARD;
 		if (pKeysBuffer[VK_A] & 0xF0) dwDirection |= DIR_LEFT;
 		if (pKeysBuffer[VK_D] & 0xF0) dwDirection |= DIR_RIGHT;
 		if (pKeysBuffer[VK_Q] & 0xF0) dwDirection |= DIR_UP;
-		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;*/
+		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;
 		if (pKeysBuffer[VK_RIGHT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->RightSpin();
 		if (pKeysBuffer[VK_LEFT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->LeftSpin();
-		if (pKeysBuffer[VK_LBUTTON] & 0xF0) 
-			if(m_pick->GetInstance()->IntersecTri() !=nullptr)
-				((CTerrainPlayer*)m_pPlayer)->RightSpin();
+	//	if (pKeysBuffer[VK_LBUTTON] & 0xF0) 
+	//		if(m_pick->GetInstance()->IntersecTri() !=nullptr)
+	//			((CTerrainPlayer*)m_pPlayer)->RightSpin();
 	
 	}
 
@@ -494,6 +498,8 @@ void CGameFramework::ProcessInput()
 	}
 
 	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
+
+
 }
 
 void CGameFramework::AnimateObjects()

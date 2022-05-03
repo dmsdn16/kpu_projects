@@ -5,9 +5,6 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Scene.h"
-#include "pickingManager.h"
-#include "ObjectManager.h"
-#include "TransManager.h"
 CScene::CScene()
 {
 }
@@ -48,8 +45,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	CMesh* pRoadMesh2 = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/road.bin", false);
 	CMesh* pLampMesh = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/c4_lamp.bin", false);
 	CMesh* pBriMesh = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/c4_bridge.bin", false);
-	
-	CCubeMeshDiffused* pCube = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList);
+	CMesh* pCube = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/UFO.bin", false);
 
 	
 
@@ -74,21 +70,33 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 #endif
 
 	
-	m_UI = new CGameObject * [1];
-	m_UI[0] = new StoreManager();
-	m_UI[0]->SetMesh(0, pCube);
+	
 	
 
 	m_nObjects = 64; // 건물 갯수
 	m_ppObjects = new CGameObject * [m_nObjects];
 	m_bObjects = new CGameObject * [1];
 	m_mObjects = new CGameObject * [m_pObjects];
+	m_UI = new CGameObject * [4];
 	CPseudoLightingShader* pShader = new CPseudoLightingShader();
 	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
 	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
+	
 
+	for (int i = 0; i < 4; ++i)
+	{
+		m_UI[i] = new CGameObject();
+		m_UI[i]->SetMesh(0, pCube);
+		m_UI[i]->SetShader(pShader);
+		m_UI[i]->SetScale(10.0f);
+		m_UI[i]->SetPosition((1500+ 75*i), 1500.0f, 750.0f);
+		m_UI[i]->SetColor(XMFLOAT3(0.5 * i, 0.5 * (i - 1), 0.5 * i));
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI[i]);
+	}
 
+	
+	//m_UI[0]->Rotate(40.0f,20.0f,-10.0f);
 
 	m_bObjects[0] = new CUfoObject(1);
 	m_bObjects[0]->SetMesh(0, pUfoMesh);
@@ -100,7 +108,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	
 
 	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_bObjects[0]);
-
+	
 
 	// 건물
 	// area1
@@ -385,7 +393,11 @@ void CScene::ReleaseObjects()
 		delete[] m_bObjects;
 	}
 	
-
+	if (m_UI)
+	{
+		for (int i = 0; i < 4; i++)if (m_UI) delete m_UI[i];
+		delete[] m_UI;
+	}
 
 
 
@@ -403,7 +415,10 @@ void CScene::ReleaseUploadBuffers()
 	{
 		if (m_bObjects[0]) m_bObjects[0]->ReleaseUploadBuffers();
 	}
-	
+	if (m_UI)
+	{
+		for (int i = 0; i < 4; i++)if (m_UI) m_UI[i]->ReleaseUploadBuffers();
+	}
 
 
 
@@ -518,12 +533,6 @@ void CScene::CheckMissileByObjectCollisions()
 void CScene::CollisonBossMissile()
 {
 	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
-
-
-	
-
-	
-
 }
 
 // 맵과의 충돌
@@ -548,7 +557,12 @@ void CScene::EnemyAttack(float fTimeElapsed)
 	std::uniform_int_distribution<> RandomDir(1.0f, 10.0f);
 	// 수치 개선 필수
 	// 랜덤으로 날아가도록 하기 필요
-
+	
+	
+	/*if (m_pick->GetInstance()->IntersecTri() != nullptr)
+	{
+		std::cout << "asdasdada" << std::endl;
+	}*/
 	
 }
 
@@ -575,6 +589,10 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	}
 	
 	m_bObjects[0]->Animate(fTimeElapsed);
+	for (int i = 0; i < 4; ++i)
+	{
+		m_UI[i]->Animate(fTimeElapsed);
+	}
 	//m_doorObjects[0]->Animate(fTimeElapsed);
 
 	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
@@ -602,6 +620,9 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 	
 
 	if (m_bObjects[0]) m_bObjects[0]->Render(pd3dCommandList, pCamera);
-	if (m_UI[0]) m_UI[0]->Render(pd3dCommandList, pCamera);
+	for (int i = 0; i < 4; ++i)
+	{
+		if (m_UI[i]) m_UI[i]->Render(pd3dCommandList, pCamera);
+	}
 }
 

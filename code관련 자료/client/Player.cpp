@@ -171,9 +171,9 @@ void CPlayer::Update(float fTimeElapsed)
 	}
 
 	DWORD nCurrentCameraMode = m_pCamera->GetMode();
-	if (nCurrentCameraMode == THIRD_PERSON_CAMERA) m_pCamera->Update(m_xmf3Position, fTimeElapsed);
+	if (nCurrentCameraMode == FIRST_PERSON_CAMERA) m_pCamera->Update(m_xmf3Position, fTimeElapsed);
 	if (m_pCameraUpdatedContext) OnCameraUpdateCallback(fTimeElapsed);
-	if (nCurrentCameraMode == THIRD_PERSON_CAMERA) m_pCamera->SetLookAt(m_xmf3Position);
+	if (nCurrentCameraMode == FIRST_PERSON_CAMERA) m_pCamera->SetLookAt(m_xmf3Position);
 	m_pCamera->RegenerateViewMatrix();
 
 	fLength = Vector3::Length(m_xmf3Velocity);
@@ -236,7 +236,7 @@ void CPlayer::OnPrepareRender()
 void CPlayer::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera)
 {
 	DWORD nCameraMode = (pCamera) ? pCamera->GetMode() : 0x00;
-	if (nCameraMode == THIRD_PERSON_CAMERA) CGameObject::Render(pd3dCommandList, pCamera);
+	if (nCameraMode == FIRST_PERSON_CAMERA) CGameObject::Render(pd3dCommandList, pCamera);
 }
 
 
@@ -497,7 +497,7 @@ void CTerrainPlayer::Attack()
 
 void CTerrainPlayer::RightSpin()
 {
-	Rotate(0.0f, 10.0f, 0.0f);
+	//Rotate(0.0f, 10.0f, 0.0f);
 }
 
 void CTerrainPlayer::LeftSpin()
