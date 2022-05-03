@@ -333,8 +333,8 @@ CTerrainPlayer::CTerrainPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandLi
 	
 	float fHeight = pTerrain->GetHeight(pTerrain->GetWidth() * 0.5f,
 		pTerrain->GetLength() * 0.5f);
-	SetPosition(XMFLOAT3(1400.0f, 2100.0f, 1000.0f));
-	Rotate(90, 0, 0);
+	SetPosition(XMFLOAT3(1400.0f, 2100.0f, 50.0f));
+	Rotate(70, 0, 0);
 	//플레이어의 위치가 변경될 때 지형의 정보에 따라 플레이어의 위치를 변경할 수 있도록 설정한다. 
 	SetPlayerUpdatedContext(pTerrain);
 	//카메라의 위치가 변경될 때 지형의 정보에 따라 카메라의 위치를 변경할 수 있도록 설정한다. 

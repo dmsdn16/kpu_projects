@@ -379,7 +379,7 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
         case WM_RBUTTONDOWN:
         case WM_LBUTTONUP:
 			if (m_pick->GetInstance()->IntersecTri() != nullptr)
-				((CTerrainPlayer*)m_pPlayer)->RightSpin();
+				m_pScene->EnemyAttack();
 			break;
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE:

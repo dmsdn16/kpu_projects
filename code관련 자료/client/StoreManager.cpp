@@ -32,10 +32,8 @@ void StoreManager::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* p
 
 	__super::Render(pd3dCommandList, pCamera);
 
-
 	pCamera->SetViewMatrix(curView);
 	pCamera->SetProMatrix(curPro);
-
 }
 
 
