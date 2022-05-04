@@ -11,18 +11,26 @@
 #pragma comment(lib, "MSWSock.lib")
 #include <Windows.h>
 #define CORE 4
+#define UNIT_ID_START UNIT_START
+#define MAX_PLAYER (UNIT_START)
+#define MAX_UNIT (MAX_USER-UNIT_ID_START)
 
 using namespace std;
 unsigned long start;
 enum OP_TYPE {OP_RECV,OP_SEND,OP_ACCEPT};
 enum PL_STATE {PLST_FREE, PLST_CONNECTED, PLST_INGAME, PLST_READY};
-struct EX_OVER {
+
+struct UNIT_OVER {
 	WSAOVERLAPPED m_over;
+	OP_TYPE m_op;
+};
+struct EX_OVER : public UNIT_OVER{
 	WSABUF m_wsabuf[1];
 	unsigned char m_packetbuf[MAX_BUFFER];
-	OP_TYPE m_op;
 	SOCKET m_csocket; //OP_ACCEPT에서만 사용
 };
+
+constexpr size_t SEND_EXOVER_INCREASEMENT_SIZE = 128;
 
 struct SESSION {
 	mutex m_slock;
