@@ -15,6 +15,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <math.h>
+#include <iostream>
 
 #include <string>
 #include <wrl.h>
@@ -25,7 +26,9 @@
 #include <wchar.h>
 
 #include <vector>
+#include <list>
 #include <random>
+#include <map>
 using namespace std;
 
 #include <d3d12.h>
@@ -41,12 +44,12 @@ using namespace std;
 #include <Mmsystem.h>
 
 using namespace DirectX;
-using namespace DirectX::PackedVector;
+//using namespace DirectX::PackedVector;
 
 using Microsoft::WRL::ComPtr;
 
-#define FRAME_BUFFER_WIDTH		640
-#define FRAME_BUFFER_HEIGHT		480
+#define FRAME_BUFFER_WIDTH		800
+#define FRAME_BUFFER_HEIGHT		600
 
 #define DIR_FORWARD				0x01
 #define DIR_BACKWARD			0x02

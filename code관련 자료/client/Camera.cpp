@@ -20,6 +20,11 @@ CCamera::CCamera()
 	m_xmf3LookAtWorld = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_nMode = 0x00;
 	m_pPlayer = NULL;
+
+	//m_PRO = ::XMMatrixOrthographicLH();
+
+	
+
 }
 
 CCamera::CCamera(CCamera *pCamera)
@@ -323,6 +328,7 @@ CFirstPersonCamera::CFirstPersonCamera(CCamera *pCamera) : CCamera(pCamera)
 			m_xmf3Look = Vector3::Normalize(m_xmf3Look);
 		}
 	}
+	
 }
 
 void CFirstPersonCamera::Rotate(float x, float y, float z)
@@ -401,6 +407,9 @@ void CThirdPersonCamera::Update(XMFLOAT3& xmf3LookAt, float fTimeElapsed)
 			SetLookAt(xmf3LookAt);
 		}
 	}
+	
+		
+	
 }
 
 void CThirdPersonCamera::SetLookAt(XMFLOAT3& xmf3LookAt)
@@ -410,3 +419,4 @@ void CThirdPersonCamera::SetLookAt(XMFLOAT3& xmf3LookAt)
 	m_xmf3Up = XMFLOAT3(mtxLookAt._12, mtxLookAt._22, mtxLookAt._32);
 	m_xmf3Look = XMFLOAT3(mtxLookAt._13, mtxLookAt._23, mtxLookAt._33);
 }
+

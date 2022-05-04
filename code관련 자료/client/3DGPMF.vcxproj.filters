@@ -57,6 +57,12 @@
     <ClInclude Include="TransManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DGPMF.cpp">
@@ -93,6 +99,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TransManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -74,6 +74,7 @@ protected:
 
 	UINT							m_nVertexBufferViews = 0;
 	D3D12_VERTEX_BUFFER_VIEW		*m_pd3dVertexBufferViews = NULL;
+	D3D12_VERTEX_BUFFER_VIEW		m_d3dVertexBufferView;
 
 	D3D12_INDEX_BUFFER_VIEW			m_d3dIndexBufferView;
 
@@ -89,6 +90,14 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList);
 
 	void LoadMeshFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, char *pstrFileName, bool bTextFile);
+};
+
+class CCubeMeshDiffused : public CMesh
+{
+public:
+	//직육면체의 가로, 세로, 깊이의 길이를 지정하여 직육면체 메쉬를 생성한다. 
+	CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual ~CCubeMeshDiffused();
 };
 
 class CHeightMapImage

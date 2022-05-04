@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "GameFramework.h"
-#include "pickingManager.h"
+
 
 CGameFramework::CGameFramework()
 {
@@ -52,6 +52,8 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	CreateRtvAndDsvDescriptorHeaps();
 	CreateSwapChain();
 	CreateDepthStencilView();
+
+	PickMgr::GetInstance()->Create(hMainWnd,800,600,m_pd3dDevice);
 
 	BuildObjects();
 
@@ -340,7 +342,8 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
                 case VK_RETURN:
                     break;
 				case VK_F3:
-					m_pCamera = m_pPlayer->ChangeCamera((DWORD)(wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
+					//m_pCamera = m_pPlayer->ChangeCamera((DWORD)(wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
+					TransManager::GetInstance()->SetCamera(m_pCamera);
 					break;
 				case VK_F9:
 					ChangeSwapChainState();
@@ -372,8 +375,12 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 		case WM_SIZE:
 			break;
 		case WM_LBUTTONDOWN:
+			break;
         case WM_RBUTTONDOWN:
         case WM_LBUTTONUP:
+			if (m_pick->GetInstance()->IntersecTri() != nullptr)
+				m_pScene->EnemyAttack();
+			break;
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE:
 			OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
@@ -453,16 +460,18 @@ void CGameFramework::ProcessInput()
 	DWORD dwDirection = 0;
 	if (::GetKeyboardState(pKeysBuffer))
 	{
-		/*if (pKeysBuffer[VK_W] & 0xF0) dwDirection |= DIR_FORWARD;
+		if (pKeysBuffer[VK_W] & 0xF0) dwDirection |= DIR_FORWARD;
 		if (pKeysBuffer[VK_S] & 0xF0) dwDirection |= DIR_BACKWARD;
 		if (pKeysBuffer[VK_A] & 0xF0) dwDirection |= DIR_LEFT;
 		if (pKeysBuffer[VK_D] & 0xF0) dwDirection |= DIR_RIGHT;
 		if (pKeysBuffer[VK_Q] & 0xF0) dwDirection |= DIR_UP;
-		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;*/
+		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;
 		if (pKeysBuffer[VK_RIGHT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->RightSpin();
 		if (pKeysBuffer[VK_LEFT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->LeftSpin();
-		//if (pKeysBuffer[VK_LBUTTON] & 0xF0)  ((CTerrainPlayer*)m_pPlayer)->RightSpin();
-		
+	//	if (pKeysBuffer[VK_LBUTTON] & 0xF0) 
+	//		if(m_pick->GetInstance()->IntersecTri() !=nullptr)
+	//			((CTerrainPlayer*)m_pPlayer)->RightSpin();
+	
 	}
 
 	float cxDelta = 0.0f, cyDelta = 0.0f;
@@ -489,6 +498,8 @@ void CGameFramework::ProcessInput()
 	}
 
 	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
+
+
 }
 
 void CGameFramework::AnimateObjects()
@@ -588,9 +599,6 @@ void CGameFramework::FrameAdvance()
 	if (m_pPlayer) m_pPlayer->Render(m_pd3dCommandList, m_pCamera);
 
 	PickMgr::GetInstance()->Tick();
-
-
-
 
 	d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	d3dResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;

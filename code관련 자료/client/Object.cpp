@@ -80,8 +80,6 @@ void CGameObject::ReleaseShaderVariables()
 
 void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
 {
-	OnPrepareRender();
-
 	if (m_pShader) m_pShader->Render(pd3dCommandList, pCamera);
 
 	UpdateShaderVariables(pd3dCommandList);
@@ -328,5 +326,3 @@ CBuildingObject::CBuildingObject()
 CBuildingObject::~CBuildingObject()
 {
 }
-
-// a스타 알고리즘 무빙 추가

@@ -1,5 +1,7 @@
 #pragma once
 #include "stdafx.h"
+#include "ObjectManager.h"
+#include "TransManager.h"
 class PickMgr
 {
 public:
@@ -21,9 +23,6 @@ private:
 	static PickMgr* pInstance;
 
 private:
-	XMFLOAT3 m_RayPos;
-	//XMFLOAT4 m_RayVec;
-	XMFLOAT3 m_RayVec;
 
 	POINT m_ptMouse;
 	POINT m_ptResolution;
@@ -34,7 +33,20 @@ private:
 	POINT m_WindowResolution;
 
 public:
+
+	XMFLOAT3 m_RayPos;
+	//XMFLOAT4 m_RayVec;
+	XMFLOAT3 m_RayVec;
+
 	void Create(HWND _hWnd, int	_nWndClientWidth, int _nWndClientHeight, ID3D12Device* _pd3dDevice);
 	void Tick(void);
-	bool IntersecTri(void);
+	CGameObject* IntersecTri(void);
+	void SetRayPos(XMFLOAT3 Raypos) 
+	{ 
+		m_RayPos = Raypos; }
+
+
+	void SetRayVec(XMFLOAT3 Rayvec) { m_RayVec = Rayvec; }
+    XMFLOAT3 GetRayPos() { return m_RayPos; }
+	XMFLOAT3 GetRayVec() { return m_RayVec; }
 };
