@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include <WS2tcpip.h>
 #include <MSWSock.h>
 #include <mutex>
@@ -8,20 +9,28 @@
 #include "Protocol.h"
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
+#include <Windows.h>
 #define CORE 4
+#define UNIT_ID_START UNIT_START
+#define MAX_PLAYER (UNIT_START)
+#define MAX_UNIT (MAX_USER-UNIT_ID_START)
 
 using namespace std;
-
+unsigned long start;
 enum OP_TYPE {OP_RECV,OP_SEND,OP_ACCEPT};
-enum PL_STATE {PLST_FREE, PLST_CONNECTED, PLST_INGAME};
+enum PL_STATE {PLST_FREE, PLST_CONNECTED, PLST_INGAME, PLST_READY};
 
-struct EX_OVER {
+struct UNIT_OVER {
 	WSAOVERLAPPED m_over;
+	OP_TYPE m_op;
+};
+struct EX_OVER : public UNIT_OVER{
 	WSABUF m_wsabuf[1];
 	unsigned char m_packetbuf[MAX_BUFFER];
-	OP_TYPE m_op;
 	SOCKET m_csocket; //OP_ACCEPT에서만 사용
 };
+
+constexpr size_t SEND_EXOVER_INCREASEMENT_SIZE = 128;
 
 struct SESSION {
 	mutex m_slock;
@@ -37,7 +46,6 @@ struct SESSION {
 
 constexpr int SERVER_ID = 0;
 array <SESSION, MAX_USER + 1> players;
-
 void display_error(const char* msg, int err_no)
 {
 	WCHAR* lpMsgBuf;
@@ -53,6 +61,7 @@ void send_packet(int p_id, void* p)
 	int p_type = reinterpret_cast<unsigned char*>(p)[1];
 	cout << "To client [" << p_id << "]";//디버깅용 callback 에러 생기니 실행할땐 제거
 	cout << "Packet [" << p_type << "]\n";
+	//cout << "test" << p_type;
 	EX_OVER* s_over = new EX_OVER; //로컬 변수로 사용 X sned를 계속 사용할 예정
 	s_over->m_op = OP_SEND;
 	memset(&s_over->m_over, 0, sizeof(s_over->m_over));
@@ -91,7 +100,7 @@ void do_recv(int c_id)
 	if (0 != ret) {
 		auto err_no = WSAGetLastError();
 		if (WSA_IO_PENDING != err_no)
-			display_error("Error in SendPacket: ", err_no);
+			display_error("Error in Recv: ", err_no);
 	}
 }
 
@@ -142,17 +151,51 @@ void send_move_packet(int c_id, int p_id)
 	send_packet(c_id, &p);
 }
 
-
-void do_move(int p_id, DIRECTION dir)
+void send_all_ready_packet(int p_id)
 {
+	StoC_all_ready p;
+	p.id = p_id;
+	p.size = sizeof(p);
+	p.type = StoC_ALL_READY;
+	send_packet(p_id, &p);
+}
+
+void send_start_packet(int c_id, int p_id)
+{
+	StoC_start p;
+	p.id = p_id;
+	p.size = sizeof(p);
+	p.type = StoC_START;
+	p.time = GetTickCount64();
+	send_packet(c_id, &p);
+}
+
+void do_move(int p_id, DIRECTION dir, int p_x, int p_y)
+{
+	DWORD dwDirection;
 	auto& x = players[p_id].x;
 	auto& y = players[p_id].y;
-	switch (dir)
+	/*switch (dir)
 	{
 	case D_N: if (y > 0) y--; break;
 	case D_S: if (y < (WORLD_Y_SIZE - 1))y++; break;
 	case D_W: if (x > 0)x--; break;
 	case D_E: if (x < (WORLD_X_SIZE - 1))x++; break;
+	}*/
+	switch (dir) 
+	{
+	case D_N:
+		break;
+	case D_S:
+		break;
+	case D_E:
+		break;
+	case D_W:
+		break;
+	case D_LB:
+		x = p_x;
+		y = p_y;
+		break;
 	}
 	for (auto& pl : players) {
 		lock_guard<mutex> gl{ pl.m_slock };
@@ -164,14 +207,18 @@ void do_move(int p_id, DIRECTION dir)
 
 void proccess_packet(int p_id, unsigned char* p_buf) 
 {
+	
 	switch (p_buf[1])
 	{
 		case CtoS_LOGIN: {
 			CtoS_login* packet = reinterpret_cast<CtoS_login*>(p_buf);
-			lock_guard<mutex> gl2{ players[p_id].m_slock };
-			strcpy_s(players[p_id].m_name, packet->name);
+			{
+				lock_guard<mutex> gl2{ players[p_id].m_slock };
+				players[p_id].m_state = PLST_INGAME;
+			}
+			
+			//strcpy_s(players[p_id].m_name, packet->name);
 			send_login_ok_packet(p_id);
-			players[p_id].m_state = PLST_INGAME;
 			//주위에 누가 있는지 알려줘야함(시야공유 등)
 			for (auto& pl : players) {
 				if (p_id != pl.id) {
@@ -186,14 +233,32 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 			break;
 		case CtoS_MOVE: {
 			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
-			do_move(p_id, packet->dir);
+			do_move(p_id, packet->dir,packet->x,packet->y);
+			cout << "클라에게 받음: " << packet->x << " " << packet->y << endl;
 		}
 			break;
+		case CtoS_START:
+		{
+			CtoS_start* packet = reinterpret_cast<CtoS_start*>(p_buf);
+			{
+				lock_guard<mutex> gl2{ players[p_id].m_slock };
+				players[p_id].m_state = PLST_READY;
+			}
+			for (auto& pl : players) {
+				if (p_id != pl.id) {
+					lock_guard<mutex>gl{ pl.m_slock };
+					if (PLST_READY == pl.m_state) {
+						send_start_packet(pl.id, p_id);
+						send_start_packet(p_id, pl.id);
+					}
+				}
+			}
+		}
+		break;
 		default:
-			cout<< "Unknown Packet Type from Client[" << p_id << "] Packet Type [" << p_buf[1] << "]" << endl;
+			cout << "Unknown Packet Type from Client[" << p_id << "] Packet Type [" << p_buf[1] << "]" << endl;
 			while (true);
 	}
-
 }
 
 void disconnect(int p_id)
@@ -260,6 +325,7 @@ void worker_thread(HANDLE h_iocp, SOCKET l_socket)
 				break;
 
 			case OP_ACCEPT: {
+				printf("연결");
 				int c_id = get_new_player_id(ex_over->m_csocket);
 				if (-1 != c_id) {
 					players[c_id].m_recv_over.m_op = OP_RECV;
@@ -313,8 +379,11 @@ int main()
 	}
 
 	vector<thread> mult_threads;
-	for (int i = 0; i < CORE; ++i)
-		mult_threads.emplace_back(worker_thread, h_iocp, listenSocket);
+	for (int i = 0; i < CORE; ++i) {
+		mult_threads.emplace_back(worker_thread, h_iocp, listenSocket);	
+
+	}
+		
 	for (auto& th : mult_threads)
 		th.join();
 	closesocket(listenSocket);
