@@ -70,7 +70,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 #endif
 
 	
-	
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_TERRAIN, m_pTerrain);
 	
 
 	m_nObjects = 59; // 건물 갯수
@@ -227,7 +227,6 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_Building, m_ppObjects[i]);
 	}
 
-
 }
 
 ID3D12RootSignature* CScene::CreateGraphicsRootSignature(ID3D12Device* pd3dDevice)
@@ -327,73 +326,9 @@ void CScene::ReleaseUploadBuffers()
 
 
 
-void CScene::CheckMouseByObjectCollisions()
-{
-	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
-
-	
-
-	if (m_bObjects[0]->life)
-		if (m_bObjects[0]->m_xmOOBB.Intersects(Player->m_xmOOBB))
-			Player->ResetPlayerPos();
-
-}
-
-void CScene::BrigeCollision()
-{
 
 
-}
 
-void CScene::CheckMissileByObjectCollisions()
-{
-	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
-
-	// 보스와 미사일이 충돌했을 때 타격횟수 추가 필요
-
-	if (m_bObjects[0]->life)
-	{
-		for (int j = 0; j < Player->GetMissileNum(); ++j)
-		{
-			CMissileObject* Missile = Player->GetMissile(j);
-			if (Missile->GetFire())
-				if (m_bObjects[0]->m_xmOOBB.Intersects(Missile->m_xmOOBB))
-				{
-					Beep(1000, 50);
-					Missile->SetFire(false);
-					Missile->SetPosition(0.0f, -1000.0f, 0.0f);
-					cnt++;
-					if (cnt == 30)
-					{
-						m_bObjects[0]->life = false;
-					}
-
-				}
-		}
-	}
-}
-
-// 보스와의 충돌체크 만들기
-
-void CScene::CollisonBossMissile()
-{
-	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
-}
-
-// 맵과의 충돌
-void CScene::CheckMissileByTerrainCollisions()
-{
-	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
-	for (int i = 0; i < Player->GetMissileNum(); ++i) {
-		CMissileObject* Missile = Player->GetMissile(i);
-		XMFLOAT3 posi = Missile->GetPosition();
-		if (Missile->GetFire() && m_pTerrain->GetHeight(posi.x, posi.z) > posi.y) {
-			Missile->SetFire(false);
-			Missile->SetPosition(0.0f, -1000.0f, 0.0f);
-			//Beep(1000, 50);
-		}
-	}
-}
 
 
 // 여기 수정하면 끝!!!!!!!!!!!
@@ -413,6 +348,7 @@ void CScene::EnemyAttack()
 			if (Unit1[0]->GetPosition().z == 0)
 			{
 				Unit1[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+				std::cout << "유닛 1 구매" << std::endl;
 			}
 			else
 				Unit1[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
@@ -430,6 +366,7 @@ void CScene::EnemyAttack()
 			if (Unit2[0]->GetPosition().z == 0)
 			{
 				Unit2[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+				std::cout << "유닛 2 구매" << std::endl;
 			}
 			else
 				Unit2[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
@@ -445,6 +382,7 @@ void CScene::EnemyAttack()
 			if (Unit3[0]->GetPosition().z == 0)
 			{
 				Unit3[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+				std::cout << "유닛 3 구매" << std::endl;
 			}
 			else
 				Unit3[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
@@ -459,6 +397,7 @@ void CScene::EnemyAttack()
 			if (Unit4[0]->GetPosition().z == 0)
 			{
 				Unit4[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+				std::cout << "유닛 4 구매" << std::endl;
 			}
 			else
 				Unit4[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
@@ -518,11 +457,6 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	
 	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
 
-	CheckMouseByObjectCollisions();
-	CheckMissileByTerrainCollisions();
-	CheckMissileByObjectCollisions();
-	//EnemyAttack();
-	CollisonBossMissile();
 }
 
 void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)

@@ -30,6 +30,7 @@ public:
 		OT_UNIT,
 		OT_Building,
 		OT_UI,
+		OT_TERRAIN,
 		OT_END
 	};
 

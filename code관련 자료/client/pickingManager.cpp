@@ -81,10 +81,15 @@ CGameObject* PickMgr::IntersecTri()
   
     map<float, CGameObject*> map;
     list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
+  //  list<CGameObject*> ok = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_TERRAIN);
   
-   for (auto& object : oj)
+    
+    
+    
+    
+    for (auto& object : oj)
     {
-       std::cout << object->m_xmOOBB.Center.x << std::endl;
+      
        
       if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec),x))
         { 
@@ -97,7 +102,7 @@ CGameObject* PickMgr::IntersecTri()
       */
     }
 
-   std::cout << map.begin()->second << std::endl;
+  // std::cout << map.begin()->second << std::endl;
     if (!map.empty())
     {
         return map.begin()->second;
