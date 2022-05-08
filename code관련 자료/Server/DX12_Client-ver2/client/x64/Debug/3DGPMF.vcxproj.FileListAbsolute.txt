@@ -1,0 +1,4 @@
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\3DGPMF\x64\Debug\3DGPMF.exe
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\x64\Debug\3DGPMF.exe
+E:\KPU_Project\code관련 자료\client\x64\Debug\3DGPMF.exe
+E:\KPU_Project\code관련 자료\Server\DX12_Client-ver2\client\x64\Debug\3DGPMF.exe

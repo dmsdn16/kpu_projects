@@ -32,7 +32,7 @@ struct CtoS_move {
 	unsigned char size;
 	unsigned char type;
 	DIRECTION dir;
-	int x, y;
+	float x, y,z;
 	int move_time; // 클라이언트에서 패킷을 보낸 시간이고 millisecond단위
 };
 
@@ -59,7 +59,7 @@ struct StoC_add_player {
 	unsigned char size;
 	unsigned char type;
 	int		id;
-	short	x, y;
+	short	x, y,z;
 	int		race;
 };
 
@@ -68,7 +68,7 @@ struct StoC_move_player {
 	unsigned char type;
 	int id;
 	int move_time;
-	short x, y;
+	float x, y, z;
 };
 
 struct StoC_remove_player {

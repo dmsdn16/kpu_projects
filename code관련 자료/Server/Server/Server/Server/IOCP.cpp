@@ -41,7 +41,7 @@ struct SESSION {
 	int m_prev_size;
 	//게임의 내용물
 	char m_name[100];
-	short x, y;
+	float x, y,z;
 };
 
 constexpr int SERVER_ID = 0;
@@ -148,6 +148,7 @@ void send_move_packet(int c_id, int p_id)
 	p.type = StoC_MOVE_PLAYER;
 	p.x = players[p_id].x;
 	p.y = players[p_id].y;
+	p.z = players[p_id].z;
 	send_packet(c_id, &p);
 }
 
@@ -170,37 +171,20 @@ void send_start_packet(int c_id, int p_id)
 	send_packet(c_id, &p);
 }
 
-void do_move(int p_id, DIRECTION dir, int p_x, int p_y)
+void do_move(int p_id, float p_x, float p_y, float p_z)
 {
-	DWORD dwDirection;
-	auto& x = players[p_id].x;
-	auto& y = players[p_id].y;
-	/*switch (dir)
-	{
-	case D_N: if (y > 0) y--; break;
-	case D_S: if (y < (WORLD_Y_SIZE - 1))y++; break;
-	case D_W: if (x > 0)x--; break;
-	case D_E: if (x < (WORLD_X_SIZE - 1))x++; break;
-	}*/
-	switch (dir) 
-	{
-	case D_N:
-		break;
-	case D_S:
-		break;
-	case D_E:
-		break;
-	case D_W:
-		break;
-	case D_LB:
-		x = p_x;
-		y = p_y;
-		break;
-	}
+	players[p_id].x = p_x;
+	players[p_id].y = p_y;
+	players[p_id].z = p_z;
+
 	for (auto& pl : players) {
-		lock_guard<mutex> gl{ pl.m_slock };
-		if (PLST_INGAME == pl.m_state)
-			send_move_packet(pl.id, p_id);
+		if (p_id != pl.id) {
+			lock_guard<mutex>gl{ pl.m_slock };
+			if (PLST_INGAME == pl.m_state) {
+				send_move_packet(pl.id, p_id);
+				send_move_packet(p_id, pl.id);
+			}
+		}
 	}
 }
 
@@ -233,11 +217,12 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 			break;
 		case CtoS_MOVE: {
 			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
-			do_move(p_id, packet->dir,packet->x,packet->y);
-			cout << "클라에게 받음: " << packet->x << " " << packet->y << endl;
+			cout << " CtoS_move" << packet->x << " " << packet->y << " " << packet->z << endl;
+			do_move(p_id,packet->x, packet->y, packet->z);
+			cout << " CtoS_move" << packet->x << " " << packet->y << " " << packet->z << endl;
 		}
 			break;
-		case CtoS_START:
+		/*case CtoS_START:
 		{
 			CtoS_start* packet = reinterpret_cast<CtoS_start*>(p_buf);
 			{
@@ -254,7 +239,7 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 				}
 			}
 		}
-		break;
+		break;*/
 		default:
 			cout << "Unknown Packet Type from Client[" << p_id << "] Packet Type [" << p_buf[1] << "]" << endl;
 			while (true);
@@ -325,7 +310,6 @@ void worker_thread(HANDLE h_iocp, SOCKET l_socket)
 				break;
 
 			case OP_ACCEPT: {
-				printf("연결");
 				int c_id = get_new_player_id(ex_over->m_csocket);
 				if (-1 != c_id) {
 					players[c_id].m_recv_over.m_op = OP_RECV;
