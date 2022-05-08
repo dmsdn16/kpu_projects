@@ -5,6 +5,10 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Scene.h"
+
+std::uniform_int_distribution<int> RandomDir(1, 5);
+std::default_random_engine dre;
+
 CScene::CScene()
 {
 }
@@ -47,7 +51,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	CMesh* pBriMesh = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/c4_bridge.bin", false);
 	CMesh* pCube = new CMesh(pd3dDevice, pd3dCommandList, "Assets/Models/Cube.bin", false);
 
-	
+
 
 
 #endif
@@ -69,14 +73,18 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		257, xmf3Scale, xmf4Color);
 #endif
 
-	
+
 	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_TERRAIN, m_pTerrain);
-	
+
 
 	m_nObjects = 59; // 건물 갯수
 	m_ppObjects = new CGameObject * [m_nObjects];
 	m_bObjects = new CGameObject * [1];
-	m_UI = new CGameObject * [4];
+	m_UI1 = new CGameObject * [4];
+	m_UI2 = new CGameObject * [4];
+	m_UI3 = new CGameObject * [4];
+	m_UI4 = new CGameObject * [4];
+	m_UI5 = new CGameObject * [4];
 	Unit1 = new CGameObject * [2];
 	Unit2 = new CGameObject * [2];
 	Unit3 = new CGameObject * [2];
@@ -92,8 +100,8 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		Unit1[i]->SetMesh(0, pUfoMesh);
 		Unit1[i]->SetShader(pShader);
 		Unit1[i]->SetScale(20.0f);
-		Unit1[i]->SetPosition(0,-1000.0f,0);
-		Unit1[i]->SetColor(XMFLOAT3(1.0f,0.0f,0.0f));
+		Unit1[i]->SetPosition(0, 3000.0f, 0);
+		Unit1[i]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_Building, Unit1[i]);
 	}
 	for (int i = 0; i < 2; ++i)
@@ -102,7 +110,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		Unit2[i]->SetMesh(0, pUfoMesh);
 		Unit2[i]->SetShader(pShader);
 		Unit2[i]->SetScale(20.0f);
-		Unit2[i]->SetPosition(0, -1000.0f, 0);
+		Unit2[i]->SetPosition(0, 3000.0f, 0);
 		Unit2[i]->SetColor(XMFLOAT3(0.0f, 1.0f, 0.0f));
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_Building, Unit2[i]);
 	}
@@ -112,7 +120,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		Unit3[i]->SetMesh(0, pUfoMesh);
 		Unit3[i]->SetShader(pShader);
 		Unit3[i]->SetScale(20.0f);
-		Unit3[i]->SetPosition(0, -1000.0f, 0);
+		Unit3[i]->SetPosition(0, 3000.0f, 0);
 		Unit3[i]->SetColor(XMFLOAT3(1.0f, 1.0f, 1.0f));
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_Building, Unit3[i]);
 	}
@@ -122,7 +130,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		Unit4[i]->SetMesh(0, pUfoMesh);
 		Unit4[i]->SetShader(pShader);
 		Unit4[i]->SetScale(20.0f);
-		Unit4[i]->SetPosition(0, -1000.0f, 0);
+		Unit4[i]->SetPosition(0, 3000.0f, 0);
 		Unit4[i]->SetColor(XMFLOAT3(1.0f, 1.0f, 0.0f));
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_Building, Unit4[i]);
 	}
@@ -132,7 +140,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		Unit5[i]->SetMesh(0, pUfoMesh);
 		Unit5[i]->SetShader(pShader);
 		Unit5[i]->SetScale(20.0f);
-		Unit5[i]->SetPosition(0, -1000.0f, 0);
+		Unit5[i]->SetPosition(0, 3000.0f, 0);
 		Unit5[i]->SetColor(XMFLOAT3(0.0f, 0.0f, 0.0f));
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_Building, Unit5[i]);
 	}
@@ -140,16 +148,48 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	//UI상자
 	for (int i = 0; i < m_U; ++i)
 	{
-		m_UI[i] = new CGameObject();
-		m_UI[i]->SetMesh(0, pCube);
-		m_UI[i]->SetShader(pShader);
-		m_UI[i]->SetScale(200.0f);
-		m_UI[i]->SetPosition((500+500*i), m_pTerrain->GetHeight(100,100),-100.0f);
-		m_UI[i]->SetColor(XMFLOAT3(0.5 * i, 0.5 * (i - 1), 0.5 * i));
-		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI[i]);
+		m_UI1[i] = new CGameObject();
+		m_UI1[i]->SetMesh(0, pCube);
+		m_UI1[i]->SetShader(pShader);
+		m_UI1[i]->SetScale(200.0f);
+		m_UI1[i]->SetPosition((500 + 500 * i), 3000, -100.0f);
+		m_UI1[i]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI1[i]);
+
+		m_UI2[i] = new CGameObject();
+		m_UI2[i]->SetMesh(0, pCube);
+		m_UI2[i]->SetShader(pShader);
+		m_UI2[i]->SetScale(200.0f);
+		m_UI2[i]->SetPosition((500 + 500 * i), 3000, -100.0f);
+		m_UI2[i]->SetColor(XMFLOAT3(0.0f, 1.0f, 0.0f));
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI2[i]);
+
+		m_UI3[i] = new CGameObject();
+		m_UI3[i]->SetMesh(0, pCube);
+		m_UI3[i]->SetShader(pShader);
+		m_UI3[i]->SetScale(200.0f);
+		m_UI3[i]->SetPosition((500 + 500 * i), 3000, -100.0f);
+		m_UI3[i]->SetColor(XMFLOAT3(1.0f, 1.0f, 0.0f));
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI3[i]);
+
+		m_UI4[i] = new CGameObject();
+		m_UI4[i]->SetMesh(0, pCube);
+		m_UI4[i]->SetShader(pShader);
+		m_UI4[i]->SetScale(200.0f);
+		m_UI4[i]->SetPosition((500 + 500 * i), 3000, -100.0f);
+		m_UI4[i]->SetColor(XMFLOAT3(1.0f, 1.0f, 1.0f));
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI4[i]);
+
+		m_UI5[i] = new CGameObject();
+		m_UI5[i]->SetMesh(0, pCube);
+		m_UI5[i]->SetShader(pShader);
+		m_UI5[i]->SetScale(200.0f);
+		m_UI5[i]->SetPosition((500 + 500 * i), 3000, -100.0f);
+		m_UI5[i]->SetColor(XMFLOAT3(0.0f, 0.0f, 0.0f));
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI5[i]);
 	}
 
-	
+
 	//m_UI[0]->Rotate(40.0f,20.0f,-10.0f);
 
 	m_bObjects[0] = new CUfoObject(1);
@@ -159,10 +199,10 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_bObjects[0]->SetPosition(1000.0f, -400.0f, 1000.0f);
 	m_bObjects[0]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
 
-	
+
 
 	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_bObjects[0]);
-	
+
 
 	// 건물
 	// area1
@@ -177,18 +217,18 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		m_ppObjects[i]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
 		m_ppObjects[i]->Rotate(0.0f, 90.0f, 0.0f);
 	}
-	
-	
+
+
 	for (int i = 0; i < 9; i++)
 	{
 		float z = 100 + 50 * i;
 		m_ppObjects[20 + i] = new CBuildingObject();
 		m_ppObjects[20 + i]->SetMesh(0, pCityMesh6);
-		m_ppObjects[20+ i]->SetShader(pShader);
-		m_ppObjects[20+ i]->SetScale(20.0f);
-		m_ppObjects[20+ i]->SetPosition(2700.0f, m_pTerrain->GetHeight(1900, z), z);
-		m_ppObjects[20+ i]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
-		m_ppObjects[20+ i]->Rotate(0.0f, -90.0f, 0.0f);
+		m_ppObjects[20 + i]->SetShader(pShader);
+		m_ppObjects[20 + i]->SetScale(20.0f);
+		m_ppObjects[20 + i]->SetPosition(2700.0f, m_pTerrain->GetHeight(1900, z), z);
+		m_ppObjects[20 + i]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
+		m_ppObjects[20 + i]->Rotate(0.0f, -90.0f, 0.0f);
 	}
 	//램프
 	for (int i = 0; i < 28; ++i)
@@ -208,7 +248,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_ppObjects[57]->SetShader(pShader);
 	m_ppObjects[57]->SetScale(20.0f);
 	m_ppObjects[57]->SetScaleX(120.0f);
-	m_ppObjects[57]->SetPosition(1300, m_pTerrain->GetHeight(1950, 500)+100, 1750.0f);
+	m_ppObjects[57]->SetPosition(1300, m_pTerrain->GetHeight(1950, 500) + 100, 1750.0f);
 	m_ppObjects[57]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[57]->Rotate(0.0f, 0.0f, 0.0f);
 
@@ -217,7 +257,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_ppObjects[58]->SetShader(pShader);
 	m_ppObjects[58]->SetScale(20.0f);
 	m_ppObjects[58]->SetScaleZ(80.0f);
-	m_ppObjects[58]->SetPosition(2700, m_pTerrain->GetHeight(1950, 500)+100, 1050.0f);
+	m_ppObjects[58]->SetPosition(2700, m_pTerrain->GetHeight(1950, 500) + 100, 1050.0f);
 	m_ppObjects[58]->SetColor(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[58]->Rotate(0.0f, 90.0f, 0.0f);
 
@@ -267,7 +307,7 @@ ID3D12RootSignature* CScene::CreateGraphicsRootSignature(ID3D12Device* pd3dDevic
 	pd3dDevice->CreateRootSignature(0, pd3dSignatureBlob->GetBufferPointer(), pd3dSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature), (void**)&pd3dGraphicsRootSignature);
 	if (pd3dSignatureBlob) pd3dSignatureBlob->Release();
 	if (pd3dErrorBlob) pd3dErrorBlob->Release();
-	
+
 	return(pd3dGraphicsRootSignature);
 }
 
@@ -281,7 +321,7 @@ void CScene::ReleaseObjects()
 		delete[] m_ppObjects;
 	}
 
-	
+
 	if (m_bObjects)
 	{
 		if (m_bObjects[0])
@@ -290,11 +330,11 @@ void CScene::ReleaseObjects()
 		}
 		delete[] m_bObjects;
 	}
-	
-	if (m_UI)
+
+	if (m_UI1)
 	{
-		for (int i = 0; i < 4; i++)if (m_UI) delete m_UI[i];
-		delete[] m_UI;
+		for (int i = 0; i < 4; i++)if (m_UI1) delete m_UI1[i];
+		delete[] m_UI1;
 	}
 
 
@@ -308,14 +348,14 @@ void CScene::ReleaseUploadBuffers()
 	{
 		for (int j = 0; j < m_nObjects; j++) if (m_ppObjects[j]) m_ppObjects[j]->ReleaseUploadBuffers();
 	}
-	
+
 	if (m_bObjects)
 	{
 		if (m_bObjects[0]) m_bObjects[0]->ReleaseUploadBuffers();
 	}
-	if (m_UI)
+	if (m_UI1)
 	{
-		for (int i = 0; i < 4; i++)if (m_UI) m_UI[i]->ReleaseUploadBuffers();
+		for (int i = 0; i < 4; i++)if (m_UI1) m_UI1[i]->ReleaseUploadBuffers();
 	}
 
 
@@ -326,84 +366,155 @@ void CScene::ReleaseUploadBuffers()
 
 
 
+// 리롤
+void CScene::Reroll()
+{
+	int u_count = 0; // ui위치
+	int x_count = 0; // ui 갯수
 
+	for (int i = 0; i < m_U; ++i)
+	{
 
+		m_UI1[i]->SetPosition((500 + 500), 3000, -100.0f);
+		m_UI2[i]->SetPosition((500 + 500), 3000, -100.0f);
+		m_UI3[i]->SetPosition((500 + 500), 3000, -100.0f);
+		m_UI4[i]->SetPosition((500 + 500), 3000, -100.0f);
+		m_UI5[i]->SetPosition((500 + 500), 3000, -100.0f);
+
+	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int a = RandomDir(dre);
+
+		std::cout << a << std::endl;
+		switch (a)
+		{
+		case 1:
+			m_UI1[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			break;
+		case 2:
+			m_UI2[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			break;
+		case 3:
+			m_UI3[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			break;
+		case 4:
+			m_UI4[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			break;
+		case 5:
+			m_UI5[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			break;
+		default:
+			break;
+		}
+	}
+	std::cout << "무야호" << std::endl;
+}
 
 
 
 // 여기 수정하면 끝!!!!!!!!!!!
-void CScene::EnemyAttack()
+void CScene::UnitBuy()
 {
-	std::uniform_int_distribution<> RandomDir(1.0f, 10.0f);
-	// 수치 개선 필수
-	// 랜덤으로 날아가도록 하기 필요
-	
-	
-	if ((m_pick->GetInstance()->IntersecTri()) == m_UI[0])
+	for (int i = 0; i < m_U; ++i)
 	{
-		++u1c;
-		if (u1c < 3)
+		if ((m_pick->GetInstance()->IntersecTri()) == m_UI1[i])
 		{
-			++count;
-			if (Unit1[0]->GetPosition().z == 0)
+			++u1c;
+			if (u1c < 3)
 			{
-				Unit1[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
-				std::cout << "유닛 1 구매" << std::endl;
+				++count;
+				m_UI1[i]->SetPosition(0, 3000, 0);
+				if (Unit1[0]->GetPosition().z == 0)
+				{
+					Unit1[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+					std::cout << "유닛 1 구매" << std::endl;
+				}
+				else
+					Unit1[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
 			}
-			else
-				Unit1[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+			//std::cout << "asda" <<std::endl;
+			//x = 200, z= 100 초기값
 		}
-		//std::cout << "asda" <<std::endl;
-		//x = 200, z= 100 초기값
-	}
-	if ((m_pick->GetInstance()->IntersecTri()) == m_UI[1])
-	{
-		
-		++u2c;
-		if (u2c < 3)
+		if ((m_pick->GetInstance()->IntersecTri()) == m_UI2[i])
 		{
-			++count;
-			if (Unit2[0]->GetPosition().z == 0)
-			{
-				Unit2[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
-				std::cout << "유닛 2 구매" << std::endl;
-			}
-			else
-				Unit2[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
-		}
-	}
 
-	if ((m_pick->GetInstance()->IntersecTri()) == m_UI[2])
-	{
-		++u3c;
-		if (u3c < 3)
-		{
-			++count;
-			if (Unit3[0]->GetPosition().z == 0)
+			++u2c;
+			if (u2c < 3)
 			{
-				Unit3[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
-				std::cout << "유닛 3 구매" << std::endl;
+				++count;
+				m_UI2[i]->SetPosition(0, 3000, 0);
+				if (Unit2[0]->GetPosition().z == 0)
+				{
+					Unit2[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+					std::cout << "유닛 2 구매" << std::endl;
+				}
+				else
+					Unit2[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
 			}
-			else
-				Unit3[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+		}
+
+		if ((m_pick->GetInstance()->IntersecTri()) == m_UI3[i])
+		{
+			++u3c;
+			if (u3c < 3)
+			{
+				++count;
+				m_UI3[i]->SetPosition(0, 3000, 0);
+				if (Unit3[0]->GetPosition().z == 0)
+				{
+					Unit3[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+					std::cout << "유닛 3 구매" << std::endl;
+				}
+				else
+					Unit3[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+			}
+		}
+		if ((m_pick->GetInstance()->IntersecTri()) == m_UI4[i])
+		{
+			++u4c;
+			if (u4c < 3)
+			{
+				++count;
+				m_UI4[i]->SetPosition(0, 3000, 0);
+				if (Unit4[0]->GetPosition().z == 0)
+				{
+					Unit4[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+					std::cout << "유닛 4 구매" << std::endl;
+				}
+				else
+					Unit4[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+			}
+		}
+
+		if ((m_pick->GetInstance()->IntersecTri()) == m_UI5[i])
+		{
+			++u5c;
+			if (u5c < 3)
+			{
+				++count;
+				m_UI5[i]->SetPosition(0, 3000, 0);
+				if (Unit5[0]->GetPosition().z == 0)
+				{
+					Unit5[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+					std::cout << "유닛 4 구매" << std::endl;
+				}
+				else
+					Unit5[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+			}
 		}
 	}
-	if ((m_pick->GetInstance()->IntersecTri()) == m_UI[3])
-	{
-		++u4c;
-		if (u4c < 3)
-		{
-			++count;
-			if (Unit4[0]->GetPosition().z == 0)
-			{
-				Unit4[0]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
-				std::cout << "유닛 4 구매" << std::endl;
-			}
-			else
-				Unit4[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
-		}
-	}
-	
 }
 
 bool CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
@@ -427,11 +538,15 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	{
 		m_ppObjects[j]->Animate(fTimeElapsed);
 	}
-	
+
 	m_bObjects[0]->Animate(fTimeElapsed);
 	for (int i = 0; i < m_U; ++i)
 	{
-		m_UI[i]->Animate(fTimeElapsed);
+		m_UI1[i]->Animate(fTimeElapsed);
+		m_UI2[i]->Animate(fTimeElapsed);
+		m_UI3[i]->Animate(fTimeElapsed);
+		m_UI4[i]->Animate(fTimeElapsed);
+		m_UI5[i]->Animate(fTimeElapsed);
 	}
 
 	for (int i = 0; i < 2; ++i)
@@ -454,8 +569,11 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	{
 		Unit5[i]->Animate(fTimeElapsed);
 	}
-	
-	CTerrainPlayer* Player = (CTerrainPlayer*)m_pPlayer;
+	if (start == 0)
+	{
+		Reroll();
+		++start;
+	}
 
 }
 
@@ -472,31 +590,23 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 	{
 		if (m_ppObjects[j]) m_ppObjects[j]->Render(pd3dCommandList, pCamera);
 	}
-	
+
 
 	if (m_bObjects[0]) m_bObjects[0]->Render(pd3dCommandList, pCamera);
 	for (int i = 0; i < m_U; ++i)
 	{
-		if (m_UI[i]) m_UI[i]->Render(pd3dCommandList, pCamera);
+		if (m_UI1[i]) m_UI1[i]->Render(pd3dCommandList, pCamera);
+		if (m_UI2[i]) m_UI2[i]->Render(pd3dCommandList, pCamera);
+		if (m_UI3[i]) m_UI3[i]->Render(pd3dCommandList, pCamera);
+		if (m_UI4[i]) m_UI4[i]->Render(pd3dCommandList, pCamera);
+		if (m_UI5[i]) m_UI5[i]->Render(pd3dCommandList, pCamera);
 	}
 	for (int i = 0; i < 2; ++i)
 	{
 		if (Unit1[i]) Unit1[i]->Render(pd3dCommandList, pCamera);
-	}
-	for (int i = 0; i < 2; ++i)
-	{
 		if (Unit2[i]) Unit2[i]->Render(pd3dCommandList, pCamera);
-	}
-	for (int i = 0; i < 2; ++i)
-	{
 		if (Unit3[i]) Unit3[i]->Render(pd3dCommandList, pCamera);
-	}
-	for (int i = 0; i < 2; ++i)
-	{
 		if (Unit4[i]) Unit4[i]->Render(pd3dCommandList, pCamera);
-	}
-	for (int i = 0; i < 2; ++i)
-	{
 		if (Unit5[i]) Unit5[i]->Render(pd3dCommandList, pCamera);
 	}
 

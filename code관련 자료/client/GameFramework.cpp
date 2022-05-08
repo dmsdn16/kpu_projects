@@ -350,7 +350,8 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 					break;
 				case MKF_LEFTBUTTONDOWN:
 					break;
-				
+				case VK_D:
+					m_pScene->Reroll();
 				default:
 					break;
 			} 
@@ -379,7 +380,7 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
         case WM_RBUTTONDOWN:
         case WM_LBUTTONUP:
 			if (m_pick->GetInstance()->IntersecTri() != nullptr)
-				m_pScene->EnemyAttack();
+				m_pScene->UnitBuy();
 			break;
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE:
@@ -463,7 +464,7 @@ void CGameFramework::ProcessInput()
 		if (pKeysBuffer[VK_W] & 0xF0) dwDirection |= DIR_FORWARD;
 		if (pKeysBuffer[VK_S] & 0xF0) dwDirection |= DIR_BACKWARD;
 		if (pKeysBuffer[VK_A] & 0xF0) dwDirection |= DIR_LEFT;
-		if (pKeysBuffer[VK_D] & 0xF0) dwDirection |= DIR_RIGHT;
+		//if (pKeysBuffer[VK_D] & 0xF0) dwDirection |= DIR_RIGHT;
 		if (pKeysBuffer[VK_Q] & 0xF0) dwDirection |= DIR_UP;
 		if (pKeysBuffer[VK_E] & 0xF0) dwDirection |= DIR_DOWN;
 		if (pKeysBuffer[VK_RIGHT] & 0xF0) ((CTerrainPlayer*)m_pPlayer)->RightSpin();

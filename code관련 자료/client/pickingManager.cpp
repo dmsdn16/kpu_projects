@@ -81,7 +81,7 @@ CGameObject* PickMgr::IntersecTri()
   
     map<float, CGameObject*> map;
     list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
-  //  list<CGameObject*> ok = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_TERRAIN);
+    list<CGameObject*> Unit = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
   
     
     
@@ -89,20 +89,20 @@ CGameObject* PickMgr::IntersecTri()
     
     for (auto& object : oj)
     {
-      
-       
       if(object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec),x))
-        { 
+      { 
             map.emplace(x, object);
       }
-     /*  if (m_ptMouse.x - 100 <=object->GetPosition().x <= m_ptMouse.x + 100 )
-       {
-           map.emplace(x, object);
-       }
-      */
     }
 
-  // std::cout << map.begin()->second << std::endl;
+    for (auto& object : Unit)
+    {
+        if (object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec), x))
+        {
+            map.emplace(x, object);
+        }
+    }
+
     if (!map.empty())
     {
         return map.begin()->second;
