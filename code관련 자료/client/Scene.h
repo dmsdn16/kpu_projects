@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "pickingManager.h"
 #include "StoreManager.h"
+
 class CScene
 {
 public:
@@ -32,6 +33,7 @@ public:
 
 	void Reroll();
 	void UnitBuy();
+	int CalRoll();
 	void PlayerSpin();
 	void BrigeCollision();
 	void CollisonBossMissile();
@@ -67,6 +69,13 @@ protected:
 	int							u4c = 0;
 	int							u5c = 0;
 	int							start = 0;
+
+	int							UnitName1 = 2;
+	int							UnitName2 = 2;
+	int							UnitName3 = 2;
+	int							UnitName4 = 2;
+	int							UnitName5 = 2;
+
 
 	CHeightMapTerrain* m_pTerrain = NULL;
 	PickMgr* m_pick = NULL;

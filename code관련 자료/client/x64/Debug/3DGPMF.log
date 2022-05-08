@@ -1,4 +1,26 @@
-﻿  pickingManager.cpp
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\TransManager.h(37): warning C4715: 'TransManager::GetViewMaterix': 모든 제어 경로에서 값을 반환하지는 않습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\TransManager.h(43): warning C4715: 'TransManager::GetProjectionMatrix': 모든 제어 경로에서 값을 반환하지는 않습니다.
+﻿  Scene.cpp
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(155,30): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(163,30): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(171,30): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(179,30): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(187,30): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(211,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(224,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(236,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(398,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(409,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(419,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(429,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(439,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(489,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(493,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(510,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(514,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(528,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(532,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(545,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(549,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(563,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(567,32): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(472): warning C4715: 'CScene::CalRoll': 모든 제어 경로에서 값을 반환하지는 않습니다.
   3DGPMF.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\x64\Debug\3DGPMF.exe

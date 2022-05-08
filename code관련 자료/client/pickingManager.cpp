@@ -105,6 +105,7 @@ CGameObject* PickMgr::IntersecTri()
 
     if (!map.empty())
     {
+        //std::cout << map.begin()->second << std::endl;
         return map.begin()->second;
     }
    

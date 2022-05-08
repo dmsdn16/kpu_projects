@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Scene.h"
 
-std::uniform_int_distribution<int> RandomDir(1, 5);
+std::uniform_int_distribution<int> RandomDir(1,100);
 std::default_random_engine dre;
 
 CScene::CScene()
@@ -169,7 +169,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		m_UI3[i]->SetShader(pShader);
 		m_UI3[i]->SetScale(200.0f);
 		m_UI3[i]->SetPosition((500 + 500 * i), 3000, -100.0f);
-		m_UI3[i]->SetColor(XMFLOAT3(1.0f, 1.0f, 0.0f));
+		m_UI3[i]->SetColor(XMFLOAT3(1.0f, 1.0f, 1.0f));
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI3[i]);
 
 		m_UI4[i] = new CGameObject();
@@ -177,7 +177,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 		m_UI4[i]->SetShader(pShader);
 		m_UI4[i]->SetScale(200.0f);
 		m_UI4[i]->SetPosition((500 + 500 * i), 3000, -100.0f);
-		m_UI4[i]->SetColor(XMFLOAT3(1.0f, 1.0f, 1.0f));
+		m_UI4[i]->SetColor(XMFLOAT3(1.0f, 1.0f, 0.0f));
 		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI4[i]);
 
 		m_UI5[i] = new CGameObject();
@@ -385,43 +385,91 @@ void CScene::Reroll()
 
 	for (int i = 0; i < 4; ++i)
 	{
-		int a = RandomDir(dre);
+		int a = CalRoll();
 
-		std::cout << a << std::endl;
+		//std::cout << a << std::endl;
+	
 		switch (a)
 		{
 		case 1:
-			m_UI1[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
-			x_count++;
-			u_count++;
+			
+			if (UnitName1 != 0)
+			{
+				m_UI1[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+				x_count++;
+				u_count++;
+			}
+			else
+				Reroll();
+			
 			break;
 		case 2:
-			m_UI2[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
-			x_count++;
-			u_count++;
+			if (UnitName2 != 0)
+			{
+				m_UI2[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+				x_count++;
+				u_count++;
+			}
+			else
+				Reroll();
 			break;
 		case 3:
-			m_UI3[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
-			x_count++;
-			u_count++;
+			if (UnitName3 != 0)
+			{
+				m_UI3[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+				x_count++;
+				u_count++;
+			}
+			else
+				Reroll();
 			break;
 		case 4:
-			m_UI4[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
-			x_count++;
-			u_count++;
+			if (UnitName4 != 0)
+			{
+				m_UI4[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+				x_count++;
+				u_count++;
+			}
+			else
+				Reroll();
 			break;
 		case 5:
-			m_UI5[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
-			x_count++;
-			u_count++;
+			if (UnitName5 != 0)
+			{
+				m_UI5[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+				x_count++;
+				u_count++;
+			}
+			else
+				Reroll();
 			break;
 		default:
 			break;
 		}
 	}
-	std::cout << "무야호" << std::endl;
+	//std::cout << "무야호" << std::endl;
 }
 
+// 누적 확률을 이용한 확률계산
+int CScene::CalRoll()
+{
+	int ran = RandomDir(dre);
+	
+	double p[] = { 5.0f, 15.0f, 15.0f, 30.0f, 35.0f }; //4, 3, 2, 1, 0
+
+	double cumulative = 0.0f;
+
+	for (int i = 0; i < 5; i++)
+	{
+		cumulative += p[i];
+		if (ran <= cumulative)
+		{
+			return 5 - i;
+		}
+	}
+
+
+}
 
 
 // 여기 수정하면 끝!!!!!!!!!!!
@@ -443,6 +491,8 @@ void CScene::UnitBuy()
 				}
 				else
 					Unit1[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+
+				--UnitName1;
 			}
 			//std::cout << "asda" <<std::endl;
 			//x = 200, z= 100 초기값
@@ -462,6 +512,7 @@ void CScene::UnitBuy()
 				}
 				else
 					Unit2[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+				--UnitName2;
 			}
 		}
 
@@ -479,6 +530,7 @@ void CScene::UnitBuy()
 				}
 				else
 					Unit3[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+				--UnitName3;
 			}
 		}
 		if ((m_pick->GetInstance()->IntersecTri()) == m_UI4[i])
@@ -495,6 +547,7 @@ void CScene::UnitBuy()
 				}
 				else
 					Unit4[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+				--UnitName4;
 			}
 		}
 
@@ -512,6 +565,7 @@ void CScene::UnitBuy()
 				}
 				else
 					Unit5[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+				--UnitName5;
 			}
 		}
 	}
