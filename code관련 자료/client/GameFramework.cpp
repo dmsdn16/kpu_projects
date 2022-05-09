@@ -350,7 +350,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 					break;
 				case MKF_LEFTBUTTONDOWN:
 					break;
-				case VK_D:
+				case VK_G:
 					m_pScene->Reroll();
 				default:
 					break;

@@ -486,8 +486,6 @@ void CScene::ResetUi()
 
 void CScene::UnitSell()
 {
-	std::cout << "dasqag" << std::endl;
-
 	for (int i = 0; i < m_U; ++i)
 	{
 		if ((m_pick->GetInstance()->IntersecUnit()) == Unit1[i])
@@ -594,11 +592,14 @@ void CScene::UnitBuy()
 				{
 					--Canbuy;
 					m_UI1[i]->SetPosition(0, 3000, 0);
-
+					
 					for (int j = 0; j < 4; ++j)
 					{
+						std::cout << UnitList1.front() << std::endl;
+						std::cout << Unit1[j] << std::endl;
 						if (UnitList1.front() == Unit1[j])
 						{
+							std::cout << "aaaa" << std::endl;
 							for (int k = 0; k < 6; ++k)
 							{
 								if (array[k] == 0)
@@ -611,9 +612,9 @@ void CScene::UnitBuy()
 									array[k] = 1;
 									break;
 								}
-							}
-						}break;
-					}break;
+							}break;
+						}
+					}
 				}
 				//std::cout << "asda" <<std::endl;
 				//x = 200, z= 100 초기값
@@ -623,27 +624,29 @@ void CScene::UnitBuy()
 				--uc[1];
 				if (0 <= uc[1])
 				{
-					++count;
 					--Canbuy;
+					
 					m_UI2[i]->SetPosition(0, 3000, 0);
+		
 					for (int j = 0; j < 4; ++j)
 					{
-						if (UnitList2.front() == Unit2[uic[1]])
+						if (UnitList2.front() == Unit2[j])
 						{
+						
 							for (int k = 0; k < 6; ++k)
 							{
 								if (array[k] == 0)
 								{
-									Unit2[uic[1]]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									Unit2[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
 									std::cout << "유닛 2 구매" << std::endl;
 									uic[1]++;
 									UnitList2.pop_front();
 									array[k] = 1;
 									break;
 								}
-							}
-						}break;
-					}break;
+							}break;
+						}
+					}
 				}
 			}
 
@@ -652,7 +655,6 @@ void CScene::UnitBuy()
 				--uc[2];
 				if (0 <= uc[2])
 				{
-					++count;
 					--Canbuy;
 					m_UI3[i]->SetPosition(0, 3000, 0);
 					for (int j = 0; j < 4; ++j)
@@ -669,9 +671,9 @@ void CScene::UnitBuy()
 									array[k] = 1;
 									break;
 								}
-							}
-						}break;
-					}break;
+							}break;
+						}
+					}
 				}
 			}
 			if ((m_pick->GetInstance()->IntersecTri()) == m_UI4[i])
@@ -696,9 +698,9 @@ void CScene::UnitBuy()
 									array[k] = 1;
 									break;
 								}
-							}
-						}break;
-					}break;
+							}break;
+						}
+					};
 				}
 			}
 
@@ -726,9 +728,9 @@ void CScene::UnitBuy()
 									//std::cout << Unit5[1] << std::endl;
 									break;
 								}
-							}
-						}break;
-					}break;
+							}break;
+						}
+					}
 				}
 			}
 		}

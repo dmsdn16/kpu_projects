@@ -64,6 +64,7 @@ using Microsoft::WRL::ComPtr;
 #define VK_D					0x44
 #define VK_Q                    0x51
 #define VK_E					0x45
+#define VK_G					0x47
 
 #define RANDOM_COLOR			XMFLOAT4(rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX))
 

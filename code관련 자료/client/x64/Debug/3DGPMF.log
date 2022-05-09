@@ -12,10 +12,10 @@ C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scen
 C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(411,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(418,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(425,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(607,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(637,41): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(666,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(693,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(721,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(608,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(640,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(668,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(695,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(723,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\Scene.cpp(464): warning C4715: 'CScene::CalRoll': 모든 제어 경로에서 값을 반환하지는 않습니다.
   3DGPMF.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\client\x64\Debug\3DGPMF.exe
