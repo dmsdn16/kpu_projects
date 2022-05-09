@@ -34,9 +34,10 @@ public:
 	void Reroll();
 	void UnitBuy();
 	int CalRoll();
-	void PlayerSpin();
-	void BrigeCollision();
-	void CollisonBossMissile();
+	void AdmCount();
+	void ResetUi();
+	void UnitSell();
+	
 
 
 	CPlayer* m_pPlayer = NULL;
@@ -63,27 +64,27 @@ protected:
 	int                         m_Brige = 0;
 	int							m_U = 4;
 	int							count = 0;
-	int							u1c = 0;
-	int							u2c = 0;
-	int							u3c = 0;
-	int							u4c = 0;
-	int							u5c = 0;
+	int							uc[5] = { 4,4,4,2,2 }; // À¯´Ö °¹¼ö
+	
 	int							start = 0;
 
-	int							UnitName1 = 2;
-	int							UnitName2 = 2;
-	int							UnitName3 = 2;
-	int							UnitName4 = 2;
-	int							UnitName5 = 2;
+	int							UIBox[5] = { 0, };
+	int							u_count = 0; // uiÀ§Ä¡
+	int							x_count = 0; // ui °¹¼ö
 
+	int							uic[5] = {0,};
+	int							Canbuy = 6;
+	int                         array[6] = { 0, };
+	
 
 	CHeightMapTerrain* m_pTerrain = NULL;
 	PickMgr* m_pick = NULL;
 
-private:
-	int m_missileNum = 10; // ¹Ì»çÀÏ °¹¼ö
-	CMissileObject** m_pmissile = 0;
 public:
-	int cnt = 0; // º¸½º Å¸°Ý È½¼ö
-
+	list<CGameObject*> oj;
+	list<CGameObject*> UnitList1;
+	list<CGameObject*> UnitList2;
+	list<CGameObject*> UnitList3;
+	list<CGameObject*> UnitList4;
+	list<CGameObject*> UnitList5;
 };

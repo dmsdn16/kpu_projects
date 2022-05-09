@@ -41,6 +41,7 @@ public:
 	void Create(HWND _hWnd, int	_nWndClientWidth, int _nWndClientHeight, ID3D12Device* _pd3dDevice);
 	void Tick(void);
 	CGameObject* IntersecTri(void);
+	CGameObject* IntersecUnit(void);
 	void SetRayPos(XMFLOAT3 Raypos) 
 	{ 
 		m_RayPos = Raypos; }

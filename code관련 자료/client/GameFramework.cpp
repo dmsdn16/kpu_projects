@@ -378,6 +378,8 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 		case WM_LBUTTONDOWN:
 			break;
         case WM_RBUTTONDOWN:
+			if (m_pick->GetInstance()->IntersecUnit() != nullptr)
+				m_pScene->UnitSell();
         case WM_LBUTTONUP:
 			if (m_pick->GetInstance()->IntersecTri() != nullptr)
 				m_pScene->UnitBuy();
