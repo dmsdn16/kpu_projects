@@ -1,14 +1,2 @@
-﻿  stdafx.cpp
-  Camera.cpp
-  DDSTextureLoader12.cpp
-  GameFramework.cpp
-  LastProject.cpp
-  Mesh.cpp
-  Object.cpp
-  Player.cpp
-  Scene.cpp
-  Shader.cpp
-  Timer.cpp
-  WICTextureLoader12.cpp
-  코드를 생성하고 있습니다...
-  LastProject.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\x64\Debug\LastProject.exe
+﻿  Object.cpp
+  LastProject.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\x64\Debug\LastProject.exe
