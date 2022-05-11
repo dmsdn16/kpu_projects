@@ -763,6 +763,7 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	for (int i = 0; i < m_U; ++i)
 	{
 		m_UI1[i]->Animate(fTimeElapsed);
+		std::cout << m_UI1[0]->m_xmOOBB.Center.x << std::endl;
 		m_UI2[i]->Animate(fTimeElapsed);
 		m_UI3[i]->Animate(fTimeElapsed);
 		m_UI4[i]->Animate(fTimeElapsed);

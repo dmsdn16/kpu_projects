@@ -38,8 +38,9 @@ public:
 
 public:
 	char							m_pstrMeshName[64] = { 0 };
-
+	
 protected:
+	BoundingOrientedBox             x_mAABB;
 	UINT							m_nType = 0x00;
 
 	XMFLOAT3						m_xmf3AABBCenter = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -48,6 +49,8 @@ protected:
 	D3D12_PRIMITIVE_TOPOLOGY		m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	UINT							m_nSlot = 0;
 	UINT							m_nOffset = 0;
+
+	
 
 protected:
 	int								m_nVertices = 0;
@@ -80,6 +83,8 @@ public:
 	virtual void OnPostRender(ID3D12GraphicsCommandList *pd3dCommandList, void *pContext);
 
 	void LoadMeshFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, FILE *pInFile);
+
+	BoundingOrientedBox GetBox();
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

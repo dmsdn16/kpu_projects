@@ -671,10 +671,21 @@ void CGameObject::Animate(float fTimeElapsed)
 {
 	OnPrepareRender();
 
+	if (m_pMesh)
+	{
+		m_pMesh->GetBox().Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4World));
+		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
+		//std::cout << m_xmOOBB.Extents.x << std::endl;
+		//std::cout << m_xmOOBB.Center.y << std::endl;
+	}
+
 	if (m_pSkinnedAnimationController) m_pSkinnedAnimationController->AdvanceTime(fTimeElapsed, this);
 
 	if (m_pSibling) m_pSibling->Animate(fTimeElapsed);
 	if (m_pChild) m_pChild->Animate(fTimeElapsed);
+	
+	
+	
 }
 
 void CGameObject::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera)

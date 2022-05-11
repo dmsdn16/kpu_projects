@@ -168,6 +168,12 @@ void CMesh::LoadMeshFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList
 	}
 }
 
+BoundingOrientedBox CMesh::GetBox()
+{
+	x_mAABB.Extents = XMFLOAT3(10, 10, 10);
+	return x_mAABB;
+}
+
 CHeightMapImage::CHeightMapImage(LPCTSTR pFileName, int nWidth, int nLength, XMFLOAT3 xmf3Scale)
 {
 	m_nWidth = nWidth;

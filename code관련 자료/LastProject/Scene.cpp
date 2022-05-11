@@ -90,13 +90,14 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 	m_ppGameObjects = new CGameObject*[m_nGameObjects];
 
 	CLoadedModelInfo *pAngrybotModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orc.bin", NULL);
-	m_ppGameObjects[0] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pAngrybotModel, 2);
+	m_ppGameObjects[0] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pAngrybotModel, 1);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
-	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(1, 2.5f, 3.0f);
-	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.2f);
+	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.5f);
+	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
-	m_ppGameObjects[0]->SetPosition(134.0f, 70.0f, 98.0f);
+	m_ppGameObjects[0]->SetPosition(200.0f, 1000.0f, 98.0f);
 	m_ppGameObjects[0]->SetScale(300, 300, 300);
+
 	if (pAngrybotModel) delete pAngrybotModel;
 
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
@@ -494,6 +495,10 @@ void CScene::AnimateObjects(float fTimeElapsed)
 		m_pLights[1].m_xmf3Position = m_pPlayer->GetPosition();
 		m_pLights[1].m_xmf3Direction = m_pPlayer->GetLookVector();
 	}
+
+	m_ppGameObjects[0]->MoveUp(-1.0f);
+	//m_ppGameObjects[0]->MoveForward(-1.0f);
+	//std::cout << m_ppGameObjects[0]->GetPosition().y << std::endl;
 }
 
 void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera)
@@ -519,6 +524,7 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 			m_ppGameObjects[i]->Animate(m_fElapsedTime);
 			if (!m_ppGameObjects[i]->m_pSkinnedAnimationController) m_ppGameObjects[i]->UpdateTransform(NULL);
 			m_ppGameObjects[i]->Render(pd3dCommandList, pCamera);
+			std::cout << m_ppGameObjects[i]->m_xmOOBB.Center.y << std::endl;
 		}
 	}
 

@@ -30,7 +30,7 @@ CGameFramework::CGameFramework()
 	m_pScene = NULL;
 	m_pPlayer = NULL;
 
-	_tcscpy_s(m_pszFrameRate, _T("Client")); //프레임 레이트 작성
+	_tcscpy_s(m_pszFrameRate, _T("GuildBattleChess")); //프레임 레이트 작성
 }
 
 CGameFramework::~CGameFramework()

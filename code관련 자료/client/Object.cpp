@@ -100,6 +100,7 @@ void CGameObject::UpdateBoundingBox()
 		for (int i = 0; i < m_nMeshes; ++i) {
 			m_ppMeshes[i]->GetBoundingBox().Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4World));
 			XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
+			//std::cout << m_ppMeshes[i]->GetBoundingBox().Extents.x << std::endl;
 		}
 	}
 }
