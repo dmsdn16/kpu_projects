@@ -1,4 +1,5 @@
 #pragma once
+#define SERVER_IP = "127.0.0.1"
 
 constexpr int MAX_NAME = 100;
 constexpr int MAX_BUFFER = 1024;
@@ -7,6 +8,7 @@ constexpr int WORLD_X_SIZE = 400;
 constexpr int WORLD_Y_SIZE = 400;
 constexpr int MAX_USER = 5000;
 constexpr int MAX_UNIT = 5000;
+
 
 constexpr unsigned char CtoS_LOGIN = 1;
 constexpr unsigned char CtoS_MOVE = 2;
@@ -52,7 +54,7 @@ struct StoC_login_ok {
 	int id;
 	int hp, level;
 	int race;
-	short x, y;
+	float x, y, z;
 };
 
 struct StoC_add_player {

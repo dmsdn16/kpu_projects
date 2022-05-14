@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Camera.h"
 #include "GameFramework.h"
+#include "Scene.h"
 unsigned long start = 0;
 sf::TcpSocket socket;
 using namespace std;
@@ -10,9 +11,16 @@ constexpr auto BUF_SIZE = MAX_BUFFER;
 int g_myid;
 float g_x = 0, g_y = 0, g_z = 0;
 
-CGameObject players[MAX_USER];
-CGameObject avatar;
-CPlayer* S_Player;
+class OBJECT : public CGameObject {
+public:
+	int o_x, o_y, o_z;
+
+};
+
+OBJECT players[MAX_USER];
+OBJECT avatar;
+
+
 void ProcessPacket(char* ptr) {
 	static bool first_time = true;
 	switch (ptr[1])
@@ -21,6 +29,9 @@ void ProcessPacket(char* ptr) {
 	{
 		StoC_login_ok* packet = reinterpret_cast<StoC_login_ok*>(ptr);
 		g_myid = packet->id;
+		cout << "로그인 아이디: " << g_myid << endl;
+		
+
 	}
 	break;
 	case StoC_ADD_PLAYER:
@@ -36,19 +47,22 @@ void ProcessPacket(char* ptr) {
 	case StoC_MOVE_PLAYER:
 	{
 		StoC_move_player* my_packet = reinterpret_cast<StoC_move_player*>(ptr);
-		int other_id = my_packet->id;
-		if (other_id == g_myid) {
+		int packet_id = my_packet->id;
+		int test = 0;
+		if (packet_id == g_myid) {
+			
 			avatar.SetPosition(my_packet->x, my_packet->y,my_packet->z);
 			g_x = my_packet->x;
 			g_y = my_packet->y;
 			g_z = my_packet->z;
 			
 		}
-		else if (other_id < MAX_USER) {
-			cout<<"다른클라에서" << my_packet->x << " " << my_packet->y << " " << my_packet->z << " " << endl;
-			players[other_id].SetPosition(my_packet->x, my_packet->y,my_packet->z);
-			//players[other_id].Render(&pd3dCommandList,&pCamera)
+		else if (packet_id < MAX_USER) {
+			//avatar.GetPosition();
+			players[packet_id].SetPosition(my_packet->x, my_packet->y, my_packet->z);
 		}
+		test++;
+		cout << "test" << test << endl;
 		break;
 	}
 	case StoC_REMOVE_PLAYER:
@@ -103,6 +117,7 @@ void send_move_packet(float x, float y,float z)
 	packet.x = x;
 	packet.y = y;
 	packet.z = z;
+	cout << "send move packe : " << x << " " << y << " " << z << endl;
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
 }
@@ -125,6 +140,7 @@ void send_login_packet()
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
 }
+
 
 
 void client_main()

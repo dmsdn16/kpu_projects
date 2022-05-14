@@ -143,6 +143,7 @@ void send_remove_player(int c_id, int p_id)
 void send_move_packet(int c_id, int p_id)
 {
 	StoC_move_player p;
+	cout<<"send_move_packet" << players[p_id].x << players[p_id].y << players[p_id].z <<" "<<p_id << endl;
 	p.id = p_id;
 	p.size = sizeof(p);
 	p.type = StoC_MOVE_PLAYER;
@@ -150,6 +151,7 @@ void send_move_packet(int c_id, int p_id)
 	p.y = players[p_id].y;
 	p.z = players[p_id].z;
 	send_packet(c_id, &p);
+	send_packet(p_id, &p);
 }
 
 void send_all_ready_packet(int p_id)
@@ -217,29 +219,10 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 			break;
 		case CtoS_MOVE: {
 			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
-			cout << " CtoS_move" << packet->x << " " << packet->y << " " << packet->z << endl;
+			cout << " CtoS_move" << packet->x << " " << packet->y << " " << packet->z << " " << p_id << endl;
 			do_move(p_id,packet->x, packet->y, packet->z);
-			cout << " CtoS_move" << packet->x << " " << packet->y << " " << packet->z << endl;
 		}
 			break;
-		/*case CtoS_START:
-		{
-			CtoS_start* packet = reinterpret_cast<CtoS_start*>(p_buf);
-			{
-				lock_guard<mutex> gl2{ players[p_id].m_slock };
-				players[p_id].m_state = PLST_READY;
-			}
-			for (auto& pl : players) {
-				if (p_id != pl.id) {
-					lock_guard<mutex>gl{ pl.m_slock };
-					if (PLST_READY == pl.m_state) {
-						send_start_packet(pl.id, p_id);
-						send_start_packet(p_id, pl.id);
-					}
-				}
-			}
-		}
-		break;*/
 		default:
 			cout << "Unknown Packet Type from Client[" << p_id << "] Packet Type [" << p_buf[1] << "]" << endl;
 			while (true);

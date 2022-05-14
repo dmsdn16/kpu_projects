@@ -45,7 +45,7 @@ public:
 
 protected:
 	ID3D12RootSignature			*m_pd3dGraphicsRootSignature = NULL;
-
+public:
 	CGameObject					**m_ppObjects = 0; // 건물
 	CGameObject                 **m_bObjects = 0; // 보스
 	CGameObject					**m_UI = 0;

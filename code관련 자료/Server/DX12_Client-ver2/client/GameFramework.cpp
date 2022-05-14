@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "GameFramework.h"
+#include "Network.h"
 
 CGameFramework::CGameFramework()
 {
@@ -378,7 +379,11 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
         case WM_RBUTTONDOWN:
         case WM_LBUTTONUP:
 			if (m_pick->GetInstance()->IntersecTri() != nullptr)
+			{
 				m_pScene->EnemyAttack();
+				
+			}
+				
 				//send_move_
 			break;
         case WM_RBUTTONUP:
