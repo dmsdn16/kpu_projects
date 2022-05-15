@@ -85,6 +85,7 @@ public:
 	void LoadMeshFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, FILE *pInFile);
 
 	BoundingOrientedBox GetBox();
+	void SetBox(BoundingOrientedBox m_xmOOBB) { x_mAABB = m_xmOOBB; }
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

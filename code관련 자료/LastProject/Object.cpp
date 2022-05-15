@@ -608,6 +608,19 @@ void CGameObject::SetMaterial(int nMaterial, CMaterial *pMaterial)
 	if (m_ppMaterials[nMaterial]) m_ppMaterials[nMaterial]->AddRef();
 }
 
+void CGameObject::UpdateBox()
+{
+	if (m_pMesh)
+	{
+		m_pMesh->GetBox().Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4World));
+		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
+		//m_pMesh->SetBox(m_xmOOBB);
+		//std::cout << m_xmOOBB.Extents.x << std::endl;
+		//std::cout << m_xmOOBB.Center.y << std::endl;
+	}
+
+}
+
 CSkinnedMesh *CGameObject::FindSkinnedMesh(char *pstrSkinnedMeshName)
 {
 	CSkinnedMesh *pSkinnedMesh = NULL;
@@ -671,21 +684,20 @@ void CGameObject::Animate(float fTimeElapsed)
 {
 	OnPrepareRender();
 
-	if (m_pMesh)
-	{
-		m_pMesh->GetBox().Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4World));
-		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
-		//std::cout << m_xmOOBB.Extents.x << std::endl;
-		//std::cout << m_xmOOBB.Center.y << std::endl;
-	}
+	UpdateBox();
 
 	if (m_pSkinnedAnimationController) m_pSkinnedAnimationController->AdvanceTime(fTimeElapsed, this);
 
 	if (m_pSibling) m_pSibling->Animate(fTimeElapsed);
-	if (m_pChild) m_pChild->Animate(fTimeElapsed);
-	
-	
-	
+	if (m_pChild)
+	{
+		XMFLOAT4X4	m_xmf4x4InverseWorld = ::Matrix4x4::Inverse(m_xmf4x4World);
+		m_pChild->m_xmOOBB.Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4InverseWorld));
+		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
+		//std:; cout << m_pChild->m_xmOOBB.Center.y << std::endl; 
+		
+		m_pChild->Animate(fTimeElapsed);
+	}
 }
 
 void CGameObject::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera)

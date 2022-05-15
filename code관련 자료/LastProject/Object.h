@@ -383,6 +383,7 @@ public:
 	void SetWireFrameShader();
 	void SetSkinnedAnimationWireFrameShader();
 	void SetMaterial(int nMaterial, CMaterial *pMaterial);
+	void UpdateBox();
 
 	void SetChild(CGameObject *pChild, bool bReferenceUpdate=false);
 
