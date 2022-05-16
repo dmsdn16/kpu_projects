@@ -86,19 +86,29 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 	XMFLOAT4 xmf4Color(0.0f, 0.3f, 0.0f, 0.0f);
 	m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, _T("1HeightMap.raw"), 257, 257, xmf3Scale, xmf4Color);
 
-	m_nGameObjects = 1;
+	m_nGameObjects = 2;
 	m_ppGameObjects = new CGameObject*[m_nGameObjects];
 
 	CLoadedModelInfo *pAngrybotModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orc.bin", NULL);
 	m_ppGameObjects[0] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pAngrybotModel, 1);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
-	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.5f);
+	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
-	m_ppGameObjects[0]->SetPosition(200.0f, 1000.0f, 98.0f);
+	m_ppGameObjects[0]->SetPosition(600.0f, 800.0f, 98.0f);
 	m_ppGameObjects[0]->SetScale(300, 300, 300);
 
+	CLoadedModelInfo* pOrcModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orc.bin", NULL);
+	m_ppGameObjects[1] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pOrcModel, 1);
+	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+	m_ppGameObjects[1]->SetPosition(600.0f, 800.0f, 98.0f);
+	m_ppGameObjects[1]->SetScale(300, 300, 300);
+
 	if (pAngrybotModel) delete pAngrybotModel;
+	if (pOrcModel) delete pOrcModel;
 
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 }
@@ -496,8 +506,8 @@ void CScene::AnimateObjects(float fTimeElapsed)
 		m_pLights[1].m_xmf3Direction = m_pPlayer->GetLookVector();
 	}
 
-	m_ppGameObjects[0]->MoveUp(-1.0f);
-	//m_ppGameObjects[0]->MoveForward(-1.0f);
+	//m_ppGameObjects[0]->MoveUp(-1.0f);
+	m_ppGameObjects[0]->MoveStrafe(-1.0f);
 	//std::cout << m_ppGameObjects[0]->GetPosition().y << std::endl;
 }
 
@@ -524,7 +534,7 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 			m_ppGameObjects[i]->Animate(m_fElapsedTime);
 			if (!m_ppGameObjects[i]->m_pSkinnedAnimationController) m_ppGameObjects[i]->UpdateTransform(NULL);
 			m_ppGameObjects[i]->Render(pd3dCommandList, pCamera);
-			std::cout << m_ppGameObjects[i]->m_xmOOBB.Center.y << std::endl;
+			//std::cout << m_ppGameObjects[i]->m_xmOOBB.Center.x << std::endl;
 		}
 	}
 

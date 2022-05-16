@@ -360,6 +360,7 @@ public:
 	char							m_pstrFrameName[64];
 
 	CMesh							*m_pMesh = NULL;
+	CMesh							* m_pMesh2 = NULL;
 
 	int								m_nMaterials = 0;
 	CMaterial						**m_ppMaterials = NULL;
@@ -378,6 +379,7 @@ public:
 	BoundingOrientedBox				m_xmOOBB;
 
 	void SetMesh(CMesh *pMesh);
+	void SetBoxMesh(CMesh* pMesh);
 	void SetShader(CShader *pShader);
 	void SetShader(int nMaterial, CShader *pShader);
 	void SetWireFrameShader();

@@ -565,6 +565,13 @@ void CGameObject::SetMesh(CMesh *pMesh)
 	if (m_pMesh) m_pMesh->AddRef();
 }
 
+void CGameObject::SetBoxMesh(CMesh* pMesh)
+{
+	if (m_pMesh2) m_pMesh2->Release();
+	m_pMesh2 = pMesh;
+	if (m_pMesh2) m_pMesh2->AddRef();
+}
+
 void CGameObject::SetShader(CShader *pShader)
 {
 	m_nMaterials = 1;
@@ -610,15 +617,16 @@ void CGameObject::SetMaterial(int nMaterial, CMaterial *pMaterial)
 
 void CGameObject::UpdateBox()
 {
-	if (m_pMesh)
-	{
-		m_pMesh->GetBox().Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4World));
-		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
-		//m_pMesh->SetBox(m_xmOOBB);
-		//std::cout << m_xmOOBB.Extents.x << std::endl;
-		//std::cout << m_xmOOBB.Center.y << std::endl;
-	}
 
+		if (m_nReferences == 0)
+		{
+			if (GetPosition().x != 134)
+			{
+				//std::cout << GetPosition().x << std::endl;
+				//std::cout << GetPosition().y << std::endl;
+				//std::cout << GetPosition().z << std::endl;
+			}
+		}
 }
 
 CSkinnedMesh *CGameObject::FindSkinnedMesh(char *pstrSkinnedMeshName)
@@ -691,11 +699,9 @@ void CGameObject::Animate(float fTimeElapsed)
 	if (m_pSibling) m_pSibling->Animate(fTimeElapsed);
 	if (m_pChild)
 	{
-		XMFLOAT4X4	m_xmf4x4InverseWorld = ::Matrix4x4::Inverse(m_xmf4x4World);
-		m_pChild->m_xmOOBB.Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4InverseWorld));
-		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
-		//std:; cout << m_pChild->m_xmOOBB.Center.y << std::endl; 
-		
+		//XMFLOAT4X4	m_xmf4x4InverseWorld = ::Matrix4x4::Inverse(m_xmf4x4World);
+		//m_pChild->m_xmOOBB.Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4InverseWorld));
+		//XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
 		m_pChild->Animate(fTimeElapsed);
 	}
 }
@@ -915,6 +921,7 @@ CGameObject *CGameObject::LoadFrameHierarchyFromFile(ID3D12Device *pd3dDevice, I
 			CMesh *pMesh = new CMesh(pd3dDevice, pd3dCommandList);
 			pMesh->LoadMeshFromFile(pd3dDevice, pd3dCommandList, pInFile);
 			pGameObject->SetMesh(pMesh);
+			//pGameObject->SetBoxMesh(pMesh);
 
 			/**/pGameObject->SetWireFrameShader();
 		}

@@ -19,6 +19,9 @@
 
 #include <fstream>
 #include <vector>
+#include <list>
+#include <random>
+#include <map>
 
 using namespace std;
 
