@@ -6,7 +6,7 @@
 #include "Timer.h"
 #include "Player.h"
 #include "Scene.h"
-
+#include "PickingManager.h"
 class CGameFramework
 {
 public:
@@ -87,5 +87,7 @@ private:
 	POINT						m_ptOldCursorPos;
 
 	_TCHAR						m_pszFrameRate[70];
+
+	PickMgr						* m_pick = NULL;
 };
 

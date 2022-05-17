@@ -80,7 +80,7 @@ CGameObject* PickMgr::IntersecTri()
 
 
     map<float, CGameObject*> map;
-    list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
+    list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
     //list<CGameObject*> Unit = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
 
     for (auto& object : oj)
@@ -106,18 +106,19 @@ CGameObject* PickMgr::IntersecUnit()
 {
     float x = 0.0f;
 
-
     map<float, CGameObject*> map;
     //list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
     list<CGameObject*> Unit = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
-
+ 
     for (auto& object : Unit)
     {
-        if (object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec), x))
+       
+        if (CheckSphere())
         {
             map.emplace(x, object);
         }
     }
+
 
     if (!map.empty())
     {
@@ -127,5 +128,33 @@ CGameObject* PickMgr::IntersecUnit()
 
     return nullptr;
 
+}
 
+bool PickMgr::CheckSphere(void)
+{
+    XMFLOAT3 k;
+    list<CGameObject*> Unit = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
+
+    for (auto& object : Unit)
+    {
+        center = object->GetPosition();
+        k = XMFLOAT3(center.x - m_RayPos.x, center.y - m_RayPos.y, center.z - m_RayPos.z);
+        double s = Vector3::DotProduct(k, m_RayVec);
+        double ls = Vector3::DotProduct(k, k);
+        double rs = pow(radius, 2);
+        if (s < 0 && ls > rs)
+        {
+            return false;                       // 광선이 구의 반대 방향을 향하거나 구를 지나친 경우
+        }
+        double m2 = ls - pow(s, 2);
+
+        if (m2 > rs)
+        {
+            return false;                      // 광선이 구를 비껴가는 경우
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

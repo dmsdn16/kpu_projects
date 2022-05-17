@@ -37,11 +37,15 @@ public:
 	XMFLOAT3 m_RayPos;
 	//XMFLOAT4 m_RayVec;
 	XMFLOAT3 m_RayVec;
+	
+	XMFLOAT3 center; // 구의 중심
+	double radius; // 구의 반지름
 
 	void Create(HWND _hWnd, int	_nWndClientWidth, int _nWndClientHeight, ID3D12Device* _pd3dDevice);
 	void Tick(void);
 	CGameObject* IntersecTri(void);
 	CGameObject* IntersecUnit(void);
+	bool CheckSphere(void);
 	void SetRayPos(XMFLOAT3 Raypos)
 	{
 		m_RayPos = Raypos;
@@ -51,4 +55,5 @@ public:
 	void SetRayVec(XMFLOAT3 Rayvec) { m_RayVec = Rayvec; }
 	XMFLOAT3 GetRayPos() { return m_RayPos; }
 	XMFLOAT3 GetRayVec() { return m_RayVec; }
+
 };

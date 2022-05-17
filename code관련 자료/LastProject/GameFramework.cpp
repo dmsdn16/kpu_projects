@@ -52,6 +52,8 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 
 	BuildObjects();
 
+	PickMgr::GetInstance()->Create(hMainWnd, 800, 600, m_pd3dDevice);
+
 	return(true);
 }
 
@@ -318,7 +320,8 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 					::ReleaseCapture();
 					break;
 				case VK_F3:
-					m_pCamera = m_pPlayer->ChangeCamera((DWORD)(wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
+					//m_pCamera = m_pPlayer->ChangeCamera((DWORD)(wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
+					TransManager::GetInstance()->SetCamera(m_pCamera);
 					break;
 				case VK_F9:
 					ChangeSwapChainState();
@@ -347,8 +350,13 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 		case WM_SIZE:
 			break;
 		case WM_LBUTTONDOWN:
-        case WM_RBUTTONDOWN:
         case WM_LBUTTONUP:
+			if (m_pick->GetInstance()->IntersecTri() == nullptr)
+			{
+				std::cout << "aa" << std::endl;
+			}
+			break;
+		case WM_RBUTTONDOWN:
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE:
 			OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
@@ -541,6 +549,7 @@ void CGameFramework::FrameAdvance()
 #endif
 	if (m_pPlayer) m_pPlayer->Render(m_pd3dCommandList, m_pCamera);
 
+	PickMgr::GetInstance()->Tick();
 	d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	d3dResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 	d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
