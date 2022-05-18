@@ -112,7 +112,6 @@ CGameObject* PickMgr::IntersecUnit()
  
     for (auto& object : Unit)
     {
-       
         if (CheckSphere())
         {
             map.emplace(x, object);
@@ -138,22 +137,26 @@ bool PickMgr::CheckSphere(void)
     for (auto& object : Unit)
     {
         center = object->GetPosition();
+        std::cout << center.x << std::endl;
         k = XMFLOAT3(center.x - m_RayPos.x, center.y - m_RayPos.y, center.z - m_RayPos.z);
         double s = Vector3::DotProduct(k, m_RayVec);
         double ls = Vector3::DotProduct(k, k);
         double rs = pow(radius, 2);
         if (s < 0 && ls > rs)
         {
+            std::cout << "a" << std::endl;
             return false;                       // 광선이 구의 반대 방향을 향하거나 구를 지나친 경우
         }
         double m2 = ls - pow(s, 2);
 
         if (m2 > rs)
         {
+            std::cout << "b" << std::endl;
             return false;                      // 광선이 구를 비껴가는 경우
         }
         else
         {
+            std::cout << "c" << std::endl;
             return true;
         }
     }

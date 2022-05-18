@@ -508,7 +508,7 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	}
 
 	//m_ppGameObjects[0]->MoveUp(-1.0f);
-	m_ppGameObjects[0]->MoveStrafe(-1.0f);
+	//m_ppGameObjects[0]->MoveStrafe(-1.0f);
 	//std::cout << m_ppGameObjects[0]->GetPosition().y << std::endl;
 }
 

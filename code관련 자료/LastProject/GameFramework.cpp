@@ -351,7 +351,7 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 			break;
 		case WM_LBUTTONDOWN:
         case WM_LBUTTONUP:
-			if (m_pick->GetInstance()->IntersecTri() == nullptr)
+			if (m_pick->GetInstance()->IntersecUnit() != nullptr)
 			{
 				std::cout << "aa" << std::endl;
 			}
