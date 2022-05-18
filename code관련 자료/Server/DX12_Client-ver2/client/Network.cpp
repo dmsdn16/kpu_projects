@@ -11,7 +11,7 @@ constexpr auto BUF_SIZE = MAX_BUFFER;
 int g_myid;
 float g_x = 0, g_y = 0, g_z = 0;
 
-class OBJECT : public CGameObject {
+class OBJECT : public CScene{
 public:
 	int o_x, o_y, o_z;
 
@@ -40,7 +40,8 @@ void ProcessPacket(char* ptr) {
 		int id = my_packet->id;
 
 		if (id < MAX_USER) {
-			players[id].SetPosition(my_packet->x, my_packet->y, my_packet->z);
+			//players[id].Unit1[0]->SetPosition(my_packet->x, my_packet->y, my_packet->z);
+			//players[id].SetPosition(my_packet->x, my_packet->y, my_packet->z);
 		}
 		break;
 	}
@@ -50,19 +51,143 @@ void ProcessPacket(char* ptr) {
 		int packet_id = my_packet->id;
 		int test = 0;
 		if (packet_id == g_myid) {
-			
-			avatar.SetPosition(my_packet->x, my_packet->y,my_packet->z);
+			//avatar.Unit1[0]->SetPosition(my_packet->x, my_packet->y, my_packet->z);
+			//avatar.SetPosition(my_packet->x, my_packet->y,my_packet->z);
+			//avatar.EnemyAttack();
 			g_x = my_packet->x;
 			g_y = my_packet->y;
 			g_z = my_packet->z;
-			
+
+			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[0])
+			{
+				++players[packet_id].u1c;
+				if (players[packet_id].u1c < 3)
+				{
+					++players[packet_id].count;
+					if (players[packet_id].Unit1[0]->GetPosition().z == 0)
+					{
+						players[packet_id].Unit1[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+					}
+					else
+						players[packet_id].Unit1[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+				}
+				//std::cout << "asda" <<std::endl;
+				//x = 200, z= 100 초기값
+			}
+			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[1])
+			{
+
+				++players[packet_id].u2c;
+				if (players[packet_id].u2c < 3)
+				{
+					++players[packet_id].count;
+					if (players[packet_id].Unit2[0]->GetPosition().z == 0)
+					{
+						players[packet_id].Unit2[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+					}
+					else
+						players[packet_id].Unit2[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+				}
+			}
+
+			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[2])
+			{
+				++players[packet_id].u3c;
+				if (players[packet_id].u3c < 3)
+				{
+					++players[packet_id].count;
+					if (players[packet_id].Unit3[0]->GetPosition().z == 0)
+					{
+						players[packet_id].Unit3[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+					}
+					else
+						players[packet_id].Unit3[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+				}
+			}
+			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[3])
+			{
+				++players[packet_id].u4c;
+				if (players[packet_id].u4c < 3)
+				{
+					++players[packet_id].count;
+					if (players[packet_id].Unit4[0]->GetPosition().z == 0)
+					{
+						players[packet_id].Unit4[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+					}
+					else
+						players[packet_id].Unit4[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+				}
+			}
+
 		}
+			
 		else if (packet_id < MAX_USER) {
 			//avatar.GetPosition();
-			players[packet_id].SetPosition(my_packet->x, my_packet->y, my_packet->z);
+			//players[packet_id].SetPosition(my_packet->x, my_packet->y, my_packet->z);
+			//players[packet_id].Unit1[0]->SetPosition(my_packet->x, my_packet->y, my_packet->z);
+			//players[packet_id].EnemyAttack();
+			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[0])
+			{
+				++players[packet_id].u1c;
+				if (players[packet_id].u1c < 3)
+				{
+					++players[packet_id].count;
+					if (players[packet_id].Unit1[0]->GetPosition().z == 0)
+					{
+						players[packet_id].Unit1[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+					}
+					else
+						players[packet_id].Unit1[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+				}
+				//std::cout << "asda" <<std::endl;
+				//x = 200, z= 100 초기값
+			}
+			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[1])
+			{
+
+				++players[packet_id].u2c;
+				if (players[packet_id].u2c < 3)
+				{
+					++players[packet_id].count;
+					if (players[packet_id].Unit2[0]->GetPosition().z == 0)
+					{
+						players[packet_id].Unit2[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+					}
+					else
+						players[packet_id].Unit2[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+				}
+			}
+
+			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[2])
+			{
+				++players[packet_id].u3c;
+				if (players[packet_id].u3c < 3)
+				{
+					++players[packet_id].count;
+					if (players[packet_id].Unit3[0]->GetPosition().z == 0)
+					{
+						players[packet_id].Unit3[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+					}
+					else
+						players[packet_id].Unit3[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+				}
+			}
+			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[3])
+			{
+				++players[packet_id].u4c;
+				if (players[packet_id].u4c < 3)
+				{
+					++players[packet_id].count;
+					if (players[packet_id].Unit4[0]->GetPosition().z == 0)
+					{
+						players[packet_id].Unit4[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+					}
+					else
+						players[packet_id].Unit4[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
+				}
+			}
+
 		}
-		test++;
-		cout << "test" << test << endl;
 		break;
 	}
 	case StoC_REMOVE_PLAYER:
