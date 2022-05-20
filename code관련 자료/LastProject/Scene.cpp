@@ -95,7 +95,7 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
-	m_ppGameObjects[0]->SetPosition(600.0f, 800.0f, 98.0f);
+	m_ppGameObjects[0]->SetPosition(1000.0f, 800.0f, 500.0f);
 	m_ppGameObjects[0]->SetScale(300, 300, 300);
 	//ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[0]);
 
@@ -105,8 +105,8 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
-	m_ppGameObjects[1]->SetPosition(600.0f, 800.0f, 98.0f);
-	m_ppGameObjects[1]->SetScale(300, 300, 300);
+	m_ppGameObjects[1]->SetPosition(1000.0f,500.0f, 500.0f);
+	m_ppGameObjects[1]->SetScale(100, 100,100);
 	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[1]);
 	if (pAngrybotModel) delete pAngrybotModel;
 	if (pOrcModel) delete pOrcModel;

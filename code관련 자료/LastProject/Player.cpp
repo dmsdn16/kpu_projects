@@ -257,6 +257,7 @@ CTerrainPlayer::CTerrainPlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandLi
 	CLoadedModelInfo *pAngrybotModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Angrybot.bin", NULL);
 	SetChild(pAngrybotModel->m_pModelRootObject, true);
 
+
 	m_pSkinnedAnimationController = new CAnimationController(pd3dDevice, pd3dCommandList, 2, pAngrybotModel);
 	m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
 	m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 2.5f);
@@ -274,9 +275,13 @@ CTerrainPlayer::CTerrainPlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandLi
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
 	CHeightMapTerrain *pTerrain = (CHeightMapTerrain *)pContext;
-	SetPosition(XMFLOAT3(134.0f, 1000, 98.0f));
+	SetPosition(XMFLOAT3(1000.0f, 1500, -220.0f));
 
 	SetScale(XMFLOAT3(0.2f, 0.2f, 0.2f));
+
+	Rotate(50, 180, 0);
+
+	//60 , 1000,1700,-220
 }
 
 CTerrainPlayer::~CTerrainPlayer()

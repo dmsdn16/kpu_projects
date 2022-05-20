@@ -59,6 +59,12 @@ public:
     void Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera=NULL);
 
 	void ReleaseUploadBuffers();
+	bool isDestination(); // 현재좌표와 도착좌표 비교
+	bool isRanger(); // 현재 자신의 위치 확인
+	bool isUnBlock(); // 현재좌표가 벽인지 확인
+	float GetValue(); // 도착지점까지의 거리 계산
+	void Path(); //최단 경로 검색 함수
+	bool Astar(); //astar실행함수
 
 	CPlayer								*m_pPlayer = NULL;
 
