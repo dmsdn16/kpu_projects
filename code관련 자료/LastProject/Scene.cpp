@@ -368,6 +368,36 @@ void CScene::ReleaseUploadBuffers()
 	for (int i = 0; i < m_nGameObjects; i++) m_ppGameObjects[i]->ReleaseUploadBuffers();
 }
 
+bool CScene::isDestination(int row, int col, Pair dst)
+{
+	if (row == dst.first && col == dst.second) return true;
+	return false;
+}
+
+bool CScene::isRanger(int row, int col)
+{
+	return (row >= 0 && row < ROW&& col >= 0 && col < COL);
+}
+
+bool CScene::isUnBlock()
+{
+	return false;
+}
+
+float CScene::GetValue()
+{
+	return 0.0f;
+}
+
+void CScene::Path()
+{
+}
+
+bool CScene::Astar()
+{
+	return false;
+}
+
 void CScene::CreateCbvSrvDescriptorHeaps(ID3D12Device *pd3dDevice, int nConstantBufferViews, int nShaderResourceViews)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC d3dDescriptorHeapDesc;
@@ -541,3 +571,4 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 
 	for (int i = 0; i < m_nShaders; i++) if (m_ppShaders[i]) m_ppShaders[i]->Render(pd3dCommandList, pCamera);
 }
+

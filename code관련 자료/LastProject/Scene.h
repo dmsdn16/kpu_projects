@@ -10,6 +10,12 @@
 #define SPOT_LIGHT						2
 #define DIRECTIONAL_LIGHT				3
 
+
+
+struct Cell {
+	int parent_x, parent_y;
+	double f, g, h;
+};
 struct LIGHT
 {
 	XMFLOAT4							m_xmf4Ambient;
@@ -59,12 +65,7 @@ public:
     void Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera=NULL);
 
 	void ReleaseUploadBuffers();
-	bool isDestination(); // 현재좌표와 도착좌표 비교
-	bool isRanger(); // 현재 자신의 위치 확인
-	bool isUnBlock(); // 현재좌표가 벽인지 확인
-	float GetValue(); // 도착지점까지의 거리 계산
-	void Path(); //최단 경로 검색 함수
-	bool Astar(); //astar실행함수
+
 
 	CPlayer								*m_pPlayer = NULL;
 
@@ -117,4 +118,31 @@ public:
 
 	ID3D12Resource						*m_pd3dcbLights = NULL;
 	LIGHTS								*m_pcbMappedLights = NULL;
+
+public:
+
+	int									MAX = 101;
+	double								INF = 1e9 + 7;
+
+	// 직선
+	const int dx1[4] = { 0, 0, 1, -1 };
+	const int dy1[4] = { -1, 1, 0, 0 };
+
+	// 대각선
+	const int dx2[4] = { 1, -1, -1, 1 };
+	const int dy2[4] = { -1, 1, -1, 1 };
+
+	using Pair = std::pair<int, int>;
+	using pPair = std::pair<double, Pair>;
+
+	char zmap[101][101];
+	int ROW = 0;
+	int COL = 0;
+
+	bool isDestination(int row, int col, Pair dst); // 현재좌표와 도착좌표 비교
+	bool isRanger(int row, int col); // 현재 자신의 위치 확인
+	bool isUnBlock(); // 현재좌표가 벽인지 확인
+	float GetValue(); // 도착지점까지의 거리 계산
+	void Path(); //최단 경로 검색 함수
+	bool Astar(); //astar실행함수
 };
