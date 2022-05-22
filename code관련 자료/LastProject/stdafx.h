@@ -22,6 +22,8 @@
 #include <list>
 #include <random>
 #include <map>
+#include <stack>
+#include <set>
 using namespace std;
 
 #include <d3d12.h>

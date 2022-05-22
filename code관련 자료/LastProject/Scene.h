@@ -141,8 +141,8 @@ public:
 
 	bool isDestination(int row, int col, Pair dst); // 현재좌표와 도착좌표 비교
 	bool isRanger(int row, int col); // 현재 자신의 위치 확인
-	bool isUnBlock(); // 현재좌표가 벽인지 확인
-	float GetValue(); // 도착지점까지의 거리 계산
-	void Path(); //최단 경로 검색 함수
-	bool Astar(); //astar실행함수
+	bool isUnBlock(std::vector<std::vector<int>>& map, int row, int col); // 현재좌표가 벽인지 확인
+	float GetValue(int row, int col, Pair dst); // 도착지점까지의 거리 계산
+	void Path(Cell cellDetails[101][101], Pair dst); //최단 경로 검색 함수
+	bool Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst); //astar실행함수
 };
