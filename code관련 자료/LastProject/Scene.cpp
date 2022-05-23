@@ -398,7 +398,8 @@ void CScene::Path(Cell cellDetails[101][101], Pair dst)
 
 	s.push({ y, x });
 	// cellDetails의 x, y의 부모좌표가 모두 현재좌표와 동일할때까지 반복
-	while (!(cellDetails[y][x].parent_x == x && cellDetails[y][x].parent_y == y)) {
+	while (!(cellDetails[y][x].parent_x == x && cellDetails[y][x].parent_y == y)) 
+	{
 		int tempy = cellDetails[y][x].parent_y;
 		int tempx = cellDetails[y][x].parent_x;
 		y = tempy;
@@ -406,7 +407,8 @@ void CScene::Path(Cell cellDetails[101][101], Pair dst)
 		s.push({ y, x });
 	}
 
-	while (!s.empty()) {
+	while (!s.empty())
+	{
 		zmap[s.top().first][s.top().second] = '*';
 		s.pop();
 	}
@@ -424,7 +426,6 @@ bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
 	Cell cellDetails[101][101];
 
 	// 내용초기화
-		// 이 구조 많이 보셨을겁니다. (최대유량알고리즘과 유사)
 		// 계산해야할 값부분은 INF로하고, 계산할 경로는 -1로 초기화
 	for (int i = 0; i < ROW; ++i) {
 		for (int j = 0; j < COL; ++j) {
@@ -443,7 +444,6 @@ bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
 	std::set<pPair> openList;
 	openList.insert({ 0.0, { sy, sx } });
 
-	// 이 반복구조 bfs와 엄청 똑같습니다.
 	while (!openList.empty()) {
 		pPair p = *openList.begin();
 		openList.erase(openList.begin());
@@ -467,7 +467,7 @@ bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
 					return true;
 				}
 
-				// bfs와 굳이 비교하자면, closedList를 방문여부라고 생각하시면 됩니다.
+				
 				else if (!closedList[ny][nx] && isUnBlock(map, ny, nx)) {
 					// 이부분 y x, ny nx 헷갈리는거 조심
 					ng = cellDetails[y][x].g + 1.0;
@@ -519,6 +519,87 @@ bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
 
 	return false;
 }
+
+void CScene::PrintMap()
+{
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			std::cout << zmap[i][j];
+		}
+		std::cout << '\n';
+	}
+}
+
+
+
+std::vector<std::vector<int>> CScene::fileload(std::string filepath)
+{
+	std::ifstream ifs(filepath);
+
+	int col, row, cur = 0;
+
+	if (ifs.is_open()) {
+		ifs >> ROW >> COL;
+		std::vector<std::vector<int>> result(ROW, std::vector<int>(COL));
+
+		for (int i = 0; i < ROW; ++i) {
+			for (int j = 0; j < COL; ++j) {
+				ifs >> result[i][j];
+			}
+		}
+
+		return result;
+	}
+
+	return std::vector<std::vector<int>>();
+}
+
+void CScene::Checking()
+{
+	Pair src, dst;
+	int row, col;
+
+	/// 방법1 - 맵정보 직접 입력하기 
+	/*
+	std::cin >> row >> col;
+	ROW = row;
+	COL = col;
+
+	std::vector<std::vector<int>> grid(row, std::vector<int>(col));
+
+	for(int i=0;i<row;++i){
+		for(int j=0;j<col;++j){
+			std::cin >> grid[i][j];
+		}
+	}*/
+
+	/// 방법2 - 파일로 부터 맵정보 불러오기 
+	std::vector<std::vector<int>> grid = fileload("MAP.txt");
+	if (grid.empty()) std::cout <<"파일이 안열림"<<std::endl;
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			if (grid[i][j] == 2) {
+				src = { i, j };
+				grid[i][j] = 0;
+			}
+			if (grid[i][j] == 3) {
+				dst = { i, j };
+				grid[i][j] = 0;
+			}
+		}
+	}
+
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			zmap[i][j] = grid[i][j] + '0';
+		}
+	}
+
+	if (Astar(grid, src, dst)) PrintMap();
+	else std::cout << "실패.";
+
+}
+
 
 void CScene::CreateCbvSrvDescriptorHeaps(ID3D12Device *pd3dDevice, int nConstantBufferViews, int nShaderResourceViews)
 {
@@ -658,7 +739,11 @@ void CScene::AnimateObjects(float fTimeElapsed)
 		m_pLights[1].m_xmf3Position = m_pPlayer->GetPosition();
 		m_pLights[1].m_xmf3Direction = m_pPlayer->GetLookVector();
 	}
-
+	if (count == 0)
+	{
+		Checking();
+		count++;
+	}
 	//m_ppGameObjects[0]->MoveUp(-1.0f);
 	//m_ppGameObjects[0]->MoveStrafe(-1.0f);
 	//std::cout << m_ppGameObjects[0]->GetPosition().y << std::endl;

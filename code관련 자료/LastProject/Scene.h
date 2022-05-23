@@ -145,4 +145,10 @@ public:
 	float GetValue(int row, int col, Pair dst); // 도착지점까지의 거리 계산
 	void Path(Cell cellDetails[101][101], Pair dst); //최단 경로 검색 함수
 	bool Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst); //astar실행함수
+	void PrintMap(); // astar확인용 출력
+	std::vector<std::vector<int>> fileload(std::string filepath);
+
+	void Checking();
+
+	int count = 0;
 };
