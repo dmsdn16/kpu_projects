@@ -29,164 +29,22 @@ void ProcessPacket(char* ptr) {
 	{
 		StoC_login_ok* packet = reinterpret_cast<StoC_login_ok*>(ptr);
 		g_myid = packet->id;
-		cout << "로그인 아이디: " << g_myid << endl;
-		
 
+		break;
 	}
-	break;
+	case StoC_UNIT_LOGIN_OK:
+	{
+		StoC_unit_login_ok* packet = reinterpret_cast<StoC_unit_login_ok*>(ptr);
+		g_myid = packet->id;
+		cout << "unit id " << packet->id << " " << packet->x << " " << packet->y << " " << packet->z << endl;
+	}
 	case StoC_ADD_PLAYER:
 	{
 		StoC_add_player* my_packet = reinterpret_cast<StoC_add_player*>(ptr);
 		int id = my_packet->id;
-
 		if (id < MAX_USER) {
-			//players[id].Unit1[0]->SetPosition(my_packet->x, my_packet->y, my_packet->z);
+			players[id].Unit1[0]->SetPosition(my_packet->x, my_packet->y, my_packet->z);
 			//players[id].SetPosition(my_packet->x, my_packet->y, my_packet->z);
-		}
-		break;
-	}
-	case StoC_MOVE_PLAYER:
-	{
-		StoC_move_player* my_packet = reinterpret_cast<StoC_move_player*>(ptr);
-		int packet_id = my_packet->id;
-		int test = 0;
-		if (packet_id == g_myid) {
-			//avatar.Unit1[0]->SetPosition(my_packet->x, my_packet->y, my_packet->z);
-			//avatar.SetPosition(my_packet->x, my_packet->y,my_packet->z);
-			//avatar.EnemyAttack();
-			g_x = my_packet->x;
-			g_y = my_packet->y;
-			g_z = my_packet->z;
-
-			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[0])
-			{
-				++players[packet_id].u1c;
-				if (players[packet_id].u1c < 3)
-				{
-					++players[packet_id].count;
-					if (players[packet_id].Unit1[0]->GetPosition().z == 0)
-					{
-						players[packet_id].Unit1[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-					}
-					else
-						players[packet_id].Unit1[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-				}
-				//std::cout << "asda" <<std::endl;
-				//x = 200, z= 100 초기값
-			}
-			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[1])
-			{
-
-				++players[packet_id].u2c;
-				if (players[packet_id].u2c < 3)
-				{
-					++players[packet_id].count;
-					if (players[packet_id].Unit2[0]->GetPosition().z == 0)
-					{
-						players[packet_id].Unit2[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-					}
-					else
-						players[packet_id].Unit2[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-				}
-			}
-
-			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[2])
-			{
-				++players[packet_id].u3c;
-				if (players[packet_id].u3c < 3)
-				{
-					++players[packet_id].count;
-					if (players[packet_id].Unit3[0]->GetPosition().z == 0)
-					{
-						players[packet_id].Unit3[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-					}
-					else
-						players[packet_id].Unit3[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-				}
-			}
-			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[3])
-			{
-				++players[packet_id].u4c;
-				if (players[packet_id].u4c < 3)
-				{
-					++players[packet_id].count;
-					if (players[packet_id].Unit4[0]->GetPosition().z == 0)
-					{
-						players[packet_id].Unit4[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-					}
-					else
-						players[packet_id].Unit4[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-				}
-			}
-
-		}
-			
-		else if (packet_id < MAX_USER) {
-			//avatar.GetPosition();
-			//players[packet_id].SetPosition(my_packet->x, my_packet->y, my_packet->z);
-			//players[packet_id].Unit1[0]->SetPosition(my_packet->x, my_packet->y, my_packet->z);
-			//players[packet_id].EnemyAttack();
-			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[0])
-			{
-				++players[packet_id].u1c;
-				if (players[packet_id].u1c < 3)
-				{
-					++players[packet_id].count;
-					if (players[packet_id].Unit1[0]->GetPosition().z == 0)
-					{
-						players[packet_id].Unit1[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-					}
-					else
-						players[packet_id].Unit1[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-				}
-				//std::cout << "asda" <<std::endl;
-				//x = 200, z= 100 초기값
-			}
-			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[1])
-			{
-
-				++players[packet_id].u2c;
-				if (players[packet_id].u2c < 3)
-				{
-					++players[packet_id].count;
-					if (players[packet_id].Unit2[0]->GetPosition().z == 0)
-					{
-						players[packet_id].Unit2[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-					}
-					else
-						players[packet_id].Unit2[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-				}
-			}
-
-			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[2])
-			{
-				++players[packet_id].u3c;
-				if (players[packet_id].u3c < 3)
-				{
-					++players[packet_id].count;
-					if (players[packet_id].Unit3[0]->GetPosition().z == 0)
-					{
-						players[packet_id].Unit3[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-					}
-					else
-						players[packet_id].Unit3[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-				}
-			}
-			if ((players[packet_id].m_pick->GetInstance()->IntersecTri()) == players[packet_id].m_UI[3])
-			{
-				++players[packet_id].u4c;
-				if (players[packet_id].u4c < 3)
-				{
-					++players[packet_id].count;
-					if (players[packet_id].Unit4[0]->GetPosition().z == 0)
-					{
-						players[packet_id].Unit4[0]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-					}
-					else
-						players[packet_id].Unit4[1]->SetPosition(200 + (300 * players[packet_id].count), players[packet_id].m_pTerrain->GetHeight(100, 100), 100);
-				}
-			}
-
 		}
 		break;
 	}
@@ -202,11 +60,8 @@ void ProcessPacket(char* ptr) {
 		}
 		break;
 	}
-	case StoC_START:
-		StoC_start* packet = reinterpret_cast<StoC_start*>(ptr);
-		start = packet->time;
-		cout << start << endl;
 	}
+
 }
 
 void process_data(char* net_buf, size_t io_byte)
@@ -234,27 +89,19 @@ void process_data(char* net_buf, size_t io_byte)
 	}
 }
 
-void send_move_packet(float x, float y,float z)
-{
-	CtoS_move packet;
-	packet.size = sizeof(packet);
-	packet.type = CtoS_MOVE;
-	packet.x = x;
-	packet.y = y;
-	packet.z = z;
-	cout << "send move packe : " << x << " " << y << " " << z << endl;
-	size_t sent = 0;
-	socket.send(&packet, sizeof(packet), sent);
-}
+//void send_move_packet(float x, float y,float z)
+//{
+//	CtoS_move packet;
+//	packet.size = sizeof(packet);
+//	packet.type = CtoS_MOVE;
+//	packet.x = x;
+//	packet.y = y;
+//	packet.z = z;
+//	cout << "send move packe : " << x << " " << y << " " << z << endl;
+//	size_t sent = 0;
+//	socket.send(&packet, sizeof(packet), sent);
+//}
 
-void send_timer()
-{
-	CtoS_start packet;
-	packet.size = sizeof(packet);
-	packet.type = CtoS_START;
-	size_t sent = 0;
-	socket.send(&packet, sizeof(packet), sent);
-}
 
 void send_login_packet()
 {
@@ -266,6 +113,19 @@ void send_login_packet()
 	socket.send(&packet, sizeof(packet), sent);
 }
 
+
+void send_unit_login_packet(float x, float y, float z)
+{
+	CtoS_unit_login packet;
+	packet.size = sizeof(packet);
+	packet.type = CtoS_UNIT_LOGIN;
+	packet.x = x;
+	packet.y = y;
+	packet.z = z;
+	//strcpy_s(packet.name, name.c_str());
+	size_t sent = 0;
+	socket.send(&packet, sizeof(packet), sent);
+}
 
 
 void client_main()

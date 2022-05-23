@@ -465,7 +465,7 @@ void CScene::EnemyAttack()
 				Unit4[1]->SetPosition(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
 		}
 	}
-	send_move_packet(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
+	send_unit_login_packet(200 + (300 * count), m_pTerrain->GetHeight(100, 100), 100);
 }
 
 bool CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
