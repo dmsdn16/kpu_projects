@@ -82,32 +82,34 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 
 	m_pSkyBox = new CSkyBox(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature);
 
-	XMFLOAT3 xmf3Scale(8.0f, 2.0f, 8.0f);
+	XMFLOAT3 xmf3Scale(7.0f, 2.0f, 7.0f);
 	XMFLOAT4 xmf4Color(0.0f, 0.3f, 0.0f, 0.0f);
 	m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, _T("1HeightMap.raw"), 257, 257, xmf3Scale, xmf4Color);
 
 	m_nGameObjects = 2;
 	m_ppGameObjects = new CGameObject*[m_nGameObjects];
 
-	CLoadedModelInfo *pAngrybotModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/Angrybot.bin", NULL);
-	m_ppGameObjects[0] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pAngrybotModel, 2);
+	CLoadedModelInfo *pAngrybotModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orc.bin", NULL);
+	m_ppGameObjects[0] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pAngrybotModel, 1);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
-	m_ppGameObjects[0]->SetPosition(1000.0f, 800.0f, 500.0f);
-	m_ppGameObjects[0]->SetScale(300, 300, 300);
-	//ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[0]);
+	m_ppGameObjects[0]->SetPosition(340.0f, 500.0f, 360.0f);
+	m_ppGameObjects[0]->SetScale(100, 100, 100);
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[0]);
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[0]);
 
 	CLoadedModelInfo* pOrcModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orc.bin", NULL);
 	m_ppGameObjects[1] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pOrcModel, 1);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
-	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 1.0f);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
-	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
-	m_ppGameObjects[1]->SetPosition(1000.0f,500.0f, 500.0f);
+	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
+	m_ppGameObjects[1]->SetPosition(1460.0f,500.0f, 1540.0f);
 	m_ppGameObjects[1]->SetScale(100, 100,100);
 	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[1]);
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[1]);
 	if (pAngrybotModel) delete pAngrybotModel;
 	if (pOrcModel) delete pOrcModel;
 
@@ -392,7 +394,8 @@ float CScene::GetValue(int row, int col, Pair dst)
 
 void CScene::Path(Cell cellDetails[101][101], Pair dst)
 {
-	std::stack<Pair> s;
+	// 여기서 이동구현
+	//std::stack<Pair> s;
 	int y = dst.first;
 	int x = dst.second;
 
@@ -407,11 +410,21 @@ void CScene::Path(Cell cellDetails[101][101], Pair dst)
 		s.push({ y, x });
 	}
 
-	while (!s.empty())
+	/*while (!s.empty())
 	{
+		int p = s.top().first;
+		int q = s.top().second;
 		zmap[s.top().first][s.top().second] = '*';
+		//std::cout << s.top().first << " y : " << s.top().second << std::endl;
 		s.pop();
-	}
+		if (!s.empty())
+		{
+			int k = p - s.top().first;
+			int j = q - s.top().second;
+			//std::cout << k << "y : "<< j << std::endl;
+			TracePath(k, j);
+		}
+	}*/
 }
 
 bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
@@ -433,6 +446,7 @@ bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
 			cellDetails[i][j].parent_x = cellDetails[i][j].parent_y = -1;
 		}
 	}
+
 
 	// src의 좌표가 첫좌표가 된다.
 	int sy = src.first;
@@ -488,7 +502,7 @@ bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
 		}
 
 		// 대각선
-		for (int i = 0; i < 4; ++i) {
+		/*for (int i = 0; i < 4; ++i) {
 			int ny = y + dy2[i];
 			int nx = x + dx2[i];
 
@@ -514,7 +528,7 @@ bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	return false;
@@ -597,6 +611,65 @@ void CScene::Checking()
 
 	if (Astar(grid, src, dst)) PrintMap();
 	else std::cout << "실패.";
+
+}
+
+void CScene::TracePath(int x , int y, int z)
+{
+	if (x == -1) // 아래로 이동
+	{
+		std::cout << " a " << std::endl;
+		m_ppGameObjects[z]->MoveUp(100.0f);
+	}
+	if (x == 1) // 위로 이동
+	{
+		std::cout << " b " << std::endl;
+		m_ppGameObjects[z]->MoveUp(-100.0f);
+	}
+	if (y == -1) // 오른쪽이동
+	{
+		std::cout << " c " << std::endl;
+		m_ppGameObjects[z]->MoveStrafe(-100.0f);
+	}
+	if (y == 1) // 왼쪽이동
+	{
+		std::cout << " d " << std::endl;
+		m_ppGameObjects[z]->MoveStrafe(100.0f);
+	}
+}
+
+void CScene::MakingMap()
+{
+	list<CGameObject*> War = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_WARRIOR);
+	int Cx,Cz,Cx2,Cz2;
+	int i = 0;
+	int j, k,p,q;
+	for (auto& ex : War)
+	{
+		Cx = ex->GetPosition().x;
+		Cz = ex->GetPosition().z;
+		for (auto& jk : War)
+		{
+			if (jk->GetPosition().x != Cx || jk->GetPosition().z != Cz)
+			{
+				Cx2 = jk->GetPosition().x;
+				Cz2 = jk->GetPosition().z;
+				p = (1460 - Cx2) / 140;
+				q = (1540 - Cz2) / 160;
+				std:: cout << "Cx2 : " << Cx2 << " , Cz2 : " << Cz2 << " , j : " << p << " , k : " << q << std::endl;
+				Bmap[i][p][q] = 1;
+			}
+			else if(jk->GetPosition().x == Cx || jk->GetPosition().z == Cz)
+			{
+				j = (1600 - Cx) / 140;
+				k = (1700 - Cz) / 160;
+				Bmap[i][j][k] = 3;
+			}
+			
+		}
+		//std::cout << Bmap[0][8][0] << std::endl;
+		i++;
+	}
 
 }
 
@@ -742,11 +815,9 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	if (count == 0)
 	{
 		Checking();
+		MakingMap();
 		count++;
 	}
-	//m_ppGameObjects[0]->MoveUp(-1.0f);
-	//m_ppGameObjects[0]->MoveStrafe(-1.0f);
-	//std::cout << m_ppGameObjects[0]->GetPosition().y << std::endl;
 }
 
 void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera)
@@ -775,6 +846,32 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 			//std::cout << m_ppGameObjects[i]->m_xmOOBB.Center.x << std::endl;
 		}
 	}
+
+		//m_ppGameObjects[1]->MoveUp(-0.1f); 
+
+	if (FrameCount == 0)
+	{
+		if (!s.empty())
+		{
+			int p = s.top().first;
+			int q = s.top().second;
+			zmap[s.top().first][s.top().second] = '*';
+			std::cout << s.top().first << " y : " << s.top().second << std::endl;
+			s.pop();
+			if (!s.empty())
+			{
+				int k = p - s.top().first;
+				int j = q - s.top().second;
+				//std::cout << k << "y : "<< j << std::endl;
+				TracePath(k, j,0);
+			}
+		}
+	}
+
+	FrameCount++;
+
+	if (FrameCount == 120) // 수치는 나중에 개선
+		FrameCount = 0;
 
 	for (int i = 0; i < m_nShaders; i++) if (m_ppShaders[i]) m_ppShaders[i]->Render(pd3dCommandList, pCamera);
 }

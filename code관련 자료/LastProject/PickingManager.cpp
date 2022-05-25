@@ -112,6 +112,7 @@ CGameObject* PickMgr::IntersecUnit()
  
     for (auto& object : Unit)
     {
+        center = object->GetPosition();
         if (CheckSphere())
         {
             map.emplace(x, object);
@@ -136,8 +137,7 @@ bool PickMgr::CheckSphere(void)
 
     for (auto& object : Unit)
     {
-        center = object->GetPosition();
-        std::cout << center.x << std::endl;
+        //std::cout << center.x << std::endl;
         k = XMFLOAT3(center.x - m_RayPos.x, center.y - m_RayPos.y, center.z - m_RayPos.z);
         double s = Vector3::DotProduct(k, m_RayVec);
         double ls = Vector3::DotProduct(k, k);

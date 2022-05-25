@@ -134,8 +134,9 @@ public:
 
 	using Pair = std::pair<int, int>;
 	using pPair = std::pair<double, Pair>;
-
+	std::stack<Pair> s;
 	char zmap[101][101];
+	int Bmap[10][9][9] = {0,};
 	int ROW = 0;
 	int COL = 0;
 
@@ -149,6 +150,8 @@ public:
 	std::vector<std::vector<int>> fileload(std::string filepath);
 
 	void Checking();
-
+	void TracePath(int x, int y, int z);
+	void MakingMap();
 	int count = 0;
+	int FrameCount = 0;
 };

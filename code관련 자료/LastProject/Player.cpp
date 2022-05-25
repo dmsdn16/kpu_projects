@@ -275,7 +275,7 @@ CTerrainPlayer::CTerrainPlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandLi
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
 	CHeightMapTerrain *pTerrain = (CHeightMapTerrain *)pContext;
-	SetPosition(XMFLOAT3(1000.0f, 1500, -220.0f));
+	SetPosition(XMFLOAT3(900.0f, 1500, -220.0f));
 
 	SetScale(XMFLOAT3(0.2f, 0.2f, 0.2f));
 

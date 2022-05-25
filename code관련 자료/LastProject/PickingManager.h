@@ -39,7 +39,7 @@ public:
 	XMFLOAT3 m_RayVec;
 	
 	XMFLOAT3 center; // 구의 중심
-	double radius = 50.0f; // 구의 반지름
+	double radius = 70.0f; // 구의 반지름
 
 	void Create(HWND _hWnd, int	_nWndClientWidth, int _nWndClientHeight, ID3D12Device* _pd3dDevice);
 	void Tick(void);
