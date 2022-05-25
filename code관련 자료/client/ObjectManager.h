@@ -27,9 +27,13 @@ public:
 	enum OBJECT_TYPE
 	{
 		OT_PLAYER,
-		OT_UNIT,
-		OT_Building,
+		OT_WARRIOR,
+		OT_ARCHER,
+		OT_THIEF,
+		OT_HUMAN,
+		OT_ELF,
 		OT_UI,
+		OT_UNIT,
 		OT_END
 	};
 
@@ -40,7 +44,5 @@ public:
 
 private:
 	list<CGameObject*>		m_objcetlist[OT_END];
-
-
 };
 

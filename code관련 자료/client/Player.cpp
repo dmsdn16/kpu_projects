@@ -348,16 +348,6 @@ CTerrainPlayer::CTerrainPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandLi
 
 	SetShader(pShader);
 
-	m_missile = new CMissileObject *[m_missileNum]; // 오브젝트 생성
-
-	for (int i = 0; i < m_missileNum; ++i) {
-		m_missile[i] = new CMissileObject();
-		m_missile[i]->SetMesh(0, pAirplaneMesh);
-		m_missile[i]->SetShader(pShader);
-		m_missile[i]->SetScale(3.0f);
-		m_missile[i]->SetPosition(0.0f, -1000.0f, 0.0f);
-		m_missile[i]->SetColor(XMFLOAT3(1.0f, 0.0f, 1.0f));
-	}
 }
 
 CTerrainPlayer::~CTerrainPlayer()
@@ -461,21 +451,11 @@ void CTerrainPlayer::OnCameraUpdateCallback(float fTimeElapsed)
 void CTerrainPlayer::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
 {
 	CPlayer::Render(pd3dCommandList, pCamera);
-	for (int i = 0; i < m_missileNum; ++i) {
-		m_missile[i]->Render(pd3dCommandList, pCamera);
-	}
 }
 
 void CTerrainPlayer::Update(float fTimeElapsed)
 {
-	for (int i = 0; i < m_missileNum; ++i) {
-		if (m_missile != nullptr)
-			if (m_missile[i]->GetFire())
-				m_missile[i]->Animate(fTimeElapsed);
-	}
-	
 	CPlayer::Update(fTimeElapsed);
-	
 }
 
 void CTerrainPlayer::ResetPlayerPos()
@@ -484,16 +464,6 @@ void CTerrainPlayer::ResetPlayerPos()
 	
 }
 
-void CTerrainPlayer::Attack()
-{
-	for (int i = 0; i < m_missileNum; ++i) {
-		if (!m_missile[i]->GetFire()) {
-			m_missile[i]->m_xmf4x4World = m_xmf4x4World;
-			m_missile[i]->SetFire(true);
-			break;
-		}
-	}
-}
 
 void CTerrainPlayer::RightSpin()
 {
