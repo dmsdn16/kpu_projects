@@ -40,12 +40,18 @@ void ProcessPacket(char* ptr) {
 	}
 	case StoC_ADD_PLAYER:
 	{
-		StoC_add_player* my_packet = reinterpret_cast<StoC_add_player*>(ptr);
-		int id = my_packet->id;
+		StoC_add_player* packet = reinterpret_cast<StoC_add_player*>(ptr);
+		int id = packet->id;
 		if (id < MAX_USER) {
-			players[id].Unit1[0]->SetPosition(my_packet->x, my_packet->y, my_packet->z);
-			//players[id].SetPosition(my_packet->x, my_packet->y, my_packet->z);
+			/*cout << "send 다른클라 좌표" << packet->x << " " << packet->y << " " << packet->z << endl;
+			players[id].Unit1[0]->SetPosition(packet->x, packet->y, packet->z);*/
 		}
+		else
+		{
+			cout << "send 다른클라 좌표" << packet->x << " " << packet->y << " " << packet->z << endl;
+			players[id- MAX_UNIT].Unit1[0]->SetPosition(packet->x, packet->y, packet->z);
+		}
+
 		break;
 	}
 	case StoC_REMOVE_PLAYER:

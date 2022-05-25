@@ -143,9 +143,8 @@ void send_add_player(int c_id, int p_id)
 	p.x = players[p_id].x;
 	p.y = players[p_id].y;
 	p.z = players[p_id].z;
-
-	p.race = 0;
 	send_packet(c_id, &p);
+	//send_packet(p_id, &p);
 }
 
 void send_remove_player(int c_id, int p_id)
@@ -221,15 +220,20 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 			{
 				lock_guard<mutex> gl2{ players[p_id].m_slock };
 				players[p_id].m_state = PLST_INGAME;
-				cout << "위치 확인" << players[p_id].x << " " << players[p_id].y << " " << players[p_id].z << endl;
+				cout << " 패킷 확인" << packet->x << " " << packet->y << " " << packet->z << endl;
+				players[p_id].x = packet->x;
+				players[p_id].y = packet->y;
+				players[p_id].z = packet->z;
+				send_unit_login_ok_packet(p_id);
 			}
 			for (auto& pl : players) {
 				if (p_id != pl.id) {
 					lock_guard<mutex>gl{ pl.m_slock };
 					if (PLST_INGAME == pl.m_state) {
-						cout << "위치 확인" << players[p_id].x << " " << players[p_id].y << " "<< players[p_id].z << endl;
 						send_add_player(pl.id, p_id);
 						send_add_player(p_id, pl.id);
+						cout << "id : " << p_id << " " << pl.id << endl;
+						cout << "pl.id" << players[pl.id].x << players[pl.id].y << players[pl.id].z;
 					}
 				}
 			}
