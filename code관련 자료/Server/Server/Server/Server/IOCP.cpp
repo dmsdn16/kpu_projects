@@ -41,7 +41,7 @@ struct SESSION {
 	int m_prev_size;
 	//게임의 내용물
 	char m_name[100];
-	short x, y;
+	float x, y,z;
 };
 
 constexpr int SERVER_ID = 0;
@@ -87,6 +87,22 @@ void send_login_ok_packet(int p_id)
 	p.type = StoC_LOGIN_OK;
 	p.x = players[p_id].x;
 	p.y = players[p_id].y;
+	p.z = players[p_id].z;
+	send_packet(p_id, &p);
+}
+
+void send_unit_login_ok_packet(int p_id)
+{
+	StoC_unit_login_ok p;
+	p.hp = 100;
+	p.id = p_id;
+	p.level = 1;
+	p.race = 1;
+	p.size = sizeof(p);
+	p.type = StoC_UNIT_LOGIN_OK;
+	p.x = players[p_id].x;
+	p.y = players[p_id].y;
+	p.z = players[p_id].z;
 	send_packet(p_id, &p);
 }
 
@@ -112,7 +128,6 @@ int get_new_player_id(SOCKET p_socket)
 		if (PLST_FREE == players[i].m_state) {
 			players[i].m_state = PLST_CONNECTED;
 			players[i].m_socket = p_socket;
-			players[i].m_name[0] = 0;
 			return i;
 		}
 	}
@@ -127,8 +142,9 @@ void send_add_player(int c_id, int p_id)
 	p.type = StoC_ADD_PLAYER;
 	p.x = players[p_id].x;
 	p.y = players[p_id].y;
-	p.race = 0;
+	p.z = players[p_id].z;
 	send_packet(c_id, &p);
+	//send_packet(p_id, &p);
 }
 
 void send_remove_player(int c_id, int p_id)
@@ -143,64 +159,32 @@ void send_remove_player(int c_id, int p_id)
 void send_move_packet(int c_id, int p_id)
 {
 	StoC_move_player p;
+	cout<<"send_move_packet" << players[p_id].x << players[p_id].y << players[p_id].z <<" "<<p_id << endl;
 	p.id = p_id;
 	p.size = sizeof(p);
 	p.type = StoC_MOVE_PLAYER;
 	p.x = players[p_id].x;
 	p.y = players[p_id].y;
+	p.z = players[p_id].z;
 	send_packet(c_id, &p);
-}
-
-void send_all_ready_packet(int p_id)
-{
-	StoC_all_ready p;
-	p.id = p_id;
-	p.size = sizeof(p);
-	p.type = StoC_ALL_READY;
 	send_packet(p_id, &p);
 }
 
-void send_start_packet(int c_id, int p_id)
-{
-	StoC_start p;
-	p.id = p_id;
-	p.size = sizeof(p);
-	p.type = StoC_START;
-	p.time = GetTickCount64();
-	send_packet(c_id, &p);
-}
 
-void do_move(int p_id, DIRECTION dir, int p_x, int p_y)
+void do_move(int p_id, float p_x, float p_y, float p_z)
 {
-	DWORD dwDirection;
-	auto& x = players[p_id].x;
-	auto& y = players[p_id].y;
-	/*switch (dir)
-	{
-	case D_N: if (y > 0) y--; break;
-	case D_S: if (y < (WORLD_Y_SIZE - 1))y++; break;
-	case D_W: if (x > 0)x--; break;
-	case D_E: if (x < (WORLD_X_SIZE - 1))x++; break;
-	}*/
-	switch (dir) 
-	{
-	case D_N:
-		break;
-	case D_S:
-		break;
-	case D_E:
-		break;
-	case D_W:
-		break;
-	case D_LB:
-		x = p_x;
-		y = p_y;
-		break;
-	}
+	players[p_id].x = p_x;
+	players[p_id].y = p_y;
+	players[p_id].z = p_z;
+
 	for (auto& pl : players) {
-		lock_guard<mutex> gl{ pl.m_slock };
-		if (PLST_INGAME == pl.m_state)
-			send_move_packet(pl.id, p_id);
+		if (p_id != pl.id) {
+			lock_guard<mutex>gl{ pl.m_slock };
+			if (PLST_INGAME == pl.m_state) {
+				send_move_packet(pl.id, p_id);
+				send_move_packet(p_id, pl.id);
+			}
+		}
 	}
 }
 
@@ -220,7 +204,7 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 			//strcpy_s(players[p_id].m_name, packet->name);
 			send_login_ok_packet(p_id);
 			//주위에 누가 있는지 알려줘야함(시야공유 등)
-			for (auto& pl : players) {
+			/*for (auto& pl : players) {
 				if (p_id != pl.id) {
 					lock_guard<mutex>gl{ pl.m_slock };
 					if (PLST_INGAME == pl.m_state) {
@@ -228,33 +212,39 @@ void proccess_packet(int p_id, unsigned char* p_buf)
 						send_add_player(p_id, pl.id);
 					}
 				}
-			}
+			}*/
 		}
 			break;
-		case CtoS_MOVE: {
-			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
-			do_move(p_id, packet->dir,packet->x,packet->y);
-			cout << "클라에게 받음: " << packet->x << " " << packet->y << endl;
-		}
-			break;
-		case CtoS_START:
-		{
-			CtoS_start* packet = reinterpret_cast<CtoS_start*>(p_buf);
+		case CtoS_UNIT_LOGIN: {
+			CtoS_unit_login* packet = reinterpret_cast<CtoS_unit_login*>(p_buf);
 			{
 				lock_guard<mutex> gl2{ players[p_id].m_slock };
-				players[p_id].m_state = PLST_READY;
+				players[p_id].m_state = PLST_INGAME;
+				cout << " 패킷 확인" << packet->x << " " << packet->y << " " << packet->z << endl;
+				players[p_id].x = packet->x;
+				players[p_id].y = packet->y;
+				players[p_id].z = packet->z;
+				send_unit_login_ok_packet(p_id);
 			}
 			for (auto& pl : players) {
 				if (p_id != pl.id) {
 					lock_guard<mutex>gl{ pl.m_slock };
-					if (PLST_READY == pl.m_state) {
-						send_start_packet(pl.id, p_id);
-						send_start_packet(p_id, pl.id);
+					if (PLST_INGAME == pl.m_state) {
+						send_add_player(pl.id, p_id);
+						send_add_player(p_id, pl.id);
+						cout << "id : " << p_id << " " << pl.id << endl;
+						cout << "pl.id" << players[pl.id].x << players[pl.id].y << players[pl.id].z;
 					}
 				}
 			}
 		}
 		break;
+		case CtoS_MOVE: {
+			CtoS_move* packet = reinterpret_cast<CtoS_move*>(p_buf);
+			cout << " CtoS_move" << packet->x << " " << packet->y << " " << packet->z << " " << p_id << endl;
+			do_move(p_id,packet->x, packet->y, packet->z);
+		}
+			break;
 		default:
 			cout << "Unknown Packet Type from Client[" << p_id << "] Packet Type [" << p_buf[1] << "]" << endl;
 			while (true);
@@ -325,7 +315,6 @@ void worker_thread(HANDLE h_iocp, SOCKET l_socket)
 				break;
 
 			case OP_ACCEPT: {
-				printf("연결");
 				int c_id = get_new_player_id(ex_over->m_csocket);
 				if (-1 != c_id) {
 					players[c_id].m_recv_over.m_op = OP_RECV;
