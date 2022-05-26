@@ -84,7 +84,7 @@ VS_SKINNED_WIREFRAME_OUTPUT VSSkinnedAnimationWireFrame(VS_SKINNED_WIREFRAME_INP
 
 float4 PSSkinnedAnimationWireFrame(VS_SKINNED_WIREFRAME_OUTPUT input) : SV_TARGET
 {
-	return(float4(1.0f, 0.0f, 0.0f, 1.0f));
+	return(float4(1.0f, 1.0f, 0.0f, 1.0f)); // »ö±ò
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

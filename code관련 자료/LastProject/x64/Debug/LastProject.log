@@ -1,11 +1,13 @@
 ﻿  Scene.cpp
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(391,26): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(553,11): warning C4101: 'row' :참조되지 않은 지역 변수입니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(553,6): warning C4101: 'col' :참조되지 않은 지역 변수입니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(574,6): warning C4101: 'row' :참조되지 않은 지역 변수입니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(574,11): warning C4101: 'col' :참조되지 않은 지역 변수입니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(649,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(392,26): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(554,11): warning C4101: 'row' :참조되지 않은 지역 변수입니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(554,6): warning C4101: 'col' :참조되지 않은 지역 변수입니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(575,6): warning C4101: 'row' :참조되지 않은 지역 변수입니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(575,11): warning C4101: 'col' :참조되지 않은 지역 변수입니다.
 C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(650,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(655,28): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(651,25): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(656,28): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(657,28): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Shader.cpp
+  코드를 생성하고 있습니다...
   LastProject.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\x64\Debug\LastProject.exe

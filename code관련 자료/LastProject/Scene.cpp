@@ -84,7 +84,7 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 
 	XMFLOAT3 xmf3Scale(7.0f, 2.0f, 7.0f);
 	XMFLOAT4 xmf4Color(0.0f, 0.3f, 0.0f, 0.0f);
-	m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, _T("1HeightMap.raw"), 257, 257, xmf3Scale, xmf4Color);
+	m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, _T("2LargeTerrain(2049)16Bit.raw"), 257, 257, xmf3Scale, xmf4Color);
 
 	m_nGameObjects = 2;
 	m_ppGameObjects = new CGameObject*[m_nGameObjects];
@@ -103,10 +103,10 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 	CLoadedModelInfo* pOrcModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orc.bin", NULL);
 	m_ppGameObjects[1] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pOrcModel, 1);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
-	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 1.0f);
+	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
-	m_ppGameObjects[1]->SetPosition(1460.0f,500.0f, 1540.0f);
+	m_ppGameObjects[1]->SetPosition(600.0f,500.0f, 500.0f);
 	m_ppGameObjects[1]->SetScale(100, 100,100);
 	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[1]);
 	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[1]);
@@ -641,35 +641,25 @@ void CScene::TracePath(int x , int y, int z)
 void CScene::MakingMap()
 {
 	list<CGameObject*> War = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_WARRIOR);
-	int Cx,Cz,Cx2,Cz2;
-	int i = 0;
-	int j, k,p,q;
+	int Cx, Cz;
+	int p,q;
 	for (auto& ex : War)
 	{
 		Cx = ex->GetPosition().x;
 		Cz = ex->GetPosition().z;
-		for (auto& jk : War)
-		{
-			if (jk->GetPosition().x != Cx || jk->GetPosition().z != Cz)
-			{
-				Cx2 = jk->GetPosition().x;
-				Cz2 = jk->GetPosition().z;
-				p = (1460 - Cx2) / 140;
-				q = (1540 - Cz2) / 160;
-				std:: cout << "Cx2 : " << Cx2 << " , Cz2 : " << Cz2 << " , j : " << p << " , k : " << q << std::endl;
-				Bmap[i][p][q] = 1;
-			}
-			else if(jk->GetPosition().x == Cx || jk->GetPosition().z == Cz)
-			{
-				j = (1600 - Cx) / 140;
-				k = (1700 - Cz) / 160;
-				Bmap[i][j][k] = 3;
-			}
-			
-		}
+		
+		p = (1460 - Cx) / 140;
+		q = (1540 - Cz) / 160;
+		//std:: cout << "Cx2 : " << Cx2 << " , Cz2 : " << Cz2 << " , j : " << p << " , k : " << q << std::endl;
+		Bmap[p][q] = 1;
+		
 		//std::cout << Bmap[0][8][0] << std::endl;
-		i++;
 	}
+
+}
+// 가장 가까운 적 타겟팅
+void CScene::Targeting()
+{
 
 }
 
@@ -847,7 +837,7 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 		}
 	}
 
-		//m_ppGameObjects[1]->MoveUp(-0.1f); 
+		m_ppGameObjects[1]->MoveUp(-0.1f); 
 
 	if (FrameCount == 0)
 	{

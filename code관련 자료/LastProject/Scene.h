@@ -136,7 +136,7 @@ public:
 	using pPair = std::pair<double, Pair>;
 	std::stack<Pair> s;
 	char zmap[101][101];
-	int Bmap[10][9][9] = {0,};
+	int Bmap[9][9] = {0,};
 	int ROW = 0;
 	int COL = 0;
 
@@ -152,6 +152,7 @@ public:
 	void Checking();
 	void TracePath(int x, int y, int z);
 	void MakingMap();
+	void Targeting();
 	int count = 0;
 	int FrameCount = 0;
 };
