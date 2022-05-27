@@ -664,6 +664,375 @@ void CScene::Targeting()
 }
 
 
+// 리롤
+void CScene::Reroll()
+{
+	ResetUi();
+
+	u_count = 0; // ui위치
+	x_count = 0; // ui 갯수
+
+	for (int i = 0; i < 5; ++i)
+	{
+		UIBox[i] = uc[i];
+	}
+	//나중에 코스트별 분리 필요
+	//std::cout << UIBox[0] << std::endl;
+	for (int i = 0; i < 4; ++i)
+	{
+		int a = CalRoll();
+		//std::cout << UIBox[0] << std::endl;
+		switch (a)
+		{
+		case 1:
+
+			m_UI1[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			--UIBox[0];
+
+			break;
+		case 2:
+
+			m_UI2[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			--UIBox[1];
+			break;
+		case 3:
+
+			m_UI3[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			--UIBox[2];
+			break;
+		case 4:
+
+			m_UI4[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			--UIBox[3];
+			break;
+		case 5:
+
+			m_UI5[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			x_count++;
+			u_count++;
+			--UIBox[4];
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+// 누적 확률을 이용한 확률계산
+int CScene::CalRoll()
+{
+	int	allunit = 0;
+	for (int i = 0; i < 5; ++i)
+	{
+		allunit += UIBox[i];
+	}
+	std::uniform_int_distribution<int> RandomDir(1, allunit);
+
+	int ran = RandomDir(gen);
+
+	int p[] = { UIBox[4],UIBox[3],UIBox[2],UIBox[1],UIBox[0], }; //5, 4, 3, 2, 1
+
+	int cumulative = 0;
+
+	std::cout << allunit << std::endl;
+
+	for (int i = 0; i < 5; i++)
+	{
+		cumulative += p[i];
+		if (ran <= cumulative)
+		{
+			return 5 - i;
+		}
+	}
+
+	// 확률은 언제나자신/전체
+}
+
+void CScene::AdmCount()
+{
+	//ui1c = 1;
+	//ui2c = 1;
+	//ui3c = 1;
+	//ui4c = 1;
+	//ui5c = 1;
+}
+
+void CScene::ResetUi()
+{
+	for (int i = 0; i < m_U; ++i)
+	{
+		m_UI1[i]->SetPosition((500 + 500), 3000, -100.0f);
+		m_UI2[i]->SetPosition((500 + 500), 3000, -100.0f);
+		m_UI3[i]->SetPosition((500 + 500), 3000, -100.0f);
+		m_UI4[i]->SetPosition((500 + 500), 3000, -100.0f);
+		m_UI5[i]->SetPosition((500 + 500), 3000, -100.0f);
+	}
+}
+
+void CScene::UnitSell()
+{
+	for (int i = 0; i < m_U; ++i)
+	{
+		if ((m_pick->GetInstance()->IntersecUnit()) == Unit1[i])
+		{
+			for (int k = 0; k < 6; ++k)
+			{
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				{
+					Unit1[i]->SetPosition(0.0f, 3000.0f, 0.0f);
+					std::cout << "유닛 1 판매" << std::endl;
+					UnitList1.push_back(Unit1[i]);
+					++uc[0];
+					++Canbuy;
+					array[k] = 0;
+					break;
+				}
+			}
+		}
+		if ((m_pick->GetInstance()->IntersecUnit()) == Unit2[i])
+		{
+			for (int k = 0; k < 6; ++k)
+			{
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				{
+					Unit2[i]->SetPosition(0.0f, 3000.0f, 0.0f);
+					std::cout << "유닛 2 판매" << std::endl;
+					UnitList2.push_back(Unit2[i]);
+					++uc[1];
+					++Canbuy;
+					array[k] = 0;
+					break;
+				}
+			}
+		}
+
+		if ((m_pick->GetInstance()->IntersecUnit()) == Unit3[i])
+		{
+			for (int k = 0; k < 6; ++k)
+			{
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				{
+					Unit3[i]->SetPosition(0.0f, 3000.0f, 0.0f);
+					std::cout << "유닛 3 판매" << std::endl;
+					UnitList3.push_back(Unit3[i]);
+					++uc[2];
+					++Canbuy;
+					array[k] = 0;
+					break;
+				}
+			}
+		}
+
+
+		if ((m_pick->GetInstance()->IntersecUnit()) == Unit4[i])
+		{
+			for (int k = 0; k < 6; ++k)
+			{
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				{
+					Unit4[i]->SetPosition(0.0f, 3000.0f, 0.0f);
+					std::cout << "유닛 4 판매" << std::endl;
+					UnitList4.push_back(Unit4[i]);
+					++uc[3];
+					++Canbuy;
+					array[k] = 0;
+					break;
+				}
+			}
+		}
+		if ((m_pick->GetInstance()->IntersecUnit()) == Unit5[i])
+		{
+			for (int k = 0; k < 6; ++k)
+			{
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				{
+					//std::cout << UnitList5.back() << endl;
+					Unit5[i]->SetPosition(0.0f, 3000.0f, 0.0f);
+					std::cout << "유닛 5 판매" << std::endl;
+					UnitList5.push_back(Unit5[i]);
+					//std::cout << UnitList5.back() << endl;
+					++uc[4];
+					++Canbuy;
+					array[k] = 0;
+					break;
+				}
+			}
+		}
+
+	}
+}
+
+
+// 여기 수정하면 끝!!!!!!!!!!!
+void CScene::UnitBuy()
+{
+	if (Canbuy != 0)
+	{
+		for (int i = 0; i < m_U; ++i)
+		{
+			if ((m_pick->GetInstance()->IntersecTri()) == m_UI1[i])
+			{
+				--uc[0];
+				if (0 <= uc[0])
+				{
+					--Canbuy;
+					m_UI1[i]->SetPosition(0, 3000, 0);
+
+					for (int j = 0; j < 4; ++j)
+					{
+						std::cout << UnitList1.front() << std::endl;
+						std::cout << Unit1[j] << std::endl;
+						if (UnitList1.front() == Unit1[j])
+						{
+							std::cout << "aaaa" << std::endl;
+							for (int k = 0; k < 6; ++k)
+							{
+								if (array[k] == 0)
+								{
+									std::cout << k << std::endl;
+									Unit1[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									std::cout << "유닛 1 구매" << std::endl;
+									uic[0]++;
+									UnitList1.pop_front();
+									array[k] = 1;
+									break;
+								}
+							}break;
+						}
+					}
+				}
+				//std::cout << "asda" <<std::endl;
+				//x = 200, z= 100 초기값
+			}
+			if ((m_pick->GetInstance()->IntersecTri()) == m_UI2[i])
+			{
+				--uc[1];
+				if (0 <= uc[1])
+				{
+					--Canbuy;
+
+					m_UI2[i]->SetPosition(0, 3000, 0);
+
+					for (int j = 0; j < 4; ++j)
+					{
+						if (UnitList2.front() == Unit2[j])
+						{
+
+							for (int k = 0; k < 6; ++k)
+							{
+								if (array[k] == 0)
+								{
+									Unit2[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									std::cout << "유닛 2 구매" << std::endl;
+									uic[1]++;
+									UnitList2.pop_front();
+									array[k] = 1;
+									break;
+								}
+							}break;
+						}
+					}
+				}
+			}
+
+			if ((m_pick->GetInstance()->IntersecTri()) == m_UI3[i])
+			{
+				--uc[2];
+				if (0 <= uc[2])
+				{
+					--Canbuy;
+					m_UI3[i]->SetPosition(0, 3000, 0);
+					for (int j = 0; j < 4; ++j)
+					{
+						if (UnitList3.front() == Unit3[j])
+						{
+							for (int k = 0; k < 6; ++k)
+							{
+								if (array[k] == 0)
+								{
+									Unit3[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									std::cout << "유닛 3 구매" << std::endl;
+									UnitList3.pop_front();
+									array[k] = 1;
+									break;
+								}
+							}break;
+						}
+					}
+				}
+			}
+			if ((m_pick->GetInstance()->IntersecTri()) == m_UI4[i])
+			{
+				--uc[3];
+				if (0 <= uc[3])
+				{
+					++count;
+					--Canbuy;
+					m_UI4[i]->SetPosition(0, 3000, 0);
+					for (int j = 0; j < 2; ++j)
+					{
+						if (UnitList4.front() == Unit4[j])
+						{
+							for (int k = 0; k < 6; ++k)
+							{
+								if (array[k] == 0)
+								{
+									Unit4[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									std::cout << "유닛 4 구매" << std::endl;
+									UnitList4.pop_front();
+									array[k] = 1;
+									break;
+								}
+							}break;
+						}
+					};
+				}
+			}
+
+			if ((m_pick->GetInstance()->IntersecTri()) == m_UI5[i])
+			{
+				--uc[4];
+				if (0 <= uc[4])
+				{
+					++count;
+					--Canbuy;
+					m_UI5[i]->SetPosition(0, 3000, 0);
+					for (int j = 0; j < 2; ++j)
+					{
+						if (UnitList5.front() == Unit5[j])
+						{
+							for (int k = 0; k < 6; ++k)
+							{
+								if (array[k] == 0)
+								{
+									Unit5[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									std::cout << "유닛 5 구매" << std::endl;
+									UnitList5.pop_front();
+									array[k] = 1;
+									//std::cout << UnitList5.front() << std::endl;
+									//std::cout << Unit5[1] << std::endl;
+									break;
+								}
+							}break;
+						}
+					}
+				}
+			}
+		}
+	}
+	else
+		std::cout << " 구매 불가 !!!" << std::endl;
+}
+
+
 void CScene::CreateCbvSrvDescriptorHeaps(ID3D12Device *pd3dDevice, int nConstantBufferViews, int nShaderResourceViews)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC d3dDescriptorHeapDesc;

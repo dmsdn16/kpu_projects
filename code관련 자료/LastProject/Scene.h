@@ -153,6 +153,13 @@ public:
 	void TracePath(int x, int y, int z);
 	void MakingMap();
 	void Targeting();
+	void Reroll();
+	int CalRoll();
+	void AdmCount();
+	void ResetUi();
+	void UnitSell();
+	void UnitBuy();
+	
 	int count = 0;
 	int FrameCount = 0;
 };
