@@ -566,7 +566,7 @@ void CGameFramework::MoveToNextFrame()
 void CGameFramework::FrameAdvance()
 {    
 	m_GameTimer.Tick(60.0f);
-	
+	client_main(m_pd3dDevice, m_pd3dCommandList);
 	ProcessInput();
 
     AnimateObjects();

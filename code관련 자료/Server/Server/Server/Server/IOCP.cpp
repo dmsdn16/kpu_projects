@@ -144,7 +144,7 @@ void send_add_player(int c_id, int p_id)
 	p.y = players[p_id].y;
 	p.z = players[p_id].z;
 	send_packet(c_id, &p);
-	//send_packet(p_id, &p);
+	send_packet(p_id, &p);
 }
 
 void send_remove_player(int c_id, int p_id)

@@ -50,7 +50,6 @@ BoundingOrientedBox CMesh::GetBoundingBox()
 
 void CMesh::Render(ID3D12GraphicsCommandList *pd3dCommandList)
 {
-	client_main();
 	pd3dCommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
 	pd3dCommandList->IASetVertexBuffers(m_nSlot, m_nVertexBufferViews, m_pd3dVertexBufferViews);
 	if (m_pd3dIndexBuffer)

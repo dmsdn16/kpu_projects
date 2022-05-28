@@ -15,11 +15,13 @@ class OBJECT : public CScene{
 public:
 	int o_x, o_y, o_z;
 
+
 };
 
 OBJECT players[MAX_USER];
 OBJECT avatar;
-
+ID3D12Device *pd3dDevice;
+ID3D12GraphicsCommandList *pd3dCommandList;
 
 void ProcessPacket(char* ptr) {
 	static bool first_time = true;
@@ -42,14 +44,15 @@ void ProcessPacket(char* ptr) {
 	{
 		StoC_add_player* packet = reinterpret_cast<StoC_add_player*>(ptr);
 		int id = packet->id;
-		if (id < MAX_USER) {
-			/*cout << "send 다른클라 좌표" << packet->x << " " << packet->y << " " << packet->z << endl;
-			players[id].Unit1[0]->SetPosition(packet->x, packet->y, packet->z);*/
-		}
-		else
+		//if (id < MAX_USER) {
+		//	/*cout << "send 다른클라 좌표" << packet->x << " " << packet->y << " " << packet->z << endl;
+		//	players[id].Unit1[0]->SetPosition(packet->x, packet->y, packet->z);*/
+		//}
+		if(g_myid != id)
 		{
 			cout << "send 다른클라 좌표" << packet->x << " " << packet->y << " " << packet->z << endl;
-			players[id- MAX_UNIT].Unit1[0]->SetPosition(packet->x, packet->y, packet->z);
+			players[g_myid].BuildObjects(pd3dDevice, pd3dCommandList);
+			players[g_myid].Unit1[0]->SetPosition(packet->x, packet->y, packet->z);
 		}
 
 		break;
@@ -134,13 +137,14 @@ void send_unit_login_packet(float x, float y, float z)
 }
 
 
-void client_main()
+void client_main(ID3D12Device *m_pd3dDevice, ID3D12GraphicsCommandList *m_pd3dCommandList)
 {
 	char net_buf[BUF_SIZE];
 	size_t	received;
 	auto recv_result = socket.receive(net_buf, BUF_SIZE, received);
 	//cout << start << endl;
-	
+	pd3dDevice = m_pd3dDevice;
+	pd3dCommandList = m_pd3dCommandList;
 	if (recv_result == sf::Socket::Error)
 	{
 		wcout << L"Recv 에러!";
