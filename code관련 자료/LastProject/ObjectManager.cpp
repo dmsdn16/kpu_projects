@@ -12,3 +12,9 @@ const list<CGameObject*>& ObjectManager::GetObjectList(OBJECT_TYPE eType)
 {
 	return m_objcetlist[eType];
 }
+
+void ObjectManager::RemoveObject(OBJECT_TYPE eType, CGameObject* pObject)
+{
+	if (nullptr != pObject)
+		m_objcetlist[eType].remove(pObject);
+}

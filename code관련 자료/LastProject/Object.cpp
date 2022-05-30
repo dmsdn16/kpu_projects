@@ -1151,11 +1151,11 @@ CHeightMapTerrain::CHeightMapTerrain(ID3D12Device *pd3dDevice, ID3D12GraphicsCom
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
 	CTexture *pTerrainBaseTexture = new CTexture(1, RESOURCE_TEXTURE2D, 0);
-	pTerrainBaseTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, L"Terrain/Detail_Texture_1.dds", 0);
+	pTerrainBaseTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, L"Terrain/Base_Texture.dds", 0);
 
 	CTexture *pTerrainDetailTexture = new CTexture(1, RESOURCE_TEXTURE2D, 0);
-	pTerrainDetailTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, L"Terrain/Base_Texture.dds", 0);
-
+	pTerrainDetailTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, L"Terrain/Detail_Texture_1.dds", 0);
+	
 	CTerrainShader *pTerrainShader = new CTerrainShader();
 	pTerrainShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
 	pTerrainShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
@@ -1229,80 +1229,557 @@ CAngrybotObject::~CAngrybotObject()
 {
 }
 
-CElvenWitchObject::CElvenWitchObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, CLoadedModelInfo *pModel, int nAnimationTracks)
+
+Champion::Champion()
 {
-	CLoadedModelInfo *pElvenWitchModel = pModel;
-	if (!pElvenWitchModel) pElvenWitchModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Elven_Witch.bin", NULL);
 
-	SetChild(pElvenWitchModel->m_pModelRootObject, true);
-	m_pSkinnedAnimationController = new CAnimationController(pd3dDevice, pd3dCommandList, nAnimationTracks, pElvenWitchModel);
-
-	strcpy_s(m_pstrFrameName, "ElvenWitch");
-
-	Rotate(-90.0f, 0.0f, 0.0f);
-	SetScale(0.15f, 0.15f, 0.15f);
-
-	SetActive("elven_staff", false);
-	SetActive("elven_staff01", false);
 }
 
-CElvenWitchObject::~CElvenWitchObject()
+Champion::~Champion()
 {
+
 }
 
-CMonsterWeaponObject::CMonsterWeaponObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, CLoadedModelInfo *pModel, int nAnimationTracks)
+bool CGameObject::isDestination(int row, int col, Pair dst)
 {
-	CLoadedModelInfo *pMonsterWeaponModel = pModel;
-	if (!pMonsterWeaponModel) pMonsterWeaponModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/MonsterWeapon.bin", NULL);
-
-	SetChild(pMonsterWeaponModel->m_pModelRootObject, true);
-	m_pSkinnedAnimationController = new CAnimationController(pd3dDevice, pd3dCommandList, nAnimationTracks, pMonsterWeaponModel);
-
-	strcpy_s(m_pstrFrameName, "MonsterWeapon");
-
-	SetScale(0.35f, 0.35f, 0.35f);
+	if (row == dst.first && col == dst.second) return true;
+	return false;
 }
 
-CMonsterWeaponObject::~CMonsterWeaponObject()
+bool CGameObject::isRanger(int row, int col)
 {
+	return (row >= 0 && row < ROW&& col >= 0 && col < COL);
 }
 
-CLionObject::CLionObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, CLoadedModelInfo *pModel, int nAnimationTracks)
+bool CGameObject::isUnBlock(int row, int col)
 {
-	CLoadedModelInfo *pLionModel = pModel;
-	if (!pLionModel) pLionModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Lion.bin", NULL);
-
-	SetChild(pLionModel->m_pModelRootObject, true);
-	m_pSkinnedAnimationController = new CAnimationController(pd3dDevice, pd3dCommandList, nAnimationTracks, pLionModel);
-
-	strcpy_s(m_pstrFrameName, "Lion");
-
-	Rotate(-90.0f, 0.0f, 0.0f);
-	SetScale(0.2f, 0.2f, 0.2f);
-
-	SetActive("SK_Lion_LOD1", false);
-	SetActive("SK_Lion_LOD2", false);
-	SetActive("SK_Lion_LOD3", false);
+	return (Bmap[row][col] == 0);
 }
 
-CLionObject::~CLionObject()
+float CGameObject::GetValue(int row, int col, Pair dst)
 {
+	return (double)std::sqrt(std::pow(row - dst.first, 2) + std::pow(col - dst.second, 2));
 }
 
-CEagleObject::CEagleObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, CLoadedModelInfo *pModel, int nAnimationTracks)
+
+void CGameObject::Path(Cell cellDetails[101][101], Pair dst)
 {
-	CLoadedModelInfo *pEagleModel = pModel;
-	if (!pEagleModel) pEagleModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Eagle.bin", NULL);
+	// 여기서 이동구현
+	//std::stack<Pair> s;
+	int y = dst.first;
+	int x = dst.second;
 
-	SetChild(pEagleModel->m_pModelRootObject, true);
-	m_pSkinnedAnimationController = new CAnimationController(pd3dDevice, pd3dCommandList, nAnimationTracks, pEagleModel);
+	s.push({ y, x });
+	// cellDetails의 x, y의 부모좌표가 모두 현재좌표와 동일할때까지 반복
+	while (!(cellDetails[y][x].parent_x == x && cellDetails[y][x].parent_y == y))
+	{
+		int tempy = cellDetails[y][x].parent_y;
+		int tempx = cellDetails[y][x].parent_x;
+		y = tempy;
+		x = tempx;
+		s.push({ y, x });
+	}
 
-	strcpy_s(m_pstrFrameName, "Eagle");
+	if(!s.empty())
+	{
+		int p = s.top().first;
+		int q = s.top().second;
+		zmap[s.top().first][s.top().second] = '*';
+		//std::cout << s.top().first << " y : " << s.top().second << std::endl;
+		s.pop();
+		if (!s.empty())
+		{
+			int k = p - s.top().first;
+			int j = q - s.top().second;
+			//std::cout << k << "y : "<< j << std::endl;
+			TracePath(k, j, 0);
+		}
+		
+	}
 
-	Rotate(-90.0f, 0.0f, 0.0f);
-	SetScale(0.2f, 0.2f, 0.2f);
+
 }
 
-CEagleObject::~CEagleObject()
+void CGameObject::Astar(Pair src, Pair dst)
 {
+	
+
+	/*if (!isRanger(src.first, src.second) || !isRanger(dst.first, dst.second)) return false;
+	if (!isUnBlock(src.first, src.second) || !isUnBlock(dst.first, dst.second)) return false;
+	if (isDestination(src.first, src.second, dst)) {
+		return false;*/
+	bool closedList[101][101];
+	std::memset(closedList, false, sizeof(closedList));
+
+	Cell cellDetails[101][101];
+
+	// 내용초기화
+		// 계산해야할 값부분은 INF로하고, 계산할 경로는 -1로 초기화
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			cellDetails[i][j].f = cellDetails[i][j].g = cellDetails[i][j].h = INF;
+			cellDetails[i][j].parent_x = cellDetails[i][j].parent_y = -1;
+		}
+	}
+
+
+	// src의 좌표가 첫좌표가 된다.
+	int sy = src.first;
+	int sx = src.second;
+	cellDetails[sy][sx].f = cellDetails[sy][sx].g = cellDetails[sy][sx].h = 0.0;
+	cellDetails[sy][sx].parent_x = sx;
+	cellDetails[sy][sx].parent_y = sy;
+
+	std::set<pPair> openList;
+	openList.insert({ 0.0, { sy, sx } });
+
+	while (!openList.empty()) {
+		pPair p = *openList.begin();
+		openList.erase(openList.begin());
+
+		int y = p.second.first;
+		int x = p.second.second;
+		closedList[y][x] = true;
+
+		double ng, nf, nh;
+
+		// 직선
+		for (int i = 0; i < 4; ++i) {
+			int ny = y + dy1[i];
+			int nx = x + dx1[i];
+
+			if (isRanger(ny, nx)) {
+				if (isDestination(ny, nx, dst)) {
+					cellDetails[ny][nx].parent_y = y;
+					cellDetails[ny][nx].parent_x = x;
+					Path(cellDetails, dst);
+					//return true;
+				}
+
+
+				else if (!closedList[ny][nx] && isUnBlock(ny, nx)) {
+					// 이부분 y x, ny nx 헷갈리는거 조심
+					ng = cellDetails[y][x].g + 1.0;
+					nh = GetValue(ny, nx, dst);
+					nf = ng + nh;
+
+					// 만약 한번도 갱신이 안된f거나, 새로갱신될 f가 기존f보다 작을시 참
+					if (cellDetails[ny][nx].f == INF || cellDetails[ny][nx].f > nf) {
+						cellDetails[ny][nx].f = nf;
+						cellDetails[ny][nx].g = ng;
+						cellDetails[ny][nx].h = nh;
+						cellDetails[ny][nx].parent_x = x;
+						cellDetails[ny][nx].parent_y = y;
+						openList.insert({ nf, { ny, nx } });
+					}
+				}
+			}
+		}
+
+		// 대각선
+		/*for (int i = 0; i < 4; ++i) {
+			int ny = y + dy2[i];
+			int nx = x + dx2[i];
+
+			if (isRanger(ny, nx)) {
+				if (isDestination(ny, nx, dst)) {
+					cellDetails[ny][nx].parent_y = y;
+					cellDetails[ny][nx].parent_x = x;
+					Path(cellDetails, dst);
+					return true;
+				}
+				else if (!closedList[ny][nx] && isUnBlock(ny, nx)) {
+					ng = cellDetails[y][x].g + 1.414;
+					nh = GetValue(ny, nx, dst);
+					nf = ng + nh;
+
+					if (cellDetails[ny][nx].f == INF || cellDetails[ny][nx].f > nf) {
+						cellDetails[ny][nx].f = nf;
+						cellDetails[ny][nx].g = ng;
+						cellDetails[ny][nx].h = nh;
+						cellDetails[ny][nx].parent_x = x;
+						cellDetails[ny][nx].parent_y = y;
+						openList.insert({ nf, { ny, nx } });
+					}
+				}
+			}
+		}*/
+	}
+
+	//return false;
 }
+
+void CGameObject::PrintMap()
+{
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			std::cout << zmap[i][j];
+		}
+		std::cout << '\n';
+	}
+	std::cout << '\n';
+	std::cout << '\n';
+	std::cout << '\n';
+	
+		if (GetPosition().x != 134)
+		{
+			//std::cout << GetPosition().x << std::endl;
+			//std::cout << GetPosition().y << std::endl;
+			//std::cout << GetPosition().z << std::endl;
+		}
+	
+}
+
+
+
+std::vector<std::vector<int>> CGameObject::fileload(std::string filepath)
+{
+	std::ifstream ifs(filepath);
+
+	int col, row, cur = 0;
+	ROW = 9;
+	COL = 9;
+	
+	std::vector<std::vector<int>> result(ROW, std::vector<int>(COL));
+
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			//result[i][j] = MakingMap();
+		}
+	}
+
+	return result;
+	
+
+	return std::vector<std::vector<int>>();
+}
+
+void CGameObject::Checking()
+{
+	Pair src, dst;
+	int row, col;
+
+	/// 방법1 - 맵정보 직접 입력하기 
+	/*
+	std::cin >> row >> col;
+	ROW = row;
+	COL = col;
+
+	std::vector<std::vector<int>> grid(row, std::vector<int>(col));
+
+	for(int i=0;i<row;++i){
+		for(int j=0;j<col;++j){
+			std::cin >> grid[i][j];
+		}
+	}*/
+
+	/// 방법2 - 파일로 부터 맵정보 불러오기 
+	//std::vector<std::vector<int>> grid = fileload("MAP.txt");
+	//if (grid.empty()) std::cout << "파일이 안열림" << std::endl;
+
+	if (tt == 0)
+	{
+		//MakingMap();
+		tt++;
+	}
+	if (tt == 600)
+		tt = 0;
+	MakingMap();
+	//MoveUp(-100.0f);
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			if (Bmap[i][j] == 2) {
+				src = { i, j };
+				Bmap[i][j] = 0;
+			}
+			if (Bmap[i][j] == 3) {
+				dst = { i, j };
+				Bmap[i][j] = 0;
+			}
+			
+		}
+	}
+	//std::cout <<"목적지"<< dst.first << " ," << dst.second << std::endl;
+	//std::cout << "출발지" << src.first << " ," << src.second << std::endl;
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			zmap[i][j] = Bmap[i][j] +'0';
+		}
+	}
+
+	Astar(src, dst);
+	PrintMap();
+
+}
+
+void CGameObject::TracePath(int x, int y, int z)
+{
+	a++;
+	//std::cout <<  a  << std::endl;
+	if (x == -1) // 아래로 이동
+	{
+		//std::cout << " a " << std::endl;
+		MoveUp(1);
+	}
+	else if (x == 1) // 위로 이동
+	{
+		//std::cout << " b " << std::endl;
+		MoveUp(-1);
+	}
+	else if (y == -1) // 오른쪽이동
+	{
+		//std::cout << " c " << std::endl;
+		MoveStrafe(-1);
+	}
+	else if (y == 1) // 왼쪽이동
+	{
+		//std::cout << " d " << std::endl;
+		MoveStrafe(1);
+	}
+}
+
+void CGameObject::MakingMap()
+{
+	list<CGameObject*> War = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_WARRIOR);
+	list<CGameObject*> Mine = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_MY_UNIT);
+	int Cx, Cz;
+	int p, q;
+	int a = 0;
+	for (int i = 0; i < 9; ++i)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			Bmap[i][j] = 0;
+		}
+	}
+	for (auto& ex : War)
+	{
+		Cx = ex->GetPosition().x;
+		Cz = ex->GetPosition().z;
+		//std::cout << Cx << Cz << std::endl;
+		p = (1460 - Cx) / 140;
+		q = (1540 - Cz) / 160;
+		//std:: cout << "Cx : " << Cx << " , Cz : " << Cz << std::endl;
+		int i = abs(8 - p);
+		int j = abs(8 - q);
+		Bmap[q][p] = 1;
+		//a++;
+		//tt++;
+		//std::cout << a << std::endl;
+	}
+
+	for (auto& ex : Mine)
+	{
+		Cx = ex->GetPosition().x;
+		Cz = ex->GetPosition().z;
+		//std::cout << Cx << Cz << std::endl;
+		p = (1460 - Cx) / 140;
+		q = (1540 - Cz) / 160;
+		//std:: cout << "Cx2 : " << Cx << " , Cz2 : " << Cz << " , j : " << p << " , k : " << q << std::endl;
+		int i = abs(8 - p);
+		int j = abs(8 - q);
+		Bmap[q][p] = 5;
+		//a++;
+		//tt++;
+		//std::cout << a << std::endl;
+	}
+
+	for (auto& ex : War)
+	{
+		Cx = ex->GetPosition().x;
+		Cz = ex->GetPosition().z;
+
+		p = (1460 - Cx) / 140;
+		q = (1540 - Cz) / 160;
+		//std:: cout << "Cx2 : " << Cx2 << " , Cz2 : " << Cz2 << " , j : " << p << " , k : " << q << std::endl;
+		if (Cx == GetPosition().x && Cz == GetPosition().z)
+		{
+			Bmap[q][p] = 2;
+			CaldisEnemy(q, p);
+			//std::cout << p<< " , " << q << std::endl;
+		}
+
+		
+	}
+	
+
+}
+
+void CGameObject::Caldis(int x, int y)
+{
+	int Mindis = 10000;
+	int temp = 0;
+	
+	for (int i = 0; i < 9; ++i)
+	{
+		for (int j = 0; j < 9; ++j)
+		{
+			if (Bmap[i][j] == 4)
+			{
+				//std::cout << i << j << std::endl;
+				temp = sqrt(pow(x - i, 2)) + (pow(y - j, 2));
+				if (temp <= Mindis)
+				{
+					Mindis = temp;
+					Mindisx = i;
+					Mindisy = j;
+				}
+			}
+		}
+	}
+
+	//std::cout << Mindisx << Mindisy << std::endl;
+	Bmap[Mindisx][Mindisy] = 3;
+}
+
+void CGameObject::CaldisEnemy(int x, int y)
+{
+	int Mindis = 10000;
+	int temp = 0;
+
+	for (int i = 0; i < 9; ++i)
+	{
+		for (int j = 0; j < 9; ++j)
+		{
+			if (Bmap[i][j] == 5)
+			{
+				//std::cout << i << j << std::endl;
+				temp = sqrt(pow(x - i, 2)) + (pow(y - j, 2));
+				if (temp <= Mindis)
+				{
+					Mindis = temp;
+					Mindisx = i;
+					Mindisy = j;
+				}
+			}
+		}
+	}
+
+	//std::cout << Mindisx << Mindisy << std::endl;
+	Bmap[Mindisx][Mindisy] = 3;
+}
+
+
+void CGameObject::CheckingOwn()
+{
+	Pair src, dst;
+	int row, col;
+
+	/// 방법1 - 맵정보 직접 입력하기 
+	/*
+	std::cin >> row >> col;
+	ROW = row;
+	COL = col;
+
+	std::vector<std::vector<int>> grid(row, std::vector<int>(col));
+
+	for(int i=0;i<row;++i){
+		for(int j=0;j<col;++j){
+			std::cin >> grid[i][j];
+		}
+	}*/
+
+	/// 방법2 - 파일로 부터 맵정보 불러오기 
+	//std::vector<std::vector<int>> grid = fileload("MAP.txt");
+	//if (grid.empty()) std::cout << "파일이 안열림" << std::endl;
+
+	if (tt == 0)
+	{
+		//MakingMap();
+		tt++;
+	}
+	if (tt == 600)
+		tt = 0;
+	MakingOwnMap();
+	//MoveUp(-100.0f);
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			if (Bmap[i][j] == 2) {
+				src = { i, j };
+				Bmap[i][j] = 0;
+			}
+			if (Bmap[i][j] == 3) {
+				dst = { i, j };
+				Bmap[i][j] = 0;
+			}
+
+		}
+	}
+	//std::cout <<"목적지"<< dst.first << " ," << dst.second << std::endl;
+	//std::cout << "출발지" << src.first << " ," << src.second << std::endl;
+	for (int i = 0; i < ROW; ++i) {
+		for (int j = 0; j < COL; ++j) {
+			zmap[i][j] = Bmap[i][j] + '0';
+		}
+	}
+
+	Astar(src, dst);
+	PrintMap();
+}
+
+void CGameObject::MakingOwnMap()
+{
+	list<CGameObject*> War = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_WARRIOR);
+	list<CGameObject*> Mine = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_MY_UNIT);
+	int Cx, Cz;
+	int p, q;
+	int a = 0;
+	for (int i = 0; i < 9; ++i)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			Bmap[i][j] = 0;
+		}
+	}
+	for (auto& ex : Mine)
+	{
+		Cx = ex->GetPosition().x;
+		Cz = ex->GetPosition().z;
+		//std::cout << Cx << Cz << std::endl;
+		p = (1460 - Cx) / 140;
+		q = (1540 - Cz) / 160;
+		int i = abs(8 - p);
+		int j = abs(8 - q);
+		Bmap[q][p] = 1;
+		std::cout << "Cx2 : " << Cx << " , Cz2 : " << Cz << " , j : " << i << " , k : " << j << std::endl;
+		//a++;
+		//tt++;
+		//std::cout << a << std::endl;
+	}
+
+	for (auto& ex : War)
+	{
+		Cx = ex->GetPosition().x;
+		Cz = ex->GetPosition().z;
+		//std::cout << Cx << Cz << std::endl;
+		p = (1460 - Cx) / 140;
+		q = (1540 - Cz) / 160;
+		//std:: cout << "Cx2 : " << Cx2 << " , Cz2 : " << Cz2 << " , j : " << p << " , k : " << q << std::endl;
+		int i = abs(8 - p);
+		int j = abs(8 - q);
+		Bmap[q][p] = 4;
+		//std::cout << i<< " , " << j << std::endl;
+		//std::cout << Cx << " , " << Cz << std::endl;
+	}
+
+	for (auto& ex : Mine)
+	{
+		Cx = ex->GetPosition().x;
+		Cz = ex->GetPosition().z;
+
+		p = (1460 - Cx) / 140;
+		q = (1540 - Cz) / 160;
+		//std:: cout << "Cx2 : " << Cx2 << " , Cz2 : " << Cz2 << " , j : " << p << " , k : " << q << std::endl;
+		if (Cx == GetPosition().x && Cz == GetPosition().z)
+		{
+			int i = abs(8-p);
+			int j = abs(8 - q);
+			Bmap[q][p] = 2;
+			Caldis(i, j);
+			//std::cout << i<< " , " << j << std::endl;
+			//std::cout << Cx << " , " << Cz << std::endl;
+		}
+
+	}
+}
+

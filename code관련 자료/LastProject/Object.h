@@ -11,6 +11,12 @@
 #define DIR_UP						0x10
 #define DIR_DOWN					0x20
 
+
+struct Cell {
+	int parent_x, parent_y;
+	double f, g, h;
+};
+
 class CShader;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,6 +454,56 @@ public:
 	static CLoadedModelInfo *LoadGeometryAndAnimationFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, char *pstrFileName, CShader *pShader);
 
 	static void PrintFrameInfo(CGameObject *pGameObject, CGameObject *pParent);
+	
+public:
+
+	int									MAX = 101;
+	double								INF = 1e9 + 7;
+
+	// 직선
+	const int dx1[4] = { 0, 0, 1, -1 };
+	const int dy1[4] = { -1, 1, 0, 0 };
+
+	// 대각선
+	const int dx2[4] = { 1, -1, -1, 1 };
+	const int dy2[4] = { -1, 1, -1, 1 };
+
+	using Pair = std::pair<int, int>;
+	using pPair = std::pair<double, Pair>;
+	std::stack<Pair> s;
+	char zmap[101][101];
+	int Bmap[9][9] = { 0, };
+	int ROW = 9;
+	int COL = 9;
+
+	bool isDestination(int row, int col, Pair dst); // 현재좌표와 도착좌표 비교
+	bool isRanger(int row, int col); // 현재 자신의 위치 확인
+	bool isUnBlock(int row, int col); // 현재좌표가 벽인지 확인
+	float GetValue(int row, int col, Pair dst); // 도착지점까지의 거리 계산
+	void Path(Cell cellDetails[101][101], Pair dst); //최단 경로 검색 함수
+	void Astar(Pair src, Pair dst); //astar실행함수
+	void PrintMap(); // astar확인용 출력
+	std::vector<std::vector<int>> fileload(std::string filepath);
+
+	void Checking();
+	void TracePath(int x, int y, int z);
+	void MakingMap();
+	void Targeting();
+	void Caldis(int x,int y);
+
+	void CaldisEnemy(int x, int y);
+
+	void CheckingOwn();
+
+	void MakingOwnMap();
+
+	void CaldisOwn(int x, int y);
+
+	int tt = 0;
+	int Mindisx = 0;
+	int Mindisy = 0;
+	int a = 0;
+
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -498,38 +554,11 @@ public:
 	virtual ~CAngrybotObject();
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-class CElvenWitchObject : public CGameObject
-{
-public:
-	CElvenWitchObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, CLoadedModelInfo *pModel, int nAnimationTracks);
-	virtual ~CElvenWitchObject();
-};
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-class CMonsterWeaponObject : public CGameObject
-{
-public:
-	CMonsterWeaponObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, CLoadedModelInfo *pModel, int nAnimationTracks);
-	virtual ~CMonsterWeaponObject();
-};
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-class CLionObject : public CGameObject
+class Champion :public CGameObject
 {
 public:
-	CLionObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, CLoadedModelInfo *pModel, int nAnimationTracks);
-	virtual ~CLionObject();
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-class CEagleObject : public CGameObject
-{
-public:
-	CEagleObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature, CLoadedModelInfo *pModel, int nAnimationTracks);
-	virtual ~CEagleObject();
+	Champion();
+	virtual ~Champion();
 };

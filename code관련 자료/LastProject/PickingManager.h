@@ -46,6 +46,7 @@ public:
 	CGameObject* IntersecTri(void);
 	CGameObject* IntersecUnit(void);
 	bool CheckSphere(void);
+	bool CheckUISphere(void);
 	void SetRayPos(XMFLOAT3 Raypos) {m_RayPos = Raypos;}
 	void SetRayVec(XMFLOAT3 Rayvec) { m_RayVec = Rayvec; }
 	XMFLOAT3 GetRayPos() { return m_RayPos; }

@@ -31,7 +31,7 @@ public:
 		OT_ARCHER,
 		OT_THIEF,
 		OT_HUMAN,
-		OT_ELF,
+		OT_MY_UNIT,
 		OT_UI,
 		OT_UNIT,
 		OT_END
@@ -40,6 +40,7 @@ public:
 public:
 	void PushObject(OBJECT_TYPE eType, CGameObject* pObject);
 	const list<CGameObject*>& GetObjectList(OBJECT_TYPE eType);
+	void RemoveObject(OBJECT_TYPE eType, CGameObject* pObject);
 
 
 private:

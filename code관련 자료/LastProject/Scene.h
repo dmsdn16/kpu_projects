@@ -12,10 +12,7 @@
 
 
 
-struct Cell {
-	int parent_x, parent_y;
-	double f, g, h;
-};
+
 struct LIGHT
 {
 	XMFLOAT4							m_xmf4Ambient;
@@ -103,6 +100,9 @@ public:
 	int									m_nGameObjects = 0;
 	CGameObject							**m_ppGameObjects = NULL;
 
+	int									m_nPlateObjects = 0;
+	CGameObject							** m_ppPlateObjects = NULL;
+
 	float								m_fElapsedTime = 0.0f;
 
 	int									m_nShaders = 0;
@@ -139,6 +139,7 @@ public:
 	int Bmap[9][9] = {0,};
 	int ROW = 0;
 	int COL = 0;
+	bool begin = false;
 
 	bool isDestination(int row, int col, Pair dst); // 현재좌표와 도착좌표 비교
 	bool isRanger(int row, int col); // 현재 자신의 위치 확인
@@ -149,17 +150,55 @@ public:
 	void PrintMap(); // astar확인용 출력
 	std::vector<std::vector<int>> fileload(std::string filepath);
 
-	void Checking();
-	void TracePath(int x, int y, int z);
-	void MakingMap();
-	void Targeting();
+	
 	void Reroll();
 	int CalRoll();
 	void AdmCount();
 	void ResetUi();
 	void UnitSell();
 	void UnitBuy();
-	
+	void SetStart(bool start) { begin = start; }
+	bool GetStart() { return begin; }
+
 	int count = 0;
+	int ncount = 0;
 	int FrameCount = 0;
+	
+	int distance = sqrt(pow(160, 2) + pow(140, 2));
+	int cmpdis = 0;
+
+	PickMgr* m_pick = NULL;
+
+	CGameObject** m_UI5 = NULL;
+	CGameObject** m_UI1 = NULL;
+	CGameObject** m_UI2 = NULL;
+	CGameObject** m_UI3 = NULL;
+	CGameObject** m_UI4 = NULL;
+	CGameObject** Unit1 = NULL;
+	CGameObject** Unit2 = NULL;
+	CGameObject** Unit3 = NULL;
+	CGameObject** Unit4 = NULL;
+	CGameObject** Unit5 = NULL;
+
+	int							m_U = 4;
+	int							countt = 0;
+	int							uc[5] = { 4,4,4,2,2 }; // 유닛 갯수
+
+	int							start = 0;
+
+	int							UIBox[5] = { 0, };
+	int							u_count = 0; // ui위치
+	int							x_count = 0; // ui 갯수
+
+	int							uic[5] = { 0, };
+	int							Canbuy = 6;
+	int                         array[6] = { 0, };
+
+public:
+	list<CGameObject*> oj;
+	list<CGameObject*> UnitList1;
+	list<CGameObject*> UnitList2;
+	list<CGameObject*> UnitList3;
+	list<CGameObject*> UnitList4;
+	list<CGameObject*> UnitList5;
 };

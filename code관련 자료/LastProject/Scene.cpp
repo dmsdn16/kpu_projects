@@ -1,6 +1,10 @@
 ﻿#include "stdafx.h"
 #include "Scene.h"
 
+std::random_device rd;
+std::mt19937 gen(rd());
+
+
 ID3D12DescriptorHeap *CScene::m_pd3dCbvSrvDescriptorHeap = NULL;
 
 D3D12_CPU_DESCRIPTOR_HANDLE	CScene::m_d3dCbvCPUDescriptorStartHandle;
@@ -82,36 +86,241 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 
 	m_pSkyBox = new CSkyBox(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature);
 
-	XMFLOAT3 xmf3Scale(7.0f, 2.0f, 7.0f);
-	XMFLOAT4 xmf4Color(0.0f, 0.3f, 0.0f, 0.0f);
-	m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, _T("2LargeTerrain(2049)16Bit.raw"), 257, 257, xmf3Scale, xmf4Color);
+	XMFLOAT3 xmf3Scale(10.0f, 2.0f, 10.0f);
+	XMFLOAT4 xmf4Color(1.0f, 0.0f, 0.0f, 0.0f);
+	m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, _T("Plain.raw"), 257, 257, xmf3Scale, xmf4Color);
+	//m_pTerrain->Rotate(-10, 0, 0);
 
-	m_nGameObjects = 2;
+	m_nGameObjects = 6;
 	m_ppGameObjects = new CGameObject*[m_nGameObjects];
+	m_nPlateObjects = 1;
+	m_ppPlateObjects = new CGameObject * [m_nPlateObjects];
 
-	CLoadedModelInfo *pAngrybotModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orc.bin", NULL);
+	CLoadedModelInfo* pPlateModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/battle_plate.bin", NULL);
+	m_ppPlateObjects[0] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pPlateModel, 1);
+	m_ppPlateObjects[0]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+	m_ppPlateObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+	m_ppPlateObjects[0]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+	m_ppPlateObjects[0]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+	m_ppPlateObjects[0]->SetPosition(900.0f, 0.0f, 1400.0f);
+	m_ppPlateObjects[0]->SetScale(130, 150, 0);
+	m_ppPlateObjects[0]->Rotate(90, 0, 0);
+
+	CLoadedModelInfo *pAngrybotModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orcc.bin", NULL);
 	m_ppGameObjects[0] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pAngrybotModel, 1);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
-	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 3.0f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
 	m_ppGameObjects[0]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
-	m_ppGameObjects[0]->SetPosition(340.0f, 500.0f, 360.0f);
-	m_ppGameObjects[0]->SetScale(100, 100, 100);
-	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[0]);
-	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[0]);
+	m_ppGameObjects[0]->SetPosition(340.0f, 500.0f, 260.0f);
+	m_ppGameObjects[0]->SetScale(200,200,200);
+	//m_ppGameObjects[0]->Rotate(-30, 0, 0);
+	//ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[0]);
+	//ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[0]);
 
-	CLoadedModelInfo* pOrcModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orc.bin", NULL);
-	m_ppGameObjects[1] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pOrcModel, 1);
+	CLoadedModelInfo* pHumanThiefModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/HumanThiefWalk.bin", NULL);
+	m_ppGameObjects[1] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pHumanThiefModel, 1);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
-	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 3.0f);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
 	m_ppGameObjects[1]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
-	m_ppGameObjects[1]->SetPosition(600.0f,500.0f, 500.0f);
-	m_ppGameObjects[1]->SetScale(100, 100,100);
-	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[1]);
-	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[1]);
+	m_ppGameObjects[1]->SetPosition(1460.0f,500.0f, 260.0f);
+	m_ppGameObjects[1]->SetScale(200, 200, 200);
+	//ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[1]);
+	//ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[1]);
+
+	//CLoadedModelInfo* pHumanThiefModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/HumanThiefWalk.bin", NULL);
+	m_ppGameObjects[2] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pHumanThiefModel, 1);
+	m_ppGameObjects[2]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+	m_ppGameObjects[2]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 3.0f);
+	m_ppGameObjects[2]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+	m_ppGameObjects[2]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
+	m_ppGameObjects[2]->SetPosition(1180.0f, 500.0f, 260.0f);
+	m_ppGameObjects[2]->SetScale(200, 200, 200);
+//	m_ppGameObjects[2]->Rotate(0, 0, 180);
+	//ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[2]);
+	//ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[2]);
+
+	CLoadedModelInfo* pOrcThiefWalkModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/OrcThiefWalk.bin", NULL);
+	m_ppGameObjects[3] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pOrcThiefWalkModel, 1);
+	m_ppGameObjects[3]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+	m_ppGameObjects[3]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.5f, 2.5f);
+	m_ppGameObjects[3]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+	m_ppGameObjects[3]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+	m_ppGameObjects[3]->SetPosition(760.0f, 500.0f, 1540.0f);
+	m_ppGameObjects[3]->SetScale(200, 200, 200);
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[3]);
+    ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[3]);
+
+	CLoadedModelInfo* porcModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orcc.bin", NULL);
+	m_ppGameObjects[4] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, porcModel, 1);
+	m_ppGameObjects[4]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+	m_ppGameObjects[4]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.5f, 2.5f);
+	m_ppGameObjects[4]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+	m_ppGameObjects[4]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+	m_ppGameObjects[4]->SetPosition(1180.0f, 650.0f, 1540.0f);
+	m_ppGameObjects[4]->SetScale(200, 200, 200);
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[4]);
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[4]);
+
+	m_ppGameObjects[5] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pAngrybotModel, 1);
+	m_ppGameObjects[5]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+	m_ppGameObjects[5]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.5f, 2.5f);
+	m_ppGameObjects[5]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+	m_ppGameObjects[5]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+	m_ppGameObjects[5]->SetPosition(340.0f, 650.0f, 1540.0f);
+	m_ppGameObjects[5]->SetScale(200, 200, 200);
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, m_ppGameObjects[5]);
+	ObjectManager::GetInstance()->PushObject(ObjectManager::OT_WARRIOR, m_ppGameObjects[5]);
+
+	//제작 부분 수정 필수
+	m_UI1 = new CGameObject * [4];
+	m_UI2 = new CGameObject * [4];
+	m_UI3 = new CGameObject * [4];
+	m_UI4 = new CGameObject * [4];
+	m_UI5 = new CGameObject * [4];
+
+	//유닛
+	Unit1 = new CGameObject * [4];
+	Unit2 = new CGameObject * [4];
+	Unit3 = new CGameObject * [4];
+	Unit4 = new CGameObject * [4];
+	Unit5 = new CGameObject * [4];
+
+	//CLoadedModelInfo* pOrcThiefWalkModel2 = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/OrcThiefWalk.bin", NULL);
+
+	for (int i = 0; i < 4; ++i)
+	{
+		Unit1[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pAngrybotModel, 1);
+		Unit1[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		Unit1[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.5f, 2.5f);
+		Unit1[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		Unit1[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+		Unit1[i]->SetPosition(0.0f, 0.0f, 50.0f);
+		Unit1[i]->SetScale(200, 200, 200);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, Unit1[i]);
+		UnitList1.push_back(Unit1[i]);
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		Unit2[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pOrcThiefWalkModel, 1);
+		Unit2[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		Unit2[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.5f, 2.5f);
+		Unit2[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		Unit2[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+		Unit2[i]->SetPosition(0.0f, 0.0f, 50.0f);
+		Unit2[i]->SetScale(200, 200, 200);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, Unit2[i]);
+		UnitList2.push_back(Unit2[i]);
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		Unit3[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pHumanThiefModel, 1);
+		Unit3[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		Unit3[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.5f, 2.5f);
+		Unit3[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		Unit3[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+		Unit3[i]->SetPosition(0.0f, 0.0f, 0.0f);
+		Unit3[i]->SetScale(200, 200, 200);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, Unit3[i]);
+		UnitList3.push_back(Unit3[i]);
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		Unit4[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pOrcThiefWalkModel, 1);
+		Unit4[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		Unit4[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.5f, 2.5f);
+		Unit4[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		Unit4[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+		Unit4[i]->SetPosition(0.0f, 0.0f, 0.0f);
+		Unit4[i]->SetScale(200, 200, 200);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, Unit4[i]);
+		UnitList4.push_back(Unit4[i]);
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		
+		Unit5[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, porcModel, 1);
+		Unit5[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		Unit5[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.5f, 2.5f);
+		Unit5[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		Unit5[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 0.5f);
+		Unit5[i]->SetPosition(0.0f, 0.0f, 0.0f);
+		Unit5[i]->SetScale(200, 200, 200);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UNIT, Unit5[i]);
+		UnitList5.push_back(Unit5[i]);
+	}
+	
+	//UI상자
+	CLoadedModelInfo* pUI1botModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orcc.bin", NULL);
+	CLoadedModelInfo* pUI2botModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/OrcThiefWalk.bin", NULL);
+	CLoadedModelInfo* pUI3botModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/HumanThiefWalk.bin", NULL);
+	//CLoadedModelInfo*pUI4botModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orcc.bin", NULL);
+	//CLoadedModelInfo* pUI5botModel = CGameObject::LoadGeometryAndAnimationFromFile(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, "Model/orcc.bin", NULL);
+	for (int i = 0; i < m_U; ++i)
+	{
+		m_UI1[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pUI1botModel, 1);
+		m_UI1[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		m_UI1[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+		m_UI1[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		m_UI1[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
+		m_UI1[i]->SetPosition(0.0f, 0.0f, 0.0f);
+		m_UI1[i]->SetScale(100, 100, 100);
+		m_UI1[i]->Rotate(45, 0, 180);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI1[i]);
+
+		m_UI2[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pUI2botModel, 1);
+		m_UI2[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		m_UI2[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+		m_UI2[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		m_UI2[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
+		m_UI2[i]->SetPosition(0.0f, 0.0f, 0.0f);
+		m_UI2[i]->SetScale(100, 100, 100);
+		m_UI2[i]->Rotate(45, 0, 180);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI2[i]);
+
+		m_UI3[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pUI3botModel, 1);
+		m_UI3[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		m_UI3[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+		m_UI3[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		m_UI3[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
+		m_UI3[i]->SetPosition(0.0f, 0.0f, 0.0f);
+		m_UI3[i]->SetScale(100, 100, 100);
+		m_UI3[i]->Rotate(45, 0, 180);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI3[i]);
+
+		m_UI4[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pUI2botModel, 1);
+		m_UI4[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		m_UI4[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f, 0.0f);
+		m_UI4[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		m_UI4[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
+		m_UI4[i]->SetPosition(0.0f, 0.0f, 0.0f);
+		m_UI4[i]->SetScale(100, 100, 100);
+		m_UI4[i]->Rotate(45, 0, 180);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI4[i]);
+
+		m_UI5[i] = new CAngrybotObject(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, pUI1botModel, 1);
+		m_UI5[i]->m_pSkinnedAnimationController->SetTrackAnimationSet(0, 0);
+		m_UI5[i]->m_pSkinnedAnimationController->SetTrackStartEndTime(0, 0.0f,0.0f);
+		m_UI5[i]->m_pSkinnedAnimationController->SetTrackPosition(0, 0.55f);
+		m_UI5[i]->m_pSkinnedAnimationController->SetTrackSpeed(0, 1.0f);
+		m_UI5[i]->SetPosition(0.0f, 0.0f, 0.0f);
+		m_UI5[i]->SetScale(100, 100, 100);
+		m_UI5[i]->Rotate(45, 0, 180);
+		ObjectManager::GetInstance()->PushObject(ObjectManager::OT_UI, m_UI5[i]);
+	}
+
 	if (pAngrybotModel) delete pAngrybotModel;
-	if (pOrcModel) delete pOrcModel;
+	if (pPlateModel) delete pPlateModel;
+	//if (pHumanArcherModel)delete pHumanArcherModel;
+	if (pHumanThiefModel)delete pHumanThiefModel;
+	if (porcModel)delete porcModel;
+	if (pOrcThiefWalkModel) delete pOrcThiefWalkModel;
+	//if (pOrcThiefWalkModel2) delete pOrcThiefWalkModel2;
+	if (pUI1botModel) delete pUI1botModel;
+	if (pUI2botModel) delete pUI2botModel;
+	if (pUI3botModel) delete pUI3botModel;
+	//if (pOrcModel) delete pOrcModel;
 
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 }
@@ -139,6 +348,18 @@ void CScene::ReleaseObjects()
 	{
 		for (int i = 0; i < m_nGameObjects; i++) if (m_ppGameObjects[i]) m_ppGameObjects[i]->Release();
 		delete[] m_ppGameObjects;
+	}
+
+	if (m_ppPlateObjects)
+	{
+		for (int i = 0; i < m_nPlateObjects; i++) if (m_ppPlateObjects[i]) m_ppPlateObjects[i]->Release();
+		delete[] m_ppPlateObjects;
+	}
+
+	if (Unit1)
+	{
+		for (int i = 0; i < 4; i++) if (Unit1[i]) Unit1[i]->Release();
+		delete[] Unit1;
 	}
 
 	ReleaseShaderVariables();
@@ -368,300 +589,12 @@ void CScene::ReleaseUploadBuffers()
 
 	for (int i = 0; i < m_nShaders; i++) m_ppShaders[i]->ReleaseUploadBuffers();
 	for (int i = 0; i < m_nGameObjects; i++) m_ppGameObjects[i]->ReleaseUploadBuffers();
-}
-
-bool CScene::isDestination(int row, int col, Pair dst)
-{
-	if (row == dst.first && col == dst.second) return true;
-	return false;
-}
-
-bool CScene::isRanger(int row, int col)
-{
-	return (row >= 0 && row < ROW&& col >= 0 && col < COL);
-}
-
-bool CScene::isUnBlock(std::vector<std::vector<int>>& map, int row, int col)
-{
-	return (map[row][col] == 0);
-}
-
-float CScene::GetValue(int row, int col, Pair dst)
-{
-	return (double)std::sqrt(std::pow(row - dst.first, 2) + std::pow(col - dst.second, 2));
-}
-
-
-void CScene::Path(Cell cellDetails[101][101], Pair dst)
-{
-	// 여기서 이동구현
-	//std::stack<Pair> s;
-	int y = dst.first;
-	int x = dst.second;
-
-	s.push({ y, x });
-	// cellDetails의 x, y의 부모좌표가 모두 현재좌표와 동일할때까지 반복
-	while (!(cellDetails[y][x].parent_x == x && cellDetails[y][x].parent_y == y)) 
-	{
-		int tempy = cellDetails[y][x].parent_y;
-		int tempx = cellDetails[y][x].parent_x;
-		y = tempy;
-		x = tempx;
-		s.push({ y, x });
-	}
-
-	/*while (!s.empty())
-	{
-		int p = s.top().first;
-		int q = s.top().second;
-		zmap[s.top().first][s.top().second] = '*';
-		//std::cout << s.top().first << " y : " << s.top().second << std::endl;
-		s.pop();
-		if (!s.empty())
-		{
-			int k = p - s.top().first;
-			int j = q - s.top().second;
-			//std::cout << k << "y : "<< j << std::endl;
-			TracePath(k, j);
-		}
-	}*/
-}
-
-bool CScene::Astar(std::vector<std::vector<int>>& map, Pair src, Pair dst)
-{
-	if (!isRanger(src.first, src.second) || !isRanger(dst.first, dst.second)) return false;
-	if (!isUnBlock(map, src.first, src.second) || !isUnBlock(map, dst.first, dst.second)) return false;
-	if (isDestination(src.first, src.second, dst)) return false;
-
-	bool closedList[101][101];
-	std::memset(closedList, false, sizeof(closedList));
-
-	Cell cellDetails[101][101];
-
-	// 내용초기화
-		// 계산해야할 값부분은 INF로하고, 계산할 경로는 -1로 초기화
-	for (int i = 0; i < ROW; ++i) {
-		for (int j = 0; j < COL; ++j) {
-			cellDetails[i][j].f = cellDetails[i][j].g = cellDetails[i][j].h = INF;
-			cellDetails[i][j].parent_x = cellDetails[i][j].parent_y = -1;
-		}
-	}
-
-
-	// src의 좌표가 첫좌표가 된다.
-	int sy = src.first;
-	int sx = src.second;
-	cellDetails[sy][sx].f = cellDetails[sy][sx].g = cellDetails[sy][sx].h = 0.0;
-	cellDetails[sy][sx].parent_x = sx;
-	cellDetails[sy][sx].parent_y = sy;
-
-	std::set<pPair> openList;
-	openList.insert({ 0.0, { sy, sx } });
-
-	while (!openList.empty()) {
-		pPair p = *openList.begin();
-		openList.erase(openList.begin());
-
-		int y = p.second.first;
-		int x = p.second.second;
-		closedList[y][x] = true;
-
-		double ng, nf, nh;
-
-		// 직선
-		for (int i = 0; i < 4; ++i) {
-			int ny = y + dy1[i];
-			int nx = x + dx1[i];
-
-			if (isRanger(ny, nx)) {
-				if (isDestination(ny, nx, dst)) {
-					cellDetails[ny][nx].parent_y = y;
-					cellDetails[ny][nx].parent_x = x;
-					Path(cellDetails, dst);
-					return true;
-				}
-
-				
-				else if (!closedList[ny][nx] && isUnBlock(map, ny, nx)) {
-					// 이부분 y x, ny nx 헷갈리는거 조심
-					ng = cellDetails[y][x].g + 1.0;
-					nh = GetValue(ny, nx, dst);
-					nf = ng + nh;
-
-					// 만약 한번도 갱신이 안된f거나, 새로갱신될 f가 기존f보다 작을시 참
-					if (cellDetails[ny][nx].f == INF || cellDetails[ny][nx].f > nf) {
-						cellDetails[ny][nx].f = nf;
-						cellDetails[ny][nx].g = ng;
-						cellDetails[ny][nx].h = nh;
-						cellDetails[ny][nx].parent_x = x;
-						cellDetails[ny][nx].parent_y = y;
-						openList.insert({ nf, { ny, nx } });
-					}
-				}
-			}
-		}
-
-		// 대각선
-		/*for (int i = 0; i < 4; ++i) {
-			int ny = y + dy2[i];
-			int nx = x + dx2[i];
-
-			if (isRanger(ny, nx)) {
-				if (isDestination(ny, nx, dst)) {
-					cellDetails[ny][nx].parent_y = y;
-					cellDetails[ny][nx].parent_x = x;
-					Path(cellDetails, dst);
-					return true;
-				}
-				else if (!closedList[ny][nx] && isUnBlock(map, ny, nx)) {
-					ng = cellDetails[y][x].g + 1.414;
-					nh = GetValue(ny, nx, dst);
-					nf = ng + nh;
-
-					if (cellDetails[ny][nx].f == INF || cellDetails[ny][nx].f > nf) {
-						cellDetails[ny][nx].f = nf;
-						cellDetails[ny][nx].g = ng;
-						cellDetails[ny][nx].h = nh;
-						cellDetails[ny][nx].parent_x = x;
-						cellDetails[ny][nx].parent_y = y;
-						openList.insert({ nf, { ny, nx } });
-					}
-				}
-			}
-		}*/
-	}
-
-	return false;
-}
-
-void CScene::PrintMap()
-{
-	for (int i = 0; i < ROW; ++i) {
-		for (int j = 0; j < COL; ++j) {
-			std::cout << zmap[i][j];
-		}
-		std::cout << '\n';
-	}
+	for (int i = 0; i < m_nPlateObjects; i++) m_ppPlateObjects[i]->ReleaseUploadBuffers();
+	for (int i = 0; i < 4; i++) Unit1[i]->ReleaseUploadBuffers();
 }
 
 
 
-std::vector<std::vector<int>> CScene::fileload(std::string filepath)
-{
-	std::ifstream ifs(filepath);
-
-	int col, row, cur = 0;
-
-	if (ifs.is_open()) {
-		ifs >> ROW >> COL;
-		std::vector<std::vector<int>> result(ROW, std::vector<int>(COL));
-
-		for (int i = 0; i < ROW; ++i) {
-			for (int j = 0; j < COL; ++j) {
-				ifs >> result[i][j];
-			}
-		}
-
-		return result;
-	}
-
-	return std::vector<std::vector<int>>();
-}
-
-void CScene::Checking()
-{
-	Pair src, dst;
-	int row, col;
-
-	/// 방법1 - 맵정보 직접 입력하기 
-	/*
-	std::cin >> row >> col;
-	ROW = row;
-	COL = col;
-
-	std::vector<std::vector<int>> grid(row, std::vector<int>(col));
-
-	for(int i=0;i<row;++i){
-		for(int j=0;j<col;++j){
-			std::cin >> grid[i][j];
-		}
-	}*/
-
-	/// 방법2 - 파일로 부터 맵정보 불러오기 
-	std::vector<std::vector<int>> grid = fileload("MAP.txt");
-	if (grid.empty()) std::cout <<"파일이 안열림"<<std::endl;
-	for (int i = 0; i < ROW; ++i) {
-		for (int j = 0; j < COL; ++j) {
-			if (grid[i][j] == 2) {
-				src = { i, j };
-				grid[i][j] = 0;
-			}
-			if (grid[i][j] == 3) {
-				dst = { i, j };
-				grid[i][j] = 0;
-			}
-		}
-	}
-
-	for (int i = 0; i < ROW; ++i) {
-		for (int j = 0; j < COL; ++j) {
-			zmap[i][j] = grid[i][j] + '0';
-		}
-	}
-
-	if (Astar(grid, src, dst)) PrintMap();
-	else std::cout << "실패.";
-
-}
-
-void CScene::TracePath(int x , int y, int z)
-{
-	if (x == -1) // 아래로 이동
-	{
-		std::cout << " a " << std::endl;
-		m_ppGameObjects[z]->MoveUp(100.0f);
-	}
-	if (x == 1) // 위로 이동
-	{
-		std::cout << " b " << std::endl;
-		m_ppGameObjects[z]->MoveUp(-100.0f);
-	}
-	if (y == -1) // 오른쪽이동
-	{
-		std::cout << " c " << std::endl;
-		m_ppGameObjects[z]->MoveStrafe(-100.0f);
-	}
-	if (y == 1) // 왼쪽이동
-	{
-		std::cout << " d " << std::endl;
-		m_ppGameObjects[z]->MoveStrafe(100.0f);
-	}
-}
-
-void CScene::MakingMap()
-{
-	list<CGameObject*> War = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_WARRIOR);
-	int Cx, Cz;
-	int p,q;
-	for (auto& ex : War)
-	{
-		Cx = ex->GetPosition().x;
-		Cz = ex->GetPosition().z;
-		
-		p = (1460 - Cx) / 140;
-		q = (1540 - Cz) / 160;
-		//std:: cout << "Cx2 : " << Cx2 << " , Cz2 : " << Cz2 << " , j : " << p << " , k : " << q << std::endl;
-		Bmap[p][q] = 1;
-		
-		//std::cout << Bmap[0][8][0] << std::endl;
-	}
-
-}
-// 가장 가까운 적 타겟팅
-void CScene::Targeting()
-{
-
-}
 
 
 // 리롤
@@ -686,7 +619,7 @@ void CScene::Reroll()
 		{
 		case 1:
 
-			m_UI1[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			m_UI1[x_count]->SetPosition(340 + 280 * u_count, 500, 50);
 			x_count++;
 			u_count++;
 			--UIBox[0];
@@ -694,28 +627,28 @@ void CScene::Reroll()
 			break;
 		case 2:
 
-			m_UI2[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			m_UI2[x_count]->SetPosition(340 + 280 * u_count, 500, 50);
 			x_count++;
 			u_count++;
 			--UIBox[1];
 			break;
 		case 3:
 
-			m_UI3[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			m_UI3[x_count]->SetPosition(340 + 280 * u_count, 500, 50);
 			x_count++;
 			u_count++;
 			--UIBox[2];
 			break;
 		case 4:
 
-			m_UI4[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			m_UI4[x_count]->SetPosition(340 + 280 * u_count, 500, 50);
 			x_count++;
 			u_count++;
 			--UIBox[3];
 			break;
 		case 5:
 
-			m_UI5[x_count]->SetPosition(500 + 500 * u_count, 0, -100);
+			m_UI5[x_count]->SetPosition(340 + 280 * u_count, 500, 50);
 			x_count++;
 			u_count++;
 			--UIBox[4];
@@ -742,7 +675,7 @@ int CScene::CalRoll()
 
 	int cumulative = 0;
 
-	std::cout << allunit << std::endl;
+	//std::cout << allunit << std::endl;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -785,7 +718,7 @@ void CScene::UnitSell()
 		{
 			for (int k = 0; k < 6; ++k)
 			{
-				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (1460 - (140 * k)))
 				{
 					Unit1[i]->SetPosition(0.0f, 3000.0f, 0.0f);
 					std::cout << "유닛 1 판매" << std::endl;
@@ -793,6 +726,7 @@ void CScene::UnitSell()
 					++uc[0];
 					++Canbuy;
 					array[k] = 0;
+					ObjectManager::GetInstance()->RemoveObject(ObjectManager::OT_MY_UNIT, Unit1[i]);
 					break;
 				}
 			}
@@ -801,7 +735,7 @@ void CScene::UnitSell()
 		{
 			for (int k = 0; k < 6; ++k)
 			{
-				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (1460 - (140 * k)))
 				{
 					Unit2[i]->SetPosition(0.0f, 3000.0f, 0.0f);
 					std::cout << "유닛 2 판매" << std::endl;
@@ -809,6 +743,7 @@ void CScene::UnitSell()
 					++uc[1];
 					++Canbuy;
 					array[k] = 0;
+					ObjectManager::GetInstance()->RemoveObject(ObjectManager::OT_MY_UNIT, Unit2[i]);
 					break;
 				}
 			}
@@ -818,7 +753,7 @@ void CScene::UnitSell()
 		{
 			for (int k = 0; k < 6; ++k)
 			{
-				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (1460 - (140 * k)))
 				{
 					Unit3[i]->SetPosition(0.0f, 3000.0f, 0.0f);
 					std::cout << "유닛 3 판매" << std::endl;
@@ -826,6 +761,7 @@ void CScene::UnitSell()
 					++uc[2];
 					++Canbuy;
 					array[k] = 0;
+					ObjectManager::GetInstance()->RemoveObject(ObjectManager::OT_MY_UNIT, Unit3[i]);
 					break;
 				}
 			}
@@ -836,7 +772,7 @@ void CScene::UnitSell()
 		{
 			for (int k = 0; k < 6; ++k)
 			{
-				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (1460 - (140 * k)))
 				{
 					Unit4[i]->SetPosition(0.0f, 3000.0f, 0.0f);
 					std::cout << "유닛 4 판매" << std::endl;
@@ -844,6 +780,7 @@ void CScene::UnitSell()
 					++uc[3];
 					++Canbuy;
 					array[k] = 0;
+					ObjectManager::GetInstance()->RemoveObject(ObjectManager::OT_MY_UNIT, Unit4[i]);
 					break;
 				}
 			}
@@ -852,7 +789,7 @@ void CScene::UnitSell()
 		{
 			for (int k = 0; k < 6; ++k)
 			{
-				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (200 + (300 * k)))
+				if (m_pick->GetInstance()->IntersecUnit()->GetPosition().x == (1460 - (140 * k)))
 				{
 					//std::cout << UnitList5.back() << endl;
 					Unit5[i]->SetPosition(0.0f, 3000.0f, 0.0f);
@@ -862,6 +799,7 @@ void CScene::UnitSell()
 					++uc[4];
 					++Canbuy;
 					array[k] = 0;
+					ObjectManager::GetInstance()->RemoveObject(ObjectManager::OT_MY_UNIT, Unit5[i]);
 					break;
 				}
 			}
@@ -888,8 +826,8 @@ void CScene::UnitBuy()
 
 					for (int j = 0; j < 4; ++j)
 					{
-						std::cout << UnitList1.front() << std::endl;
-						std::cout << Unit1[j] << std::endl;
+						//std::cout << UnitList1.front() << std::endl;
+						//std::cout << Unit1[j] << std::endl;
 						if (UnitList1.front() == Unit1[j])
 						{
 							std::cout << "aaaa" << std::endl;
@@ -898,11 +836,12 @@ void CScene::UnitBuy()
 								if (array[k] == 0)
 								{
 									std::cout << k << std::endl;
-									Unit1[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									Unit1[j]->SetPosition(1460 - (140 * k),500, 420);
 									std::cout << "유닛 1 구매" << std::endl;
 									uic[0]++;
 									UnitList1.pop_front();
 									array[k] = 1;
+									ObjectManager::GetInstance()->PushObject(ObjectManager::OT_MY_UNIT, Unit1[j]);
 									break;
 								}
 							}break;
@@ -930,11 +869,12 @@ void CScene::UnitBuy()
 							{
 								if (array[k] == 0)
 								{
-									Unit2[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									Unit2[j]->SetPosition(1460 - (140 * k), 500, 420);
 									std::cout << "유닛 2 구매" << std::endl;
 									uic[1]++;
 									UnitList2.pop_front();
 									array[k] = 1;
+									ObjectManager::GetInstance()->PushObject(ObjectManager::OT_MY_UNIT, Unit2[j]);
 									break;
 								}
 							}break;
@@ -958,10 +898,11 @@ void CScene::UnitBuy()
 							{
 								if (array[k] == 0)
 								{
-									Unit3[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									Unit3[j]->SetPosition(1460 - (140 * k), 500, 420);
 									std::cout << "유닛 3 구매" << std::endl;
 									UnitList3.pop_front();
 									array[k] = 1;
+									ObjectManager::GetInstance()->PushObject(ObjectManager::OT_MY_UNIT, Unit3[j]);
 									break;
 								}
 							}break;
@@ -977,7 +918,7 @@ void CScene::UnitBuy()
 					++count;
 					--Canbuy;
 					m_UI4[i]->SetPosition(0, 3000, 0);
-					for (int j = 0; j < 2; ++j)
+					for (int j = 0; j < 4; ++j)
 					{
 						if (UnitList4.front() == Unit4[j])
 						{
@@ -985,10 +926,11 @@ void CScene::UnitBuy()
 							{
 								if (array[k] == 0)
 								{
-									Unit4[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									Unit4[j]->SetPosition(1460 - (140 * k), 500, 420);
 									std::cout << "유닛 4 구매" << std::endl;
 									UnitList4.pop_front();
 									array[k] = 1;
+									ObjectManager::GetInstance()->PushObject(ObjectManager::OT_MY_UNIT, Unit4[j]);
 									break;
 								}
 							}break;
@@ -1005,7 +947,7 @@ void CScene::UnitBuy()
 					++count;
 					--Canbuy;
 					m_UI5[i]->SetPosition(0, 3000, 0);
-					for (int j = 0; j < 2; ++j)
+					for (int j = 0; j < 4; ++j)
 					{
 						if (UnitList5.front() == Unit5[j])
 						{
@@ -1013,10 +955,11 @@ void CScene::UnitBuy()
 							{
 								if (array[k] == 0)
 								{
-									Unit5[j]->SetPosition(200 + (300 * k), m_pTerrain->GetHeight(100, 100), 100);
+									Unit5[j]->SetPosition(1460 - (140 * k), 500, 420);
 									std::cout << "유닛 5 구매" << std::endl;
 									UnitList5.pop_front();
 									array[k] = 1;
+									ObjectManager::GetInstance()->PushObject(ObjectManager::OT_MY_UNIT, Unit5[j]);
 									//std::cout << UnitList5.front() << std::endl;
 									//std::cout << Unit5[1] << std::endl;
 									break;
@@ -1171,12 +1114,13 @@ void CScene::AnimateObjects(float fTimeElapsed)
 		m_pLights[1].m_xmf3Position = m_pPlayer->GetPosition();
 		m_pLights[1].m_xmf3Direction = m_pPlayer->GetLookVector();
 	}
-	if (count == 0)
+
+	if (start == 0)
 	{
-		Checking();
-		MakingMap();
-		count++;
+		Reroll();
+		++start;
 	}
+	
 }
 
 void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera)
@@ -1195,7 +1139,7 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 	if (m_pSkyBox) m_pSkyBox->Render(pd3dCommandList, pCamera);
 	if (m_pTerrain) m_pTerrain->Render(pd3dCommandList, pCamera);
 
-	for (int i = 0; i < m_nGameObjects; i++)
+	for (int i = 3; i < m_nGameObjects; i++)
 	{
 		if (m_ppGameObjects[i])
 		{
@@ -1206,11 +1150,93 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 		}
 	}
 
-		m_ppGameObjects[1]->MoveUp(-0.1f); 
+	for (int i = 0; i < m_nPlateObjects; i++)
+	{
+		if (m_ppPlateObjects[i])
+		{
+			m_ppPlateObjects[i]->Animate(m_fElapsedTime);
+			if (!m_ppPlateObjects[i]->m_pSkinnedAnimationController) m_ppPlateObjects[i]->UpdateTransform(NULL);
+			//m_ppPlateObjects[i]->Render(pd3dCommandList, pCamera);
+			//std::cout << m_ppPlateObjects[i]->GetPosition().x << std::endl;
+		}
+	}
+	for (int i = 0; i < m_U; ++i)
+	{
+		if (m_UI1[i])
+		{
+			m_UI1[i]->Animate(m_fElapsedTime);
+			if (!m_UI1[i]->m_pSkinnedAnimationController)m_UI1[i]->UpdateTransform(NULL);
+			m_UI1[i]->Render(pd3dCommandList, pCamera);
+		}
+		if (m_UI2[i])
+		{
+			m_UI2[i]->Animate(m_fElapsedTime);
+			if (!m_UI2[i]->m_pSkinnedAnimationController)m_UI2[i]->UpdateTransform(NULL);
+			m_UI2[i]->Render(pd3dCommandList, pCamera);
+		}
+		if (m_UI3[i])
+		{
+			m_UI3[i]->Animate(m_fElapsedTime);
+			if (!m_UI3[i]->m_pSkinnedAnimationController)m_UI3[i]->UpdateTransform(NULL);
+			m_UI3[i]->Render(pd3dCommandList, pCamera);
+		}
+		if (m_UI4[i])
+		{
+			m_UI4[i]->Animate(m_fElapsedTime);
+			if (!m_UI4[i]->m_pSkinnedAnimationController)m_UI4[i]->UpdateTransform(NULL);
+			m_UI4[i]->Render(pd3dCommandList, pCamera);
+		}
+		if (m_UI5[i]) 
+		{
+			m_UI5[i]->Animate(m_fElapsedTime);
+			if (!m_UI5[i]->m_pSkinnedAnimationController)m_UI5[i]->UpdateTransform(NULL);
+			m_UI5[i]->Render(pd3dCommandList, pCamera);
+		}
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		if (Unit1[i]) 
+		{
+			Unit1[i]->Animate(m_fElapsedTime);
+			if (!Unit1[i]->m_pSkinnedAnimationController)Unit1[i]->UpdateTransform(NULL);
+			Unit1[i]->Render(pd3dCommandList, pCamera);
+		}
+		if (Unit2[i])
+		{
+			Unit2[i]->Animate(m_fElapsedTime);
+			if (!Unit2[i]->m_pSkinnedAnimationController)Unit2[i]->UpdateTransform(NULL);
+			Unit2[i]->Render(pd3dCommandList, pCamera);
+		}
+		if (Unit3[i])
+		{
+			Unit3[i]->Animate(m_fElapsedTime);
+			if (!Unit3[i]->m_pSkinnedAnimationController)Unit3[i]->UpdateTransform(NULL);
+			Unit3[i]->Render(pd3dCommandList, pCamera);
+		}
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		if (Unit4[i])
+		{
+			Unit4[i]->Animate(m_fElapsedTime);
+			if (!Unit4[i]->m_pSkinnedAnimationController)Unit4[i]->UpdateTransform(NULL);
+			Unit4[i]->Render(pd3dCommandList, pCamera);
+		}
+		if (Unit5[i])
+		{
+			Unit5[i]->Animate(m_fElapsedTime);
+			if (!Unit5[i]->m_pSkinnedAnimationController)Unit5[i]->UpdateTransform(NULL);
+			Unit5[i]->Render(pd3dCommandList, pCamera);
+		}
+	}
+	//std::cout << Unit1[0]->GetPosition().y << std::endl;
+
+	//Unit1[0]->MoveForward(1.0f);
 
 	if (FrameCount == 0)
 	{
-		if (!s.empty())
+		//m_ppGameObjects[1]->MoveUp(1.4f);
+		/*if (!s.empty())
 		{
 			int p = s.top().first;
 			int q = s.top().second;
@@ -1224,14 +1250,70 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 				//std::cout << k << "y : "<< j << std::endl;
 				TracePath(k, j,0);
 			}
+		}*/
+		
+	}
+
+	list<CGameObject*> Mine = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_MY_UNIT);
+
+	//release 모드 너무 빨라서 필요
+	if (FrameCount == 0)
+	{
+		if (GetStart())
+		{
+			count = 0;
+			for (int i = 3; i < m_nGameObjects; i++)
+			{
+				//m_ppGameObjects[i]->MoveStrafe(14.0f);
+				for (auto& k : Mine)
+				{
+					cmpdis = sqrt(pow((k->GetPosition().x - m_ppGameObjects[i]->GetPosition().x), 2) + pow((k->GetPosition().z - m_ppGameObjects[i]->GetPosition().z), 2));
+					//std::cout << cmpdis << std::endl;
+					if (cmpdis > 160)
+					{
+						count++;
+					}
+
+					if (count == (6 - Canbuy))
+					{
+						m_ppGameObjects[i]->Checking();
+						count = 0;
+					}
+				}
+			}
+			ncount = 0;
+
+			for (auto& k : Mine)
+			{
+				for (int i = 3; i < m_nGameObjects; i++)
+				{
+					cmpdis = sqrt(pow((k->GetPosition().x - m_ppGameObjects[i]->GetPosition().x), 2) + pow((k->GetPosition().z - m_ppGameObjects[i]->GetPosition().z), 2));
+					if (cmpdis > 160)
+					{
+						ncount++;
+					}
+
+					if (ncount == 3)
+					{
+						k->CheckingOwn();
+						ncount = 0;
+					}
+				}
+
+			}
 		}
 	}
+		//MakingMap();
+		//count++;
+
+		
+	
 
 	FrameCount++;
 
-	if (FrameCount == 120) // 수치는 나중에 개선
+	if (FrameCount == 10) // 수치는 나중에 개선
 		FrameCount = 0;
-
+		
 	for (int i = 0; i < m_nShaders; i++) if (m_ppShaders[i]) m_ppShaders[i]->Render(pd3dCommandList, pCamera);
 }
 
