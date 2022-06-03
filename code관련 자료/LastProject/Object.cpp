@@ -629,6 +629,22 @@ void CGameObject::UpdateBox()
 		}
 }
 
+void CGameObject::ObjectFSM()
+{
+	switch (FSMCheck())
+	{
+	case IDLE:
+		break;
+	case WALK:
+		Checking();
+		break;
+	case ATTACK:
+		break;
+	default:
+		break;
+	}
+}
+
 CSkinnedMesh *CGameObject::FindSkinnedMesh(char *pstrSkinnedMeshName)
 {
 	CSkinnedMesh *pSkinnedMesh = NULL;
@@ -1780,6 +1796,14 @@ void CGameObject::MakingOwnMap()
 			//std::cout << Cx << " , " << Cz << std::endl;
 		}
 
+	}
+}
+
+int CGameObject::FSMCheck()
+{
+	if (GetPosition().x != 134)
+	{
+		return WALK;
 	}
 }
 

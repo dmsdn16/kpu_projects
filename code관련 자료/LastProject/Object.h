@@ -385,6 +385,14 @@ public:
 
 	BoundingOrientedBox				m_xmOOBB;
 
+public:
+	enum FSM
+	{
+		IDLE,
+		WALK,
+		ATTACK
+	};
+
 	void SetMesh(CMesh *pMesh);
 	void SetBoxMesh(CMesh* pMesh);
 	void SetShader(CShader *pShader);
@@ -393,7 +401,7 @@ public:
 	void SetSkinnedAnimationWireFrameShader();
 	void SetMaterial(int nMaterial, CMaterial *pMaterial);
 	void UpdateBox();
-
+	void ObjectFSM();
 	void SetChild(CGameObject *pChild, bool bReferenceUpdate=false);
 
 	virtual void BuildMaterials(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList) { }
@@ -498,6 +506,8 @@ public:
 	void MakingOwnMap();
 
 	void CaldisOwn(int x, int y);
+
+	int FSMCheck();
 
 	int tt = 0;
 	int Mindisx = 0;
