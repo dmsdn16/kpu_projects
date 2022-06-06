@@ -1235,6 +1235,26 @@ CAngrybotObject::CAngrybotObject(ID3D12Device *pd3dDevice, ID3D12GraphicsCommand
 	SetChild(pAngrybotModel->m_pModelRootObject, true);
 	m_pSkinnedAnimationController = new CAnimationController(pd3dDevice, pd3dCommandList, nAnimationTracks, pAngrybotModel);
 
+
+	CreateShaderVariables(pd3dDevice, pd3dCommandList);
+
+	CTexture* ObjectTexture = new CTexture(1, RESOURCE_TEXTURE2D, 0);
+	ObjectTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, L"SkyBox/SkyBox_0.dds", 0);
+
+	CSkinnedAnimationWireFrameShader* pObjectBoxShader = new CSkinnedAnimationWireFrameShader();
+	pObjectBoxShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
+	pObjectBoxShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
+
+	//CScene::CreateShaderResourceViews(pd3dDevice, ObjectTexture, 15, false);
+
+	//CMaterial* pSkyBoxMaterial = new CMaterial(1);
+	//pSkyBoxMaterial->SetTexture(ObjectTexture);
+	//pSkyBoxMaterial->SetShader(pObjectBoxShader);
+
+//	SetMaterial(0, pSkyBoxMaterial);
+
+
+
 	strcpy_s(m_pstrFrameName, "Angrybot");
 
 	Rotate(-90.0f, 0.0f, 0.0f);
