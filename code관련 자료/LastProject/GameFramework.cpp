@@ -321,10 +321,17 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 					break;
 				case VK_F3:
 					//m_pCamera = m_pPlayer->ChangeCamera((DWORD)(wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
-					TransManager::GetInstance()->SetCamera(m_pCamera);
 					break;
 				case VK_F9:
 					ChangeSwapChainState();
+					break;
+				case MKF_LEFTBUTTONDOWN:
+					break;
+				case VK_G:
+					m_pScene->Reroll();
+					break;
+				case VK_T:
+					m_pScene->SetStart(true);
 					break;
 				default:
 					break;
@@ -350,17 +357,21 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 		case WM_SIZE:
 			break;
 		case WM_LBUTTONDOWN:
-        case WM_LBUTTONUP:
-			if (m_pick->GetInstance()->IntersecUnit() != nullptr)
-			{
-				std::cout << "aa" << std::endl;
-			}
 			break;
 		case WM_RBUTTONDOWN:
-        case WM_RBUTTONUP:
+			if (m_pick->GetInstance()->IntersecUnit() != nullptr)
+				std::cout << "aa" << std::endl;
+				m_pScene->UnitSell();
+			break;
+		case WM_LBUTTONUP:
+			if (m_pick->GetInstance()->IntersecTri() != nullptr)
+				m_pScene->UnitBuy();
+			break;
+		case WM_RBUTTONUP:
         case WM_MOUSEMOVE:
 			OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
             break;
+		
         case WM_KEYDOWN:
         case WM_KEYUP:
 			OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
@@ -517,6 +528,8 @@ void CGameFramework::FrameAdvance()
 	ProcessInput();
 
     AnimateObjects();
+
+	TransManager::GetInstance()->SetCamera(m_pCamera);
 
 	HRESULT hResult = m_pd3dCommandAllocator->Reset();
 	hResult = m_pd3dCommandList->Reset(m_pd3dCommandAllocator, NULL);

@@ -80,12 +80,13 @@ CGameObject* PickMgr::IntersecTri()
 
 
     map<float, CGameObject*> map;
-    list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
+    list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
     //list<CGameObject*> Unit = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
 
     for (auto& object : oj)
     {
-        if (object->m_xmOOBB.Intersects(XMLoadFloat3(&m_RayPos), XMLoadFloat3(&m_RayVec), x))
+        center = object->GetPosition();
+        if (CheckUISphere())
         {
             map.emplace(x, object);
         }
@@ -107,7 +108,7 @@ CGameObject* PickMgr::IntersecUnit()
     float x = 0.0f;
 
     map<float, CGameObject*> map;
-    //list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
+   // list<CGameObject*> oj = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
     list<CGameObject*> Unit = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
  
     for (auto& object : Unit)
@@ -134,7 +135,7 @@ bool PickMgr::CheckSphere(void)
 {
     XMFLOAT3 k;
     list<CGameObject*> Unit = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UNIT);
-
+    //list<CGameObject*> UI = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
     for (auto& object : Unit)
     {
         //std::cout << center.x << std::endl;
@@ -144,14 +145,14 @@ bool PickMgr::CheckSphere(void)
         double rs = pow(radius, 2);
         if (s < 0 && ls > rs)
         {
-            std::cout << "a" << std::endl;
+           // std::cout << "a" << std::endl;
             return false;                       // 광선이 구의 반대 방향을 향하거나 구를 지나친 경우
         }
         double m2 = ls - pow(s, 2);
 
         if (m2 > rs)
         {
-            std::cout << "b" << std::endl;
+           // std::cout << "b" << std::endl;
             return false;                      // 광선이 구를 비껴가는 경우
         }
         else
@@ -159,5 +160,41 @@ bool PickMgr::CheckSphere(void)
             std::cout << "c" << std::endl;
             return true;
         }
+    }
+
+}
+
+bool PickMgr::CheckUISphere(void)
+{
+    XMFLOAT3 k;
+    int i = 0;
+    list<CGameObject*> UI = ObjectManager::GetInstance()->GetObjectList(ObjectManager::OT_UI);
+    for (auto& object : UI)
+    {
+        //std::cout << center.x << std::endl;
+        k = XMFLOAT3(center.x - m_RayPos.x, center.y - m_RayPos.y, center.z - m_RayPos.z);
+        double s = Vector3::DotProduct(k, m_RayVec);
+        double ls = Vector3::DotProduct(k, k);
+        double rs = pow(radius, 2);
+        if (s < 0 && ls > rs)
+        {
+            // std::cout << "a" << std::endl;
+            return false;                       // 광선이 구의 반대 방향을 향하거나 구를 지나친 경우
+        }
+        double m2 = ls - pow(s, 2);
+
+        if (m2 > rs)
+        {
+            // std::cout << "b" << std::endl;
+            return false;                      // 광선이 구를 비껴가는 경우
+        }
+        else
+        {
+            std::cout << "c" << std::endl;
+            return true;
+        }
+
+        i++;
+        std::cout << i << std::endl;
     }
 }

@@ -1,0 +1,20 @@
+﻿  Scene.cpp
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.h(167,21): warning C4244: '초기화 중': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(622,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(630,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(637,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(644,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(651,36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(839,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(872,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(901,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(929,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(958,37): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(1270,19): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\Scene.cpp(1290,19): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다.
+  1 of 1204 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    7 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  LastProject.vcxproj -> C:\Users\op389\OneDrive\바탕 화면\kpu_projects\code관련 자료\LastProject\x64\Release\LastProject.exe
